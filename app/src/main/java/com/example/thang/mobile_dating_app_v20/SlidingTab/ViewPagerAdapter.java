@@ -1,4 +1,4 @@
-package com.example.thang.mobile_dating_app_v20.Activity;
+package com.example.thang.mobile_dating_app_v20.SlidingTab;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
