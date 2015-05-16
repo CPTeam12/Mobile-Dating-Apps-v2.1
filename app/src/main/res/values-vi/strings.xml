@@ -11,5 +11,6 @@
         <item>Trò chuyện</item>
     </string-array>
     <string name="nav_setting">Thiết lập</string>
+    <string name="nav_about">Sản phẩm</string>
 
 </resources>

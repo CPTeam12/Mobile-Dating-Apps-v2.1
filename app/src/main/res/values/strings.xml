@@ -12,6 +12,7 @@
         <item>Chat</item>
     </string-array>
     <string name="nav_setting">Setting</string>
+    <string name="nav_about">About</string>
 
 
 </resources>

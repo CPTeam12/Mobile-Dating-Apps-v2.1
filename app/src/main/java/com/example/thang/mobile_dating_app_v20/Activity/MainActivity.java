@@ -13,8 +13,10 @@ import com.example.thang.mobile_dating_app_v20.R;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
@@ -60,7 +62,9 @@ public class MainActivity extends ActionBarActivity {
                         new PrimaryDrawerItem().withName(R.string.nav_home).withIcon(GoogleMaterial.Icon.gmd_home).withIdentifier(1),
                         new PrimaryDrawerItem().withName(R.string.nav_profile).withIcon(GoogleMaterial.Icon.gmd_account_circle).withIdentifier(2),
                         new PrimaryDrawerItem().withName(R.string.nav_logout).withIcon(GoogleMaterial.Icon.gmd_exit_to_app).withIdentifier(3),
-                        new PrimaryDrawerItem().withName(R.string.nav_setting).withIcon(GoogleMaterial.Icon.gmd_settings).withIdentifier(4)
+                        new DividerDrawerItem(),
+                        new SecondaryDrawerItem().withName(R.string.nav_about).withIcon(GoogleMaterial.Icon.gmd_email).withIdentifier(4),
+                        new SecondaryDrawerItem().withName(R.string.nav_setting).withIcon(GoogleMaterial.Icon.gmd_settings).withIdentifier(5)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
 
@@ -78,7 +82,7 @@ public class MainActivity extends ActionBarActivity {
                                     switchFragment(3, "", "");
                                     break;
                                 case 4:
-                                    switchFragment(4,"","");
+                                    switchFragment(4, "", "");
                                     break;
                             }
                         }
@@ -91,6 +95,8 @@ public class MainActivity extends ActionBarActivity {
             currentItem = -1;
             result.setSelectionByIdentifier(1);
         }
+
+
     }
 
     @Override
