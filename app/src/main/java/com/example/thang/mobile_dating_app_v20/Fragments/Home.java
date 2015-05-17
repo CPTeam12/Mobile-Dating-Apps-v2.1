@@ -1,7 +1,7 @@
 package com.example.thang.mobile_dating_app_v20.Fragments;
 
 import com.example.thang.mobile_dating_app_v20.R;
-import com.example.thang.mobile_dating_app_v20.SlidingTab.ViewPagerAdapter;
+import com.example.thang.mobile_dating_app_v20.Adapters.ViewPagerAdapter;
 
 import android.os.Build;
 import android.os.Bundle;

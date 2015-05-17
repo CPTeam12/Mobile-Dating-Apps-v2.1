@@ -25,6 +25,6 @@
         android:layout_marginRight="16dp"
         fab:fab_colorNormal="@color/AccentColor"
         fab:fab_colorPressed="#F44336"
-        fab:fab_icon="@drawable/ic_addfriends" />
+        fab:fab_icon="@drawable/ic_action_addfriends" />
 
 </RelativeLayout>

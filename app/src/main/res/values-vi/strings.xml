@@ -12,5 +12,6 @@
     </string-array>
     <string name="nav_setting">Thiết lập</string>
     <string name="nav_about">Sản phẩm</string>
+    <string name="tab1_title">Người gần bạn</string>
 
 </resources>

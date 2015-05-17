@@ -1,8 +1,7 @@
-package com.example.thang.mobile_dating_app_v20.SlidingTab;
+package com.example.thang.mobile_dating_app_v20.Views;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;

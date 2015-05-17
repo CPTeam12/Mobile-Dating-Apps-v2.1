@@ -1,20 +1,17 @@
-package com.example.thang.mobile_dating_app_v20.SlidingTab;
+package com.example.thang.mobile_dating_app_v20.Fragments;
 
-import android.animation.Animator;
-import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.thang.mobile_dating_app_v20.FriendList.Friend;
-import com.example.thang.mobile_dating_app_v20.FriendList.ListAdapter;
+import com.example.thang.mobile_dating_app_v20.Classes.Friend;
+import com.example.thang.mobile_dating_app_v20.Adapters.ListAdapter;
 import com.example.thang.mobile_dating_app_v20.R;
 
 import java.util.LinkedList;

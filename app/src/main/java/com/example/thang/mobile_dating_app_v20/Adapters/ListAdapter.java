@@ -1,4 +1,4 @@
-package com.example.thang.mobile_dating_app_v20.FriendList;
+package com.example.thang.mobile_dating_app_v20.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.thang.mobile_dating_app_v20.Classes.Friend;
 import com.example.thang.mobile_dating_app_v20.R;
 
 import java.util.List;

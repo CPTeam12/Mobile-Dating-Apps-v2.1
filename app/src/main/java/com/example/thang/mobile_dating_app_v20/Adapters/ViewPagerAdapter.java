@@ -1,4 +1,4 @@
-package com.example.thang.mobile_dating_app_v20.SlidingTab;
+package com.example.thang.mobile_dating_app_v20.Adapters;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -7,9 +7,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.example.thang.mobile_dating_app_v20.R;
-import com.example.thang.mobile_dating_app_v20.SlidingTab.Tab1;
-import com.example.thang.mobile_dating_app_v20.SlidingTab.Tab2;
-import com.example.thang.mobile_dating_app_v20.SlidingTab.Tab3;
+import com.example.thang.mobile_dating_app_v20.Fragments.Tab1;
+import com.example.thang.mobile_dating_app_v20.Fragments.Tab2;
+import com.example.thang.mobile_dating_app_v20.Fragments.Tab3;
 
 /**
  * Created by Thang on 5/15/2015.

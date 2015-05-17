@@ -1,4 +1,4 @@
-package com.example.thang.mobile_dating_app_v20.FriendList;
+package com.example.thang.mobile_dating_app_v20.Classes;
 
 /**
  * Created by Thang on 5/16/2015.

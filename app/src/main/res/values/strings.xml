@@ -13,6 +13,7 @@
     </string-array>
     <string name="nav_setting">Setting</string>
     <string name="nav_about">About</string>
+    <string name="tab1_title">People near you</string>
 
 
 </resources>

@@ -61,10 +61,11 @@ public class MainActivity extends ActionBarActivity {
                 .addDrawerItems(
                         new PrimaryDrawerItem().withName(R.string.nav_home).withIcon(GoogleMaterial.Icon.gmd_home).withIdentifier(1),
                         new PrimaryDrawerItem().withName(R.string.nav_profile).withIcon(GoogleMaterial.Icon.gmd_account_circle).withIdentifier(2),
-                        new SecondaryDrawerItem().withName(R.string.nav_about).withIcon(GoogleMaterial.Icon.gmd_email).withIdentifier(4),
-                        new SecondaryDrawerItem().withName(R.string.nav_setting).withIcon(GoogleMaterial.Icon.gmd_settings).withIdentifier(5),
+
+                        new PrimaryDrawerItem().withName(R.string.nav_logout).withIcon(GoogleMaterial.Icon.gmd_exit_to_app).withIdentifier(3),
                         new DividerDrawerItem(),
-                        new PrimaryDrawerItem().withName(R.string.nav_logout).withIcon(GoogleMaterial.Icon.gmd_exit_to_app).withIdentifier(3)
+                        new SecondaryDrawerItem().withName(R.string.nav_about).withIcon(GoogleMaterial.Icon.gmd_email).withIdentifier(4),
+                        new SecondaryDrawerItem().withName(R.string.nav_setting).withIcon(GoogleMaterial.Icon.gmd_settings).withIdentifier(5)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
 
