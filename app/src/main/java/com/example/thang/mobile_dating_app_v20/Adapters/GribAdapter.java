@@ -78,7 +78,7 @@ public class GribAdapter extends BaseAdapter {
 
         holder.name.setText(friend.getName());
         holder.avatar.startAnimation(animation);
-        holder.avatar.setImageDrawable(context.getResources().getDrawable(R.drawable.blueboken));
+        holder.avatar.setImageDrawable(context.getResources().getDrawable(R.drawable.avatar));
 
 
 

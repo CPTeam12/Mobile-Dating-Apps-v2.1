@@ -1,5 +1,6 @@
 package com.example.thang.mobile_dating_app_v20.Activity;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.example.thang.mobile_dating_app_v20.Fragments.Setting;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.Drawer;
@@ -84,6 +86,10 @@ public class MainActivity extends ActionBarActivity {
                                     break;
                                 case 4:
                                     switchFragment(4, "", "");
+                                    break;
+                                case 5:
+                                    Intent intent = new Intent(getApplicationContext(),SettingActivity.class);
+                                    startActivity(intent);
                                     break;
                             }
                         }
