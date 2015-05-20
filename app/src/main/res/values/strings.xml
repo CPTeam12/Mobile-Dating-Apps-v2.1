@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name" translatable="false">Dating App</string>
-
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="nav_home">Home</string>
@@ -37,5 +36,4 @@
     <string name="title_activity_setting">Setting</string>
     <string name="setting_notify_on">Enable notification</string>
     <string name="setting_notify_off">Disable notification</string>
-
 </resources>

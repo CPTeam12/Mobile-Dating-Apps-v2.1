@@ -37,7 +37,8 @@ public class Tab1 extends Fragment {
         View v = inflater.inflate(R.layout.tab_1, container, false);
 
         int mColumnCountPortrait = DEFAULT_COLUMNS_PORTRAIT;
-        Friend friend = new Friend("ThangPHam");
+
+        Friend friend = new Friend("Thang Pham");
         friends.add(friend);
         friends.add(friend);
         friends.add(friend);
@@ -58,10 +59,16 @@ public class Tab1 extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), "Clicked" + friends.get(position).getName(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "Clicked" + friends.get(position).getName(), Toast.LENGTH_SHORT).show();
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                        .replace(R.id.mainFragment, Fragment.instantiate(getActivity(), "com.example.thang.mobile_dating_app_v20.Fragments.Map"))
+                        .commit();
             }
         });
 
         return v;
     }
+
 }
