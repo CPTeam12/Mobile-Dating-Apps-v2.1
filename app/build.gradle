@@ -17,6 +17,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    repositories { mavenCentral() }
 }
 
 dependencies {
@@ -34,6 +35,8 @@ dependencies {
     compile 'com.android.support:palette-v7:22.1.1@aar'
     //    google map
     compile 'com.google.android.gms:play-services:7.3.0'
+    // facebook
+    compile 'com.facebook.android:facebook-android-sdk:4.0.0'
 }
 
 
