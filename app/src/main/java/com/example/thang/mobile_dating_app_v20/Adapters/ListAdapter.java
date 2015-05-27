@@ -71,6 +71,7 @@ public class ListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "Clicked chat icon", Toast.LENGTH_SHORT).show();
+
             }
         });
         return convertView;

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
@@ -63,7 +64,14 @@ public class Tab2 extends Fragment  {
         mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), "Clicked" + friends.get(position).getName(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "Clicked" + friends.get(position).getName(), Toast.LENGTH_SHORT).show();
+                getActivity().setTitle("Chat");
+                final FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.addToBackStack(null);
+                ft.hide(Tab2.this);
+                ft.add(R.id.mainFragment, new Chat(), "Chat");
+                ft.setBreadCrumbTitle("Chat");
+                ft.commit();
             }
         });
 

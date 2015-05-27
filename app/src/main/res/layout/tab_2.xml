@@ -21,10 +21,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_gravity="right|bottom"
         android:layout_marginBottom="16dp"
         android:layout_marginRight="16dp"
         fab:fab_colorNormal="@color/AccentColor"
         fab:fab_colorPressed="#F44336"
         fab:fab_icon="@drawable/ic_action_addfriends" />
+
 
 </RelativeLayout>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/friend_item"
+    android:layout_width="fill_parent"
+    android:layout_height="65dp"
+    android:gravity="left|center"
+    android:orientation="horizontal"
+    android:weightSum="1">
+
+    <ImageView
+        android:id="@+id/card_avatar"
+        android:layout_width="60dp"
+        android:layout_height="fill_parent"
+        android:src="@drawable/avatar" />
+
+    <LinearLayout
+        android:layout_width="205dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1"
+        android:layout_weight="0.93">
+
+        <TextView
+            android:id="@+id/carddemo_myapps_main_inner_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left|center"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="sssssssz"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_weight="0.43" />
+
+        <TextView
+            android:id="@+id/carddemo_myapps_main_inner_secondaryTitle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="sssssss"
+            android:layout_weight="0.28" />
+    </LinearLayout>
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:text="Accept"
+        android:src="@drawable/ic_action_friends"
+        android:id="@+id/accept" />
+
+</LinearLayout>

@@ -4,8 +4,8 @@
     android:layout_width="fill_parent"
     android:layout_height="65dp"
     android:background="#ffffff"
-    android:gravity="left|center"
     android:descendantFocusability="blocksDescendants"
+    android:gravity="left|center"
     android:orientation="horizontal"
     android:weightSum="1">
 
@@ -31,8 +31,8 @@
         android:id="@+id/chatIcon"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
+        android:layout_marginRight="16dp"
         android:gravity="left|center"
-        android:src="@drawable/ic_stat_chat"
-        android:layout_marginRight="16dp" />
+        android:src="@drawable/ic_stat_chat" />
 
 </LinearLayout>

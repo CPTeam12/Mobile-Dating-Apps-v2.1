@@ -6,18 +6,20 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.thang.mobile_dating_app_v20.Adapters.GribAdapter;
+import com.example.thang.mobile_dating_app_v20.Cards.CardPerson;
+import com.example.thang.mobile_dating_app_v20.Cards.MyCardSection;
+import com.example.thang.mobile_dating_app_v20.Cards.SectionAdapter;
 import com.example.thang.mobile_dating_app_v20.Classes.Friend;
 import com.example.thang.mobile_dating_app_v20.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import it.gmariotti.cardslib.library.internal.Card;
+import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
+import it.gmariotti.cardslib.library.internal.CardHeader;
+import it.gmariotti.cardslib.library.view.CardListView;
 
 /**
  * Created by Thang on 5/15/2015.
@@ -36,39 +38,48 @@ public class Tab1 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_1, container, false);
 
-        int mColumnCountPortrait = DEFAULT_COLUMNS_PORTRAIT;
-
-        Friend friend = new Friend("Thang Pham");
-        friends.add(friend);
-        friends.add(friend);
-        friends.add(friend);
-        friends.add(friend);
-        friends.add(friend);
-
-        ProgressBar mProgress = (ProgressBar) v.findViewById(R.id.progress);
-        final GridView gridView = (GridView) v.findViewById(R.id.gridView);
-        TextView title = (TextView) v.findViewById(R.id.tab_title);
-        title.setText(friends.size() + " " + getResources().getString(R.string.tab1_title));
-        gridView.setNumColumns(numColumns);
-        final GribAdapter gribAdapter = new GribAdapter(getActivity(), friends, numColumns);
-        gridView.setAdapter(gribAdapter);
-
-        if (mProgress != null)
-            mProgress.setVisibility(View.GONE);
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Toast.makeText(getActivity(), "Clicked" + friends.get(position).getName(), Toast.LENGTH_SHORT).show();
-                getActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-                        .replace(R.id.mainFragment, Fragment.instantiate(getActivity(), "com.example.thang.mobile_dating_app_v20.Fragments.Map"))
-                        .commit();
-            }
-        });
-
         return v;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        initCards();
+    }
+
+    private void initCards() {
+
+        //Init an array of Cards
+        ArrayList<Card> cards = new ArrayList<Card>();
+        for (int i = 0; i < 10; i++) {
+            CardPerson card = new CardPerson(this.getActivity());
+            card.setTitle("Application example " + i);
+            card.setSecondaryTitle("A company inc..." + i);
+//            card.setImgSource(R.drawable.avatar);
+//            card.setCount(i);
+            if (i == 5 || i == 6){
+                card.setResourceIdThumbnail(R.drawable.avatar);
+            }
+            card.init();
+            cards.add(card);
+        }
+
+        CardArrayAdapter mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
+        //define card section
+        List<MyCardSection> sections = new ArrayList<>();
+        sections.add(new MyCardSection(0,"Friend request"));
+        sections.add(new MyCardSection(3,"Person you may know"));
+
+        MyCardSection[] myCardSections = new MyCardSection[sections.size()];
+
+        //define section adapter
+        SectionAdapter sectionAdapter =  new SectionAdapter(getActivity(), mCardArrayAdapter);
+        sectionAdapter.setCardSections(sections.toArray(myCardSections));
+
+        CardListView listView = (CardListView) getActivity().findViewById(R.id.myList);
+        if (listView != null) {
+            listView.setExternalAdapter(sectionAdapter,mCardArrayAdapter);
+        }
     }
 
 }

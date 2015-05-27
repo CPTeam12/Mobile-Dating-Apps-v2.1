@@ -17,9 +17,9 @@ import com.example.thang.mobile_dating_app_v20.Fragments.Tab3;
 public class ViewPagerAdapter extends FragmentStatePagerAdapter{
     String[] title = {"a","b","c"};
     private int[] tabIcon = {
-            R.drawable.ic_location_history_black,
+            R.drawable.ic_notifications,
             R.drawable.ic_people_black,
-            R.drawable.ic_chat_black
+            R.drawable.ic_location_history_black
     };
     private Context context;
 
