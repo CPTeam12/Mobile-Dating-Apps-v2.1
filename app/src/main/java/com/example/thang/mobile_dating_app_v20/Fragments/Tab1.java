@@ -53,8 +53,8 @@ public class Tab1 extends Fragment {
         ArrayList<Card> cards = new ArrayList<Card>();
         for (int i = 0; i < 10; i++) {
             CardPerson card = new CardPerson(this.getActivity());
-            card.setTitle("Application example " + i);
-            card.setSecondaryTitle("A company inc..." + i);
+            card.setTitle("Person name " + i);
+            card.setSecondaryTitle("Description...");
 //            card.setImgSource(R.drawable.avatar);
 //            card.setCount(i);
             if (i == 5 || i == 6){
@@ -67,8 +67,8 @@ public class Tab1 extends Fragment {
         CardArrayAdapter mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
         //define card section
         List<MyCardSection> sections = new ArrayList<>();
-        sections.add(new MyCardSection(0,"Friend request"));
-        sections.add(new MyCardSection(3,"Person you may know"));
+        sections.add(new MyCardSection(0,getResources().getString(R.string.card_section_request)));
+        sections.add(new MyCardSection(3,getResources().getString(R.string.card_section_recommend)));
 
         MyCardSection[] myCardSections = new MyCardSection[sections.size()];
 

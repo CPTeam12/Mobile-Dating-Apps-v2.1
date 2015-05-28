@@ -28,5 +28,7 @@
         <item>Tiết kiệm pin</item>
         <item>Chỉ thiết bị</item>
     </string-array>
+    <string name="card_section_recommend">Người bạn có thể biết</string>
+    <string name="card_section_request">Yêu cầu kết bạn</string>
 
 </resources>

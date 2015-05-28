@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/friend_item"
+    android:layout_width="fill_parent"
+    android:layout_height="65dp"
+    android:background="#ffffff"
+    android:descendantFocusability="blocksDescendants"
+    android:gravity="left|center"
+    android:orientation="horizontal"
+    android:weightSum="1">
+
+    <ImageView
+        android:id="@+id/profile_icon"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:src="@drawable/ic_people_black" />
+
+    <TextView
+        android:id="@+id/profile_text"
+        android:layout_width="234dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1.0"
+        android:gravity="left|center"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#000000" />
+
+</LinearLayout>

@@ -79,7 +79,8 @@ public class MainActivity extends ActionBarActivity {
                                     switchFragment(1, "Dating App", "Home");
                                     break;
                                 case 2:
-                                    switchFragment(2, "Fragment 1", "Fragment1");
+                                    Intent intent1 = new Intent(getApplicationContext(),ProfileActivity.class);
+                                    startActivity(intent1);
                                     break;
                                 case 3:
                                     switchFragment(3, "", "");
@@ -88,8 +89,8 @@ public class MainActivity extends ActionBarActivity {
                                     switchFragment(4, "", "");
                                     break;
                                 case 5:
-                                    Intent intent = new Intent(getApplicationContext(),SettingActivity.class);
-                                    startActivity(intent);
+                                    Intent intent2 = new Intent(getApplicationContext(),SettingActivity.class);
+                                    startActivity(intent2);
                                     break;
                             }
                         }

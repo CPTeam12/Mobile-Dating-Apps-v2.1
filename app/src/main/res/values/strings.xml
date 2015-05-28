@@ -52,4 +52,7 @@
     <string name="error_field_required">This field is required</string>
     <!--facebook login-->
     <string name="facebook_app_id">886711624708430</string>
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="card_section_request">Friend requests</string>
+    <string name="card_section_recommend">Person you may know</string>
 </resources>

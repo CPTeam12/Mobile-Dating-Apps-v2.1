@@ -18,8 +18,8 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter{
     String[] title = {"a","b","c"};
     private int[] tabIcon = {
             R.drawable.ic_notifications,
-            R.drawable.ic_people_black,
-            R.drawable.ic_location_history_black
+            R.drawable.ic_location_history_black,
+            R.drawable.ic_people_black
     };
     private Context context;
 
@@ -27,14 +27,15 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter{
         super(fm);
         this.context = context;
     }
+
     @Override
     public Fragment getItem(int position) {
         if (position == 0){
             return new Tab1();
         }else if(position == 1){
-            return  new Tab2();
+            return  new Tab3();
         }else {
-            return new Tab3();
+            return new Tab2();
         }
     }
 
