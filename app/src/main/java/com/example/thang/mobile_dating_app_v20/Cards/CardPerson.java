@@ -35,6 +35,8 @@ public class CardPerson extends Card {
     }
 
     public void init() {
+        //remove shadow
+        setShadow(false);
         //Add thumbnail
         CardThumbnail cardThumbnail = new CardThumbnail(mContext);
 

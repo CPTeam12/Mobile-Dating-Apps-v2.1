@@ -86,7 +86,8 @@ public class MainActivity extends ActionBarActivity {
                                     switchFragment(3, "", "");
                                     break;
                                 case 4:
-                                    switchFragment(4, "", "");
+                                    Intent intent3 = new Intent(getApplicationContext(),TestActivity.class);
+                                    startActivity(intent3);
                                     break;
                                 case 5:
                                     Intent intent2 = new Intent(getApplicationContext(),SettingActivity.class);

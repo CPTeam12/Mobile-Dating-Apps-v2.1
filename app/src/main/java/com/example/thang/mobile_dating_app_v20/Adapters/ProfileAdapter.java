@@ -19,7 +19,7 @@ import java.util.Map;
 public class ProfileAdapter extends BaseAdapter {
     private Map<String, String> profile = new HashMap<String, String>();
     private Context context;
-    private String[] PROFILE_CASE = {"NAME", "AGE", "GENDER", "EMAIL"};
+    private String[] PROFILE_CASE = {"NAME", "AGE", "GENDER", "EMAIL", "GENDER1", "GENDER2", "GENDER3", "GENDER4", "GENDER5"};
 
     public ProfileAdapter(Map<String,String> profile,Context context){
         this.profile = profile;
@@ -69,6 +69,26 @@ public class ProfileAdapter extends BaseAdapter {
                     holder.profileText.setText(profile.get(PROFILE_CASE[position]));
                     break;
                 case "GENDER":
+                    holder.profileIcon.setImageResource(R.drawable.ic_account_black);
+                    holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                    break;
+                case "GENDER1":
+                    holder.profileIcon.setImageResource(R.drawable.ic_account_black);
+                    holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                    break;
+                case "GENDER2":
+                    holder.profileIcon.setImageResource(R.drawable.ic_account_black);
+                    holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                    break;
+                case "GENDER3":
+                    holder.profileIcon.setImageResource(R.drawable.ic_account_black);
+                    holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                    break;
+                case "GENDER4":
+                    holder.profileIcon.setImageResource(R.drawable.ic_account_black);
+                    holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                    break;
+                case "GENDER5":
                     holder.profileIcon.setImageResource(R.drawable.ic_account_black);
                     holder.profileText.setText(profile.get(PROFILE_CASE[position]));
                     break;

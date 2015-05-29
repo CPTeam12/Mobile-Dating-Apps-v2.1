@@ -55,4 +55,5 @@
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="card_section_request">Friend requests</string>
     <string name="card_section_recommend">Person you may know</string>
+    <string name="title_activity_test">TestActivity</string>
 </resources>

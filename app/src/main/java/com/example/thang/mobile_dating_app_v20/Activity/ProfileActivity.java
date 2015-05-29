@@ -5,9 +5,12 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
@@ -17,6 +20,7 @@ import android.widget.Toast;
 import com.example.thang.mobile_dating_app_v20.Classes.Friend;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.github.ksoichiro.android.observablescrollview.ObservableListView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
@@ -32,19 +36,20 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
     private View mOverlayView;
     private View mListBackgroundView;
     private TextView mTitleView;
-    private View mFab;
+    //    private View mFab;
     private int mActionBarSize;
     private int mFlexibleSpaceShowFabOffset;
     private int mFlexibleSpaceImageHeight;
-    private int mFabMargin;
-    private boolean mFabIsShown;
+//    private int mFabMargin;
+//    private boolean mFabIsShown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        if (Build.VERSION.SDK_INT >= 21) {
+
+        if (Build.VERSION.SDK_INT >= 18) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
@@ -68,31 +73,60 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
 
         listView.addHeaderView(paddingView);
 
-//      setDummyData(listView);
-
         Friend friend = new Friend("ABC");
         friend.setAge(22);
         friend.setEmail("phamvanthang310@gmail.com");
         friend.setGender("Female");
 
-        setFriendAdapter(listView,friend);
+        setFriendAdapter(listView, friend);
         //set icon for fab
-        FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
+        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab_edit);
         floatingActionButton.setIcon(R.drawable.ic_create_white_48dp);
 
-        mTitleView = (TextView) findViewById(R.id.title);
-        mTitleView.setText(getTitle());
-        setTitle(null);
-        mFab = findViewById(R.id.fab);
-        mFab.setOnClickListener(new View.OnClickListener() {
+        final View subLayer = findViewById(R.id.sub_layer);
+        subLayer.setVisibility(View.GONE);
+
+        final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.multiple_actions_down);
+
+        FloatingActionsMenu.OnFloatingActionsMenuUpdateListener listener = new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
+            @Override
+            public void onMenuExpanded() {
+                subLayer.setVisibility(View.VISIBLE);
+                subLayer.setBackgroundColor(getResources().getColor(R.color.black_layer));
+            }
+
+            @Override
+            public void onMenuCollapsed() {
+                subLayer.setVisibility(View.GONE);
+                subLayer.setBackgroundColor(getResources().getColor(R.color.no_layer));
+            }
+        };
+
+        subLayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ProfileActivity.this, "FAB is clicked", Toast.LENGTH_SHORT).show();
+                if (fabMenu.isExpanded()){
+                    fabMenu.collapse();
+                }
             }
         });
-        mFabMargin = getResources().getDimensionPixelSize(R.dimen.margin_standard);
-        ViewHelper.setScaleX(mFab, 0);
-        ViewHelper.setScaleY(mFab, 0);
+
+
+        fabMenu.setOnFloatingActionsMenuUpdateListener(listener);
+
+        mTitleView = (TextView) findViewById(R.id.title);
+        mTitleView.setText(friend.getName());
+        setTitle(null);
+//        mFab = findViewById(R.id.fab);
+//        mFab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(ProfileActivity.this, "FAB is clicked", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        mFabMargin = getResources().getDimensionPixelSize(R.dimen.margin_standard);
+//        ViewHelper.setScaleX(mFab, 0);
+//        ViewHelper.setScaleY(mFab, 0);
 
         mListBackgroundView = findViewById(R.id.list_background);
     }
@@ -121,7 +155,7 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
 
     @Override
     public void onScrollChanged(int scrollY, boolean b, boolean b1) {
-// Translate overlay and image
+        // Translate overlay and image
         float flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
         int minOverlayTransitionY = mActionBarSize - mOverlayView.getHeight();
         ViewHelper.setTranslationY(mOverlayView, ScrollUtils.getFloat(-scrollY, minOverlayTransitionY, 0));
@@ -145,30 +179,30 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         int titleTranslationY = maxTitleTranslationY - scrollY;
         ViewHelper.setTranslationY(mTitleView, titleTranslationY);
 
-        // Translate FAB
-        int maxFabTranslationY = mFlexibleSpaceImageHeight - mFab.getHeight() / 2;
-        float fabTranslationY = ScrollUtils.getFloat(
-                -scrollY + mFlexibleSpaceImageHeight - mFab.getHeight() / 2,
-                mActionBarSize - mFab.getHeight() / 2,
-                maxFabTranslationY);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-            // On pre-honeycomb, ViewHelper.setTranslationX/Y does not set margin,
-            // which causes FAB's OnClickListener not working.
-            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFab.getLayoutParams();
-            lp.leftMargin = mOverlayView.getWidth() - mFabMargin - mFab.getWidth();
-            lp.topMargin = (int) fabTranslationY;
-            mFab.requestLayout();
-        } else {
-            ViewHelper.setTranslationX(mFab, mOverlayView.getWidth() - mFabMargin - mFab.getWidth());
-            ViewHelper.setTranslationY(mFab, fabTranslationY);
-        }
+//        // Translate FAB
+//        int maxFabTranslationY = mFlexibleSpaceImageHeight - mFab.getHeight() / 2;
+//        float fabTranslationY = ScrollUtils.getFloat(
+//                -scrollY + mFlexibleSpaceImageHeight - mFab.getHeight() / 2,
+//                mActionBarSize - mFab.getHeight() / 2,
+//                maxFabTranslationY);
+//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+//            // On pre-honeycomb, ViewHelper.setTranslationX/Y does not set margin,
+//            // which causes FAB's OnClickListener not working.
+//            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFab.getLayoutParams();
+//            lp.leftMargin = mOverlayView.getWidth() - mFabMargin - mFab.getWidth();
+//            lp.topMargin = (int) fabTranslationY;
+//            mFab.requestLayout();
+//        } else {
+//            ViewHelper.setTranslationX(mFab, mOverlayView.getWidth() - mFabMargin - mFab.getWidth());
+//            ViewHelper.setTranslationY(mFab, fabTranslationY);
+//        }
 
-        // Show/hide FAB
-        if (fabTranslationY < mFlexibleSpaceShowFabOffset) {
-            hideFab();
-        } else {
-            showFab();
-        }
+//        // Show/hide FAB
+//        if (fabTranslationY < mFlexibleSpaceShowFabOffset) {
+//            hideFab();
+//        } else {
+//            showFab();
+//        }
     }
 
     @Override
@@ -192,19 +226,19 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         }
     }
 
-    private void showFab() {
-        if (!mFabIsShown) {
-            ViewPropertyAnimator.animate(mFab).cancel();
-            ViewPropertyAnimator.animate(mFab).scaleX(1).scaleY(1).setDuration(200).start();
-            mFabIsShown = true;
-        }
-    }
-
-    private void hideFab() {
-        if (mFabIsShown) {
-            ViewPropertyAnimator.animate(mFab).cancel();
-            ViewPropertyAnimator.animate(mFab).scaleX(0).scaleY(0).setDuration(200).start();
-            mFabIsShown = false;
-        }
-    }
+//    private void showFab() {
+//        if (!mFabIsShown) {
+//            ViewPropertyAnimator.animate(mFab).cancel();
+//            ViewPropertyAnimator.animate(mFab).scaleX(1).scaleY(1).setDuration(200).start();
+//            mFabIsShown = true;
+//        }
+//    }
+//
+//    private void hideFab() {
+//        if (mFabIsShown) {
+//            ViewPropertyAnimator.animate(mFab).cancel();
+//            ViewPropertyAnimator.animate(mFab).scaleX(0).scaleY(0).setDuration(200).start();
+//            mFabIsShown = false;
+//        }
+//    }
 }

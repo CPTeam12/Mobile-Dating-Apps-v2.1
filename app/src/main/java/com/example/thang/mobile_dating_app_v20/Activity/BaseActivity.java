@@ -45,6 +45,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         transfer.put("AGE",String.valueOf(friend.getAge()));
         transfer.put("EMAIL",friend.getEmail());
         transfer.put("GENDER",friend.getGender());
+        transfer.put("GENDER1",friend.getGender());
+        transfer.put("GENDER2",friend.getGender());
+        transfer.put("GENDER3",friend.getGender());
+        transfer.put("GENDER4",friend.getGender());
+        transfer.put("GENDER5",friend.getGender());
         return transfer;
     }
 

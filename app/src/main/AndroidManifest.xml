@@ -30,7 +30,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAGoYdniZZz-ghSbHdEY63z5a6Y63eqnis" />
+            android:value="AIzaSyBrMkSinF3VVL3z_E5if1G_jU8cdLDBsKU" />
 
         <activity
             android:name=".Activity.MainActivity"
@@ -45,12 +45,17 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".Activity.ProfileActivity"
             android:label="@string/title_activity_profile" >
+        </activity>
+        <activity
+            android:name=".Activity.TestActivity"
+            android:label="@string/title_activity_test" >
         </activity>
     </application>
 
