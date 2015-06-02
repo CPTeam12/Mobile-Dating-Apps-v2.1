@@ -3,6 +3,9 @@ package com.example.thang.mobile_dating_app_v20.Activity;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -13,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,49 +26,98 @@ import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.R;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.plus.Plus;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rengwuxian.materialedittext.validation.RegexpValidator;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 
-public class LoginActivity extends ActionBarActivity {
-    private static final String URL_DOMAIN = "http://192.168.1.17:8084/DatingAppService/Service/auth?";
+public class LoginActivity extends ActionBarActivity implements GoogleApiClient.OnConnectionFailedListener, ConnectionCallbacks {
+    private static final String URL_DOMAIN = "http://10.82.135.229:8084/DatingAppService/Service/auth?";
     private TextView loginError;
     private MaterialEditText username;
     private MaterialEditText password;
     private int TIME_OUT = 5000000;
     private MaterialDialog.Builder dialogBuilder;
     private MaterialDialog materialDialog;
+    // KhuongMH
+    private boolean mSignInClicked;
+    private GoogleApiClient gac;
+    private boolean mIntentInProgress;
+    private ConnectionResult cr;
+    //facebook
+    private CallbackManager callbackManager;
+    private FacebookCallback<LoginResult> callback = new FacebookCallback<LoginResult>() {
+        @Override
+        public void onSuccess(LoginResult loginResult) {
+            Toast.makeText(getApplicationContext(),"OK", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onCancel() {
+            Toast.makeText(getApplicationContext(),"Cancel", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onError(FacebookException e) {
+            Toast.makeText(getApplicationContext(),"Error", Toast.LENGTH_SHORT).show();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //initial view
-        //FacebookSdk.sdkInitialize(getApplicationContext());
+        //KhuongMH
+        //facebook
+        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
+        callbackManager = CallbackManager.Factory.create();
+        LoginButton btn = (LoginButton) findViewById(R.id.facebook_sign_in);
+        btn.setReadPermissions(Arrays.asList("email", "user_friends"));
+        btn.registerCallback(callbackManager,callback);
+        //google plus
+        gac = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Plus.API, Plus.PlusOptions.builder().build())
+                .addScope(Plus.SCOPE_PLUS_LOGIN).build();
 
-//        final LoginButton button = (LoginButton) findViewById(R.id.login_button);
-//        button.setBackgroundResource(R.drawable.facebook_login);
-
-        loginError = (TextView) findViewById(R.id.login_error);
-        username = (MaterialEditText) findViewById(R.id.login_email);
-        password = (MaterialEditText) findViewById(R.id.password);
 
         Button mPlusSignInButton = (Button) findViewById(R.id.goolge_sign_in);
         mPlusSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: Login google + function
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
+                if (!gac.isConnecting()) {
+                    mSignInClicked = true;
+                    resolveSignInError();
+                }
             }
         });
+
+
+        loginError = (TextView) findViewById(R.id.login_error);
+        username = (MaterialEditText) findViewById(R.id.login_email);
+        password = (MaterialEditText) findViewById(R.id.password);
+
 
         Button signIn = (Button) findViewById(R.id.email_sign_in_button);
         signIn.setOnClickListener(new View.OnClickListener() {
@@ -189,4 +242,107 @@ public class LoginActivity extends ActionBarActivity {
             }
         }
     }
+
+//    KhuongMH
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        mSignInClicked = false;
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+
+        if (Plus.PeopleApi.getCurrentPerson(gac) != null){
+            com.google.android.gms.plus.model.people.Person p = Plus.PeopleApi.getCurrentPerson(gac);
+            Person person = new Person();
+            person.setFullName(p.getDisplayName());
+            int gender = p.getGender();
+            person.setEmail(Plus.AccountApi.getAccountName(gac));
+            person.setAvatar(p.getImage().getUrl());
+            //insert to SQLite
+            DBHelper dbHelper = new DBHelper(getApplicationContext());
+            dbHelper.insertPerson(person, dbHelper.USER_FLAG_CURRENT);
+        }
+        startActivity(intent);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int responseCode, Intent intent) {
+        super.onActivityResult(requestCode, responseCode, intent);
+//        callbackManager.onActivityResult(requestCode, responseCode, intent);
+        if (requestCode == 0) {
+            if (responseCode != RESULT_OK) {
+                mSignInClicked = false;
+            }
+
+            mIntentInProgress = false;
+
+            if (!gac.isConnecting()) {
+                gac.connect();
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        if (!connectionResult.hasResolution()) {
+            GooglePlayServicesUtil.getErrorDialog(connectionResult.getErrorCode(), LoginActivity.this, 0).show();
+            return;
+        }
+        if (!mIntentInProgress) {
+            // Store the ConnectionResult for later usage
+            cr = connectionResult;
+            if (mSignInClicked) {
+                // The user has already clicked 'sign-in' so we attempt to
+                // resolve all
+                // errors until the user is signed in, or they cancel.
+                resolveSignInError();
+            }
+        }
+    }
+
+
+
+    private class LoadProfileImage extends AsyncTask {
+        ImageView downloadedImage;
+        public LoadProfileImage(ImageView image) {
+            downloadedImage = image;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            downloadedImage.setImageBitmap(result);
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            String url = objects[0] + "";
+            Bitmap icon = null;
+            try {
+                InputStream in = new URL(url).openStream();
+                icon = BitmapFactory.decodeStream(in);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return icon;
+        }
+    }
+
+
+
+    private void resolveSignInError() {
+        if (cr.hasResolution()) {
+            try {
+                mIntentInProgress = true;
+                cr.startResolutionForResult(LoginActivity.this, 0);
+            } catch (IntentSender.SendIntentException e) {
+                mIntentInProgress = false;
+                gac.connect();
+            }
+        }
+    }
+
+
 }

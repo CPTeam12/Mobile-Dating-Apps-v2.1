@@ -1,6 +1,14 @@
 package com.example.thang.mobile_dating_app_v20.Fragments;
 
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -41,28 +49,31 @@ public class Map extends Fragment {
         map.setMyLocationEnabled(true);
         tracker = new Map_Tracker(getActivity().getBaseContext());
         if(tracker.canGetLocation()) {
-        double latitude = tracker.getLatitude();
-        double longitude = tracker.getLongitude();
-        LatLng latLng = new LatLng(latitude, longitude);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8));
-        map.animateCamera(CameraUpdateFactory.zoomTo(18));
+            double latitude = tracker.getLatitude();
+            double longitude = tracker.getLongitude();
+            LatLng latLng = new LatLng(latitude, longitude);
+            map.addMarker(new MarkerOptions().position(latLng));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8));
+            map.animateCamera(CameraUpdateFactory.zoomTo(18));
+
+            friends.add(new Friend(10.85391688,106.62529707));
+            friends.add(new Friend(10.852526,106.62918091));
+            friends.add(new Friend(10.8494492,106.63203478));
+            friends.add(new Friend(10.85756262,106.62731409));
+            friends.add(new Friend(10.85206237,106.62647724));
+            scanNearBy(friends);
         } else {
             tracker.showSettingsAlert();
         }
-
-        friends.add(new Friend(10.85391688,106.62529707));
-        friends.add(new Friend(10.852526,106.62918091));
-        friends.add(new Friend(10.8494492,106.63203478));
-        friends.add(new Friend(10.85756262,106.62731409));
-        friends.add(new Friend(10.85206237,106.62647724));
-        scanNearBy(friends);
         return v;
     }
 
-    public void scanNearBy(List<Friend> friends){
+    public List<Friend> scanNearBy(List<Friend> friends){
+        //Friend me = new Friend(tracker.location.getLatitude(),tracker.location.getLongitude());
         Friend me = new Friend(tracker.getLatitude(),tracker.getLongitude());
         Utils u = new Utils();
         List<Friend> list = new ArrayList<Friend>();
+        //if(tracker.canGetLocation()){
         for(int i=0; i< friends.size();i++){
             Friend you = friends.get(i);
             if(u.isNearLocation(me,you)){
@@ -75,5 +86,7 @@ public class Map extends Fragment {
                 map.addMarker(options);
             }
         }
+        //}
+        return list;
     }
 }

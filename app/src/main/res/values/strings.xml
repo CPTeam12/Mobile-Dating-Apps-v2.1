@@ -50,7 +50,8 @@
     <string name="error_connection_title">Connection Error</string>
     <string name="action_tryagain">Try again</string>
     <!--facebook login-->
-    <string name="facebook_app_id">886711624708430</string>
+    <string name="facebook_app_id">935300426536787</string>
+
     <!-- Profile-->
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="card_section_request">Friend requests</string>

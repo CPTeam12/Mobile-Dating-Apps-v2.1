@@ -89,7 +89,6 @@ public class ProfileAdapter extends BaseAdapter {
                     holder.profileText.setText(profile.get(PROFILE_CASE[position]));
                     break;
             }
-
         return convertView;
     }
 
