@@ -7,6 +7,7 @@ import android.widget.ListView;
 
 import com.example.thang.mobile_dating_app_v20.Adapters.ProfileAdapter;
 import com.example.thang.mobile_dating_app_v20.Classes.Friend;
+import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.R;
 
 import java.util.HashMap;
@@ -28,8 +29,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     //new function
-    protected void setFriendAdapter(ListView listView, Friend friend) {
-        Map<String, String> friendHashMap = transferToMap(friend);
+    protected void setFriendAdapter(ListView listView, Person person) {
+        Map<String, String> friendHashMap = transferToMap(person);
         ProfileAdapter profileAdapter = new ProfileAdapter(friendHashMap,getApplicationContext());
         if (!friendHashMap.isEmpty()){
             listView.setAdapter(profileAdapter);
@@ -39,21 +40,18 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    private Map<String, String> transferToMap(Friend friend){
+    private Map<String, String> transferToMap(Person person){
         Map<String, String> transfer = new HashMap<>();
-        transfer.put("NAME",friend.getName());
-        transfer.put("AGE",String.valueOf(friend.getAge()));
-        transfer.put("EMAIL",friend.getEmail());
-        transfer.put("GENDER",friend.getGender());
-        transfer.put("GENDER1",friend.getGender());
-        transfer.put("GENDER2",friend.getGender());
-        transfer.put("GENDER3",friend.getGender());
-        transfer.put("GENDER4",friend.getGender());
-        transfer.put("GENDER5",friend.getGender());
+        transfer.put("FULLNAME",person.getFullName());
+        transfer.put("AGE",String.valueOf(person.getAge()));
+        transfer.put("EMAIL",person.getEmail());
+        transfer.put("GENDER",person.getGender());
+        transfer.put("AVATAR",person.getGender());
+        transfer.put("PHONE",person.getGender());
+        transfer.put("ADDRESS",person.getGender());
+
         return transfer;
     }
-
-
 
 }
 

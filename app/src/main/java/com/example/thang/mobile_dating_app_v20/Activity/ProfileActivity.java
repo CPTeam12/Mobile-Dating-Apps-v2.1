@@ -17,7 +17,9 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Friend;
+import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -70,15 +72,18 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
 
         // This is required to disable header's list selector effect
         paddingView.setClickable(true);
-
         listView.addHeaderView(paddingView);
 
-        Friend friend = new Friend("ABC");
-        friend.setAge(22);
-        friend.setEmail("phamvanthang310@gmail.com");
-        friend.setGender("Female");
+        //get current user profile
+        Person person = new Person();
+        Bundle bundle = getIntent().getExtras();
+        String flag = bundle.getString("ProfileOf");
+        if(flag.equals(DBHelper.USER_FLAG_CURRENT)){
+            DBHelper dbHelper = new DBHelper(getApplicationContext());
+            person = dbHelper.getCurrentUser();
+        }
 
-        setFriendAdapter(listView, friend);
+        setFriendAdapter(listView, person);
         //set icon for fab
         FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab_edit);
         floatingActionButton.setIcon(R.drawable.ic_create_white_48dp);
@@ -115,18 +120,8 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         fabMenu.setOnFloatingActionsMenuUpdateListener(listener);
 
         mTitleView = (TextView) findViewById(R.id.title);
-        mTitleView.setText(friend.getName());
+        mTitleView.setText(person.getFullName());
         setTitle(null);
-//        mFab = findViewById(R.id.fab);
-//        mFab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(ProfileActivity.this, "FAB is clicked", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//        mFabMargin = getResources().getDimensionPixelSize(R.dimen.margin_standard);
-//        ViewHelper.setScaleX(mFab, 0);
-//        ViewHelper.setScaleY(mFab, 0);
 
         mListBackgroundView = findViewById(R.id.list_background);
     }
@@ -178,31 +173,6 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight - mTitleView.getHeight() * scale);
         int titleTranslationY = maxTitleTranslationY - scrollY;
         ViewHelper.setTranslationY(mTitleView, titleTranslationY);
-
-//        // Translate FAB
-//        int maxFabTranslationY = mFlexibleSpaceImageHeight - mFab.getHeight() / 2;
-//        float fabTranslationY = ScrollUtils.getFloat(
-//                -scrollY + mFlexibleSpaceImageHeight - mFab.getHeight() / 2,
-//                mActionBarSize - mFab.getHeight() / 2,
-//                maxFabTranslationY);
-//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-//            // On pre-honeycomb, ViewHelper.setTranslationX/Y does not set margin,
-//            // which causes FAB's OnClickListener not working.
-//            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFab.getLayoutParams();
-//            lp.leftMargin = mOverlayView.getWidth() - mFabMargin - mFab.getWidth();
-//            lp.topMargin = (int) fabTranslationY;
-//            mFab.requestLayout();
-//        } else {
-//            ViewHelper.setTranslationX(mFab, mOverlayView.getWidth() - mFabMargin - mFab.getWidth());
-//            ViewHelper.setTranslationY(mFab, fabTranslationY);
-//        }
-
-//        // Show/hide FAB
-//        if (fabTranslationY < mFlexibleSpaceShowFabOffset) {
-//            hideFab();
-//        } else {
-//            showFab();
-//        }
     }
 
     @Override
@@ -212,7 +182,6 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
 
     @Override
     public void onUpOrCancelMotionEvent(ScrollState scrollState) {
-
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -226,19 +195,4 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         }
     }
 
-//    private void showFab() {
-//        if (!mFabIsShown) {
-//            ViewPropertyAnimator.animate(mFab).cancel();
-//            ViewPropertyAnimator.animate(mFab).scaleX(1).scaleY(1).setDuration(200).start();
-//            mFabIsShown = true;
-//        }
-//    }
-//
-//    private void hideFab() {
-//        if (mFabIsShown) {
-//            ViewPropertyAnimator.animate(mFab).cancel();
-//            ViewPropertyAnimator.animate(mFab).scaleX(0).scaleY(0).setDuration(200).start();
-//            mFabIsShown = false;
-//        }
-//    }
 }

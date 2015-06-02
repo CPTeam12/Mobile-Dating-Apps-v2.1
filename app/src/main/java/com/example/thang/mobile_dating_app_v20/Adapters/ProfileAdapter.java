@@ -19,7 +19,7 @@ import java.util.Map;
 public class ProfileAdapter extends BaseAdapter {
     private Map<String, String> profile = new HashMap<String, String>();
     private Context context;
-    private String[] PROFILE_CASE = {"NAME", "AGE", "GENDER", "EMAIL", "GENDER1", "GENDER2", "GENDER3", "GENDER4", "GENDER5"};
+    private static final String[] PROFILE_CASE = {"FULLNAME", "AGE", "GENDER", "EMAIL", "AVATAR", "PHONE", "ADDRESS"};
 
     public ProfileAdapter(Map<String,String> profile,Context context){
         this.profile = profile;
@@ -60,7 +60,7 @@ public class ProfileAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
             switch (PROFILE_CASE[position]){
-                case "NAME":
+                case "FULLNAME":
                     holder.profileIcon.setImageResource(R.drawable.ic_expand_more_black_36dp);
                     holder.profileText.setText(profile.get(PROFILE_CASE[position]));
                     break;
@@ -72,23 +72,15 @@ public class ProfileAdapter extends BaseAdapter {
                     holder.profileIcon.setImageResource(R.drawable.ic_account_black);
                     holder.profileText.setText(profile.get(PROFILE_CASE[position]));
                     break;
-                case "GENDER1":
+                case "AVATAR":
                     holder.profileIcon.setImageResource(R.drawable.ic_account_black);
                     holder.profileText.setText(profile.get(PROFILE_CASE[position]));
                     break;
-                case "GENDER2":
+                case "ADDRESS":
                     holder.profileIcon.setImageResource(R.drawable.ic_account_black);
                     holder.profileText.setText(profile.get(PROFILE_CASE[position]));
                     break;
-                case "GENDER3":
-                    holder.profileIcon.setImageResource(R.drawable.ic_account_black);
-                    holder.profileText.setText(profile.get(PROFILE_CASE[position]));
-                    break;
-                case "GENDER4":
-                    holder.profileIcon.setImageResource(R.drawable.ic_account_black);
-                    holder.profileText.setText(profile.get(PROFILE_CASE[position]));
-                    break;
-                case "GENDER5":
+                case "PHONE":
                     holder.profileIcon.setImageResource(R.drawable.ic_account_black);
                     holder.profileText.setText(profile.get(PROFILE_CASE[position]));
                     break;

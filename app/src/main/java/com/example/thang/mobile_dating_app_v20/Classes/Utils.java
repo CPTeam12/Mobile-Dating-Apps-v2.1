@@ -13,7 +13,7 @@ import android.graphics.RectF;
  * Created by Thang on 5/28/2015.
  */
 public class Utils {
-    private static double DISTANCE_RADIUS = 0.005; // 500m
+    private static double DISTANCE_RADIUS = 0.01; // 1000m
 
     public Utils() {
     }

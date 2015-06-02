@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Fragments.Setting;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -51,7 +52,6 @@ public class MainActivity extends ActionBarActivity {
                 })
                 .build();
 
-
         result = new Drawer()
                 .withActivity(this)
                 .withAccountHeader(headerResult)
@@ -79,7 +79,10 @@ public class MainActivity extends ActionBarActivity {
                                     switchFragment(1, "Dating App", "Home");
                                     break;
                                 case 2:
+                                    Bundle dataBundle = new Bundle();
+                                    dataBundle.putString("ProfileOf", DBHelper.USER_FLAG_CURRENT);
                                     Intent intent1 = new Intent(getApplicationContext(),ProfileActivity.class);
+                                    intent1.putExtras(dataBundle);
                                     startActivity(intent1);
                                     break;
                                 case 3:

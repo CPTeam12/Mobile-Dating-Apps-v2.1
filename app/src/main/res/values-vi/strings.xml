@@ -30,5 +30,17 @@
     </string-array>
     <string name="card_section_recommend">Người bạn có thể biết</string>
     <string name="card_section_request">Yêu cầu kết bạn</string>
+    <string name="prompt_password">Mật khẩu</string>
+    <string name="prompt_username">Tên đăng nhập</string>
+    <string name="prompt_email" translatable="false">Địa chỉ email</string>
+    <string name="action_sign_in">Đăng nhập</string>
+    <string name="action_sign_in_facebook">Đăng nhập bằng Facebook</string>
+    <string name="action_sign_in_google">Đăng nhập bằng Google</string>
+    <string name="error_field_required">Thông tin bắt buộc</string>
+    <string name="error_invalid_login">Thông tin đăng nhập không chính xác!</string>
+    <string name="error_connection">Không thể kết nối tới server. Kiểm tra kết nối internet và thử lại.</string>
+    <string name="action_tryagain">Thử lại</string>
+    <string name="error_connection_title">Lỗi kết nối</string>
+    <string name="progress_dialog">Đang xử lý...</string>
 
 </resources>
