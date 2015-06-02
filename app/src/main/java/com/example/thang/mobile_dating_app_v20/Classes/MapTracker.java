@@ -11,11 +11,11 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.widget.Toast;
+
 /**
  * Created by Man Huynh Khuong on 5/24/2015.
  */
-public class Map_Tracker extends Service implements LocationListener{
+public class MapTracker extends Service implements LocationListener{
     private final Context context;
 
     boolean isGPSEnabled = false;
@@ -32,7 +32,7 @@ public class Map_Tracker extends Service implements LocationListener{
 
     protected LocationManager locationManager;
 
-    public Map_Tracker(Context context){
+    public MapTracker(Context context){
         this.context = context;
         getLocation();
     }
@@ -85,7 +85,7 @@ public class Map_Tracker extends Service implements LocationListener{
 
     public void stopUsingGPS(){
         if(locationManager!=null){
-            locationManager.removeUpdates(Map_Tracker.this);
+            locationManager.removeUpdates(MapTracker.this);
         }
     }
 

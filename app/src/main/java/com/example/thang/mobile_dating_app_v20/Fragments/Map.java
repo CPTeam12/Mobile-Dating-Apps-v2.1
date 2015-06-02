@@ -1,14 +1,6 @@
 package com.example.thang.mobile_dating_app_v20.Fragments;
 
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.thang.mobile_dating_app_v20.Classes.Friend;
-import com.example.thang.mobile_dating_app_v20.Classes.Map_Tracker;
+import com.example.thang.mobile_dating_app_v20.Classes.MapTracker;
 import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -25,12 +17,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 /**
  * Created by Thang on 5/19/2015.
@@ -38,7 +28,7 @@ import java.util.zip.Inflater;
 public class Map extends Fragment {
     GoogleMap map;
     SupportMapFragment mf;
-    Map_Tracker tracker;
+    MapTracker tracker;
     List<Friend> friends = new ArrayList<Friend>();
     @Nullable
     @Override
@@ -47,7 +37,7 @@ public class Map extends Fragment {
         mf = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.googlemap);
         map = mf.getMap();
         map.setMyLocationEnabled(true);
-        tracker = new Map_Tracker(getActivity().getBaseContext());
+        tracker = new MapTracker(getActivity().getBaseContext());
         if(tracker.canGetLocation()) {
             double latitude = tracker.getLatitude();
             double longitude = tracker.getLongitude();

@@ -42,14 +42,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private Map<String, String> transferToMap(Person person){
         Map<String, String> transfer = new HashMap<>();
-        transfer.put("FULLNAME",person.getFullName());
         transfer.put("AGE",String.valueOf(person.getAge()));
         transfer.put("EMAIL",person.getEmail());
         transfer.put("GENDER",person.getGender());
-        transfer.put("AVATAR",person.getGender());
-        transfer.put("PHONE",person.getGender());
-        transfer.put("ADDRESS",person.getGender());
-
+        transfer.put("AVATAR",person.getAvatar());
+        transfer.put("PHONE",String.valueOf(person.getPhone()));
+        transfer.put("ADDRESS",person.getAddress());
         return transfer;
     }
 

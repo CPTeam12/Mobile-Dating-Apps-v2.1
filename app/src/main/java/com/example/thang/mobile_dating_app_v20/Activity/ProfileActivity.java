@@ -30,6 +30,8 @@ import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ProfileActivity extends BaseActivity implements ObservableScrollViewCallbacks {
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.3f;
@@ -42,6 +44,7 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
     private int mActionBarSize;
     private int mFlexibleSpaceShowFabOffset;
     private int mFlexibleSpaceImageHeight;
+    private CircleImageView profileAvatar;
 //    private int mFabMargin;
 //    private boolean mFabIsShown;
 
@@ -61,6 +64,9 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         mActionBarSize = getActionBarSize();
         mImageView = findViewById(R.id.image);
         mOverlayView = findViewById(R.id.overlay);
+        profileAvatar = (CircleImageView) findViewById(R.id.profile_avatar);
+        mTitleView = (TextView) findViewById(R.id.title);
+        mListBackgroundView = findViewById(R.id.list_background);
         ObservableListView listView = (ObservableListView) findViewById(R.id.list);
         listView.setScrollViewCallbacks(this);
 
@@ -78,11 +84,10 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         Person person = new Person();
         Bundle bundle = getIntent().getExtras();
         String flag = bundle.getString("ProfileOf");
-        if(flag.equals(DBHelper.USER_FLAG_CURRENT)){
+        if (flag.equals(DBHelper.USER_FLAG_CURRENT)) {
             DBHelper dbHelper = new DBHelper(getApplicationContext());
             person = dbHelper.getCurrentUser();
         }
-
         setFriendAdapter(listView, person);
         //set icon for fab
         FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab_edit);
@@ -110,20 +115,16 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         subLayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (fabMenu.isExpanded()){
+                if (fabMenu.isExpanded()) {
                     fabMenu.collapse();
                 }
             }
         });
 
-
         fabMenu.setOnFloatingActionsMenuUpdateListener(listener);
-
-        mTitleView = (TextView) findViewById(R.id.title);
         mTitleView.setText(person.getFullName());
         setTitle(null);
 
-        mListBackgroundView = findViewById(R.id.list_background);
     }
 
     @Override
@@ -155,6 +156,7 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         int minOverlayTransitionY = mActionBarSize - mOverlayView.getHeight();
         ViewHelper.setTranslationY(mOverlayView, ScrollUtils.getFloat(-scrollY, minOverlayTransitionY, 0));
         ViewHelper.setTranslationY(mImageView, ScrollUtils.getFloat(-scrollY / 2, minOverlayTransitionY, 0));
+        ViewHelper.setTranslationY(profileAvatar,ScrollUtils.getFloat(-scrollY / 2, minOverlayTransitionY, 0));
 
         // Translate list background
         ViewHelper.setTranslationY(mListBackgroundView, Math.max(0, -scrollY + mFlexibleSpaceImageHeight));

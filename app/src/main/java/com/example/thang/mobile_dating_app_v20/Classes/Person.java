@@ -30,18 +30,18 @@ public class Person implements Serializable{
 
 
     public Person(){
-        this.username = "";
-        this.password = "";
-        this.fullName = "";
-        this.email = "";
-        this.age = 0;
-        this.gender = "";
-        this.avatar = "";
-        this.phone = 0;
-        this.address = "";
-        this.longitude = 0;
-        this.latitude = 0;
-        this.lastKnown = 0;
+//        this.username = "";
+//        this.password = "";
+//        this.fullName = "";
+//        this.email = "";
+//        this.age = 0;
+//        this.gender = "";
+//        this.avatar = "";
+//        this.phone = 0;
+//        this.address = "";
+//        this.longitude = 0;
+//        this.latitude = 0;
+//        this.lastKnown = 0;
     }
 
 

@@ -28,8 +28,8 @@
         <item>Tiết kiệm pin</item>
         <item>Chỉ thiết bị</item>
     </string-array>
-    <string name="card_section_recommend">Người bạn có thể biết</string>
-    <string name="card_section_request">Yêu cầu kết bạn</string>
+    <string name="card_section_recommend">Những người bạn có thể biết</string>
+    <string name="card_section_request">Lời mời kết bạn</string>
     <string name="prompt_password">Mật khẩu</string>
     <string name="prompt_username">Tên đăng nhập</string>
     <string name="prompt_email" translatable="false">Địa chỉ email</string>

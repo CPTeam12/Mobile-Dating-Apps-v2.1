@@ -48,7 +48,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 + USER_COL_ADDRESS + " text, "
                 + USER_COL_GENDER + " text, "
                 + USER_COL_PHONE + " text,"
-                + USER_FLAG + "text not null"
+                + USER_FLAG + " text not null"
                 + ");";
         db.execSQL(databaseCreate);
     }
@@ -78,7 +78,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public List<Person> getAllFriends(){
         List<Person> persons = new ArrayList<>();
         String query = "SELECT * FROM " + USER_TABLE_NAME + " WHERE "
-                    + USER_FLAG + " = " + USER_FLAG_FRIENDS;
+                    + USER_FLAG + " = '" + USER_FLAG_FRIENDS + "'";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(query, null);
@@ -102,18 +102,20 @@ public class DBHelper extends SQLiteOpenHelper {
         Person person = new Person();
 
         String query = "SELECT * FROM " + USER_TABLE_NAME + " WHERE "
-                + USER_FLAG + " = " + USER_FLAG_CURRENT;
+                + USER_FLAG + " = '" + USER_FLAG_CURRENT + "'";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(query, null);
         res.moveToFirst();
-
-        person.setAddress(res.getString(res.getColumnIndex(USER_COL_ADDRESS)));
-        person.setFullName(res.getString(res.getColumnIndex(USER_COL_FULLNAME)));
-        person.setAge(Integer.parseInt(res.getString(res.getColumnIndex(USER_COL_AGE))));
-        person.setAvatar(res.getString(res.getColumnIndex(USER_COL_AVATAR)));
-        person.setEmail(res.getString(res.getColumnIndex(USER_COL_EMAIL)));
-        person.setGender(res.getString(res.getColumnIndex(USER_COL_GENDER)));
-        person.setPhone(Integer.parseInt(res.getString(res.getColumnIndex(USER_COL_PHONE))));
+        int a = res.getCount();
+        if (res.getCount() != 0){
+            person.setAddress(res.getString(res.getColumnIndex(USER_COL_ADDRESS)));
+            person.setFullName(res.getString(res.getColumnIndex(USER_COL_FULLNAME)));
+            person.setAge(Integer.parseInt(res.getString(res.getColumnIndex(USER_COL_AGE))));
+            person.setAvatar(res.getString(res.getColumnIndex(USER_COL_AVATAR)));
+            person.setEmail(res.getString(res.getColumnIndex(USER_COL_EMAIL)));
+            person.setGender(res.getString(res.getColumnIndex(USER_COL_GENDER)));
+            person.setPhone(Integer.parseInt(res.getString(res.getColumnIndex(USER_COL_PHONE))));
+        }
 
         if (!res.isClosed()){
             res.close();

@@ -19,9 +19,9 @@ import java.util.Map;
 public class ProfileAdapter extends BaseAdapter {
     private Map<String, String> profile = new HashMap<String, String>();
     private Context context;
-    private static final String[] PROFILE_CASE = {"FULLNAME", "AGE", "GENDER", "EMAIL", "AVATAR", "PHONE", "ADDRESS"};
+    private static final String[] PROFILE_CASE = {"AGE", "GENDER", "EMAIL", "AVATAR", "PHONE", "ADDRESS"};
 
-    public ProfileAdapter(Map<String,String> profile,Context context){
+    public ProfileAdapter(Map<String, String> profile, Context context) {
         this.profile = profile;
         this.context = context;
     }
@@ -46,9 +46,9 @@ public class ProfileAdapter extends BaseAdapter {
         ViewHolder holder;
 
 
-        if(convertView == null){
+        if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(context);
-            convertView = inflater.inflate(R.layout.profile_item,parent,false);
+            convertView = inflater.inflate(R.layout.profile_item, parent, false);
 
             holder = new ViewHolder();
             holder.profileIcon = (ImageView) convertView.findViewById(R.id.profile_icon);
@@ -56,43 +56,41 @@ public class ProfileAdapter extends BaseAdapter {
 
             convertView.setTag(holder);
 
-        }else {
+        } else {
             holder = (ViewHolder) convertView.getTag();
         }
-            switch (PROFILE_CASE[position]){
-                case "FULLNAME":
-                    holder.profileIcon.setImageResource(R.drawable.ic_expand_more_black_36dp);
-                    holder.profileText.setText(profile.get(PROFILE_CASE[position]));
-                    break;
-                case "AGE":
-                    holder.profileIcon.setImageResource(R.drawable.ic_birthday_black);
-                    holder.profileText.setText(profile.get(PROFILE_CASE[position]));
-                    break;
-                case "GENDER":
-                    holder.profileIcon.setImageResource(R.drawable.ic_account_black);
-                    holder.profileText.setText(profile.get(PROFILE_CASE[position]));
-                    break;
-                case "AVATAR":
-                    holder.profileIcon.setImageResource(R.drawable.ic_account_black);
-                    holder.profileText.setText(profile.get(PROFILE_CASE[position]));
-                    break;
-                case "ADDRESS":
-                    holder.profileIcon.setImageResource(R.drawable.ic_account_black);
-                    holder.profileText.setText(profile.get(PROFILE_CASE[position]));
-                    break;
-                case "PHONE":
-                    holder.profileIcon.setImageResource(R.drawable.ic_account_black);
-                    holder.profileText.setText(profile.get(PROFILE_CASE[position]));
-                    break;
-                case "EMAIL":
-                    holder.profileIcon.setImageResource(R.drawable.ic_email_black);
-                    holder.profileText.setText(profile.get(PROFILE_CASE[position]));
-                    break;
-            }
+
+        switch (PROFILE_CASE[position]) {
+            case "AGE":
+                holder.profileIcon.setImageResource(R.drawable.ic_birthday_black);
+                holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                break;
+            case "GENDER":
+                holder.profileIcon.setImageResource(R.drawable.ic_account_black);
+                holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                break;
+            case "AVATAR":
+                holder.profileIcon.setImageResource(R.drawable.ic_account_black);
+                holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                break;
+            case "ADDRESS":
+                holder.profileIcon.setImageResource(R.drawable.ic_account_black);
+                holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                break;
+            case "PHONE":
+                holder.profileIcon.setImageResource(R.drawable.ic_account_black);
+                holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                break;
+            case "EMAIL":
+                holder.profileIcon.setImageResource(R.drawable.ic_email_black);
+                holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                break;
+        }
+
         return convertView;
     }
 
-    private class ViewHolder{
+    private class ViewHolder {
         public ImageView profileIcon;
         public TextView profileText;
     }
