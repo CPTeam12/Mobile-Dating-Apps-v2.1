@@ -23,8 +23,8 @@ import android.widget.TextView;
 
 import com.example.thang.mobile_dating_app_v20.Adapters.ChatListAdapter;
 import com.example.thang.mobile_dating_app_v20.Adapters.GribAdapter;
-import com.example.thang.mobile_dating_app_v20.Classes.Friend;
 import com.example.thang.mobile_dating_app_v20.Classes.Message;
+import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.parse.FindCallback;
 import com.parse.LogInCallback;
@@ -47,7 +47,7 @@ public class Tab3 extends Fragment {
     public static final String NAME = "name";
     public static final String WALL = "wall";
 
-    private List<Friend> friends = new ArrayList<>();
+    private List<Person> persons = new ArrayList<>();
     private int numColumns = 2;
 
     @Nullable
@@ -57,19 +57,20 @@ public class Tab3 extends Fragment {
 
         int mColumnCountPortrait = DEFAULT_COLUMNS_PORTRAIT;
 
-        Friend friend = new Friend("Thang Pham");
-        friends.add(friend);
-        friends.add(friend);
-        friends.add(friend);
-        friends.add(friend);
-        friends.add(friend);
+        Person person = new Person();
+        person.setFullName("Thang Pham");
+        persons.add(person);
+        persons.add(person);
+        persons.add(person);
+        persons.add(person);
+        persons.add(person);
 
         ProgressBar mProgress = (ProgressBar) v.findViewById(R.id.progress);
         final GridView gridView = (GridView) v.findViewById(R.id.gridView);
         TextView title = (TextView) v.findViewById(R.id.tab_title);
-        title.setText(friends.size() + " " + getResources().getString(R.string.tab1_title));
+        title.setText(persons.size() + " " + getResources().getString(R.string.tab1_title));
         gridView.setNumColumns(numColumns);
-        final GribAdapter gribAdapter = new GribAdapter(getActivity(), friends, numColumns);
+        final GribAdapter gribAdapter = new GribAdapter(getActivity(), persons, numColumns);
         gridView.setAdapter(gribAdapter);
 
         if (mProgress != null)

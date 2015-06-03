@@ -6,7 +6,6 @@ import android.util.TypedValue;
 import android.widget.ListView;
 
 import com.example.thang.mobile_dating_app_v20.Adapters.ProfileAdapter;
-import com.example.thang.mobile_dating_app_v20.Classes.Friend;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.R;
 

@@ -17,7 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.balysv.materialripple.MaterialRippleLayout;
-import com.example.thang.mobile_dating_app_v20.Classes.Friend;
+import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.squareup.picasso.Picasso;
 
@@ -27,26 +27,26 @@ import java.util.List;
  * Created by Thang on 5/17/2015.
  */
 public class GribAdapter extends BaseAdapter {
-    private List<Friend> friends;
+    private List<Person> persons;
     private Context context;
     private final int column;
     private boolean usePalette = true;
 
-    public GribAdapter(Context context, List<Friend> friends, int column) {
+    public GribAdapter(Context context, List<Person> persons, int column) {
         super();
-        this.friends = friends;
+        this.persons = persons;
         this.context = context;
         this.column = column;
     }
 
     @Override
     public int getCount() {
-        return friends.size();
+        return persons.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return friends.get(position);
+        return persons.get(position);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class GribAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Animation animation = AnimationUtils.loadAnimation(context, R.anim.abc_fade_in);
-        Friend friend = friends.get(position);
+        Person person = persons.get(position);
 
         WindowManager wm = (WindowManager) context.getSystemService(context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
@@ -76,7 +76,7 @@ public class GribAdapter extends BaseAdapter {
             holder = (GribHolder) convertView.getTag();
         }
 
-        holder.name.setText(friend.getName());
+        holder.name.setText(person.getFullName());
         holder.avatar.startAnimation(animation);
         holder.avatar.setImageDrawable(context.getResources().getDrawable(R.drawable.avatar));
 

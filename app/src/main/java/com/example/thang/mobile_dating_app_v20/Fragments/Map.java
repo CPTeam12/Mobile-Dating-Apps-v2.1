@@ -8,8 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.thang.mobile_dating_app_v20.Classes.Friend;
 import com.example.thang.mobile_dating_app_v20.Classes.MapTracker;
+import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -29,7 +29,7 @@ public class Map extends Fragment {
     GoogleMap map;
     SupportMapFragment mf;
     MapTracker tracker;
-    List<Friend> friends = new ArrayList<Friend>();
+    List<Person> persons = new ArrayList<Person>();
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,26 +46,25 @@ public class Map extends Fragment {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8));
             map.animateCamera(CameraUpdateFactory.zoomTo(18));
 
-            friends.add(new Friend(10.85391688,106.62529707));
-            friends.add(new Friend(10.852526,106.62918091));
-            friends.add(new Friend(10.8494492,106.63203478));
-            friends.add(new Friend(10.85756262,106.62731409));
-            friends.add(new Friend(10.85206237,106.62647724));
-            scanNearBy(friends);
+            persons.add(new Person(10.85391688,106.62529707));
+            persons.add(new Person(10.852526,106.62918091));
+            persons.add(new Person(10.8494492,106.63203478));
+            persons.add(new Person(10.85756262,106.62731409));
+            persons.add(new Person(10.85206237,106.62647724));
+            scanNearBy(persons);
         } else {
             tracker.showSettingsAlert();
         }
         return v;
     }
 
-    public List<Friend> scanNearBy(List<Friend> friends){
-        //Friend me = new Friend(tracker.location.getLatitude(),tracker.location.getLongitude());
-        Friend me = new Friend(tracker.getLatitude(),tracker.getLongitude());
+    public List<Person> scanNearBy(List<Person> persons){
+        Person me = new Person(tracker.getLatitude(),tracker.getLongitude());
         Utils u = new Utils();
-        List<Friend> list = new ArrayList<Friend>();
+        List<Person> list = new ArrayList<Person>();
         //if(tracker.canGetLocation()){
-        for(int i=0; i< friends.size();i++){
-            Friend you = friends.get(i);
+        for(int i=0; i< persons.size();i++){
+            Person you = persons.get(i);
             if(u.isNearLocation(me,you)){
                 MarkerOptions options = new MarkerOptions()
                         .position(new LatLng(you.getLatitude(), you.getLongitude()))

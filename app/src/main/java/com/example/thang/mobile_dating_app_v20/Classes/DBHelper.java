@@ -32,7 +32,6 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String USER_FLAG_CURRENT = "localuser";
     public static final String USER_FLAG_FRIENDS = "friend";
 
-
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
     }

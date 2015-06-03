@@ -13,12 +13,12 @@ import android.graphics.RectF;
  * Created by Thang on 5/28/2015.
  */
 public class Utils {
-    private static double DISTANCE_RADIUS = 0.01; // 1000m
+    private static double DISTANCE_RADIUS = 0.05; // 1000m
 
     public Utils() {
     }
 
-    public boolean isNearLocation(Friend user,Friend friend){
+    public boolean isNearLocation(Person user,Person friend){
         if(Math.sqrt(Math.pow(user.getLatitude() - friend.getLatitude(),2) + Math.pow(user.getLongitude() - friend.getLongitude(),2)) < DISTANCE_RADIUS){
             return true;
         }
@@ -47,6 +47,6 @@ public class Utils {
 
         bitmap.recycle();
 
-        return Bitmap.createScaledBitmap(output, 60, 60, false);
+        return Bitmap.createScaledBitmap(output, 120, 120, false);
     }
 }

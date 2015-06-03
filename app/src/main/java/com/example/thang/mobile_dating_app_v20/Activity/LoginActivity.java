@@ -86,38 +86,37 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //initial view
+        //KhuongMH
+        //facebook
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        setContentView(R.layout.activity_login);
+        callbackManager = CallbackManager.Factory.create();
+        LoginButton btn = (LoginButton) findViewById(R.id.facebook_sign_in);
+        btn.setReadPermissions(Arrays.asList("email", "user_friends"));
+        btn.registerCallback(callbackManager, callback);
+        //google plus
+
+        gac = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Plus.API, Plus.PlusOptions.builder().build())
+                .addScope(Plus.SCOPE_PLUS_LOGIN).build();
+
+        gac.connect();
+        Button mPlusSignInButton = (Button) findViewById(R.id.goolge_sign_in);
+        mPlusSignInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!gac.isConnecting()) {
+                    mSignInClicked = true;
+                    resolveSignInError();
+                }
+            }
+        });
         //check whether this user have already logged in or not
         DBHelper dbHelper = new DBHelper(getApplicationContext());
         Person person = dbHelper.getCurrentUser();
         if (person.getEmail() == null) {
-            //initial view
-            //KhuongMH
-            //facebook
-            FacebookSdk.sdkInitialize(getApplicationContext());
-            setContentView(R.layout.activity_login);
-            callbackManager = CallbackManager.Factory.create();
-            LoginButton btn = (LoginButton) findViewById(R.id.facebook_sign_in);
-            btn.setReadPermissions(Arrays.asList("email", "user_friends"));
-            btn.registerCallback(callbackManager, callback);
-            //google plus
-            gac = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(Plus.API, Plus.PlusOptions.builder().build())
-                    .addScope(Plus.SCOPE_PLUS_LOGIN).build();
-
-
-            Button mPlusSignInButton = (Button) findViewById(R.id.goolge_sign_in);
-            mPlusSignInButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!gac.isConnecting()) {
-                        mSignInClicked = true;
-                        resolveSignInError();
-                    }
-                }
-            });
-
-
             loginError = (TextView) findViewById(R.id.login_error);
             username = (MaterialEditText) findViewById(R.id.login_email);
             password = (MaterialEditText) findViewById(R.id.password);
@@ -195,10 +194,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
 //                        .positiveText(R.string.action_tryagain)
                         .titleColorRes(R.color.md_red_400)
                         .show();
-
-
             }
-
         }
 
         @Override
@@ -258,7 +254,6 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
 
     @Override
     public void onConnectionSuspended(int i) {
-
     }
 
     @Override
@@ -296,8 +291,6 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         }
     }
 
-
-
     private class LoadProfileImage extends AsyncTask {
         ImageView downloadedImage;
         public LoadProfileImage(ImageView image) {
@@ -334,6 +327,5 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
             }
         }
     }
-
 
 }

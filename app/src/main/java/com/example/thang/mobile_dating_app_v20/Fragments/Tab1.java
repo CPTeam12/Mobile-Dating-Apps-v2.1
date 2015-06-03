@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import com.example.thang.mobile_dating_app_v20.Cards.CardPerson;
 import com.example.thang.mobile_dating_app_v20.Cards.MyCardSection;
 import com.example.thang.mobile_dating_app_v20.Cards.SectionAdapter;
-import com.example.thang.mobile_dating_app_v20.Classes.Friend;
+import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.R;
 
 import java.util.ArrayList;
@@ -25,12 +25,8 @@ import it.gmariotti.cardslib.library.view.CardListView;
  * Created by Thang on 5/15/2015.
  */
 public class Tab1 extends Fragment {
-    private static final int DEFAULT_COLUMNS_PORTRAIT = 2;
-    private static final int DEFAULT_COLUMNS_LANDSCAPE = 3;
-    public static final String NAME = "name";
-    public static final String WALL = "wall";
 
-    private List<Friend> friends = new ArrayList<>();
+    private List<Person> persons = new ArrayList<>();
     private int numColumns = 2;
 
     @Nullable

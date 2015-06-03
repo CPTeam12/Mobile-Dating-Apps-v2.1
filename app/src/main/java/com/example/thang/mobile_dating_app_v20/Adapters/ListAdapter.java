@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.thang.mobile_dating_app_v20.Classes.Friend;
+import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.R;
 
 import java.util.List;
@@ -20,22 +20,22 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by Thang on 5/16/2015.
  */
 public class ListAdapter extends BaseAdapter {
-    private List<Friend> friends;
+    private List<Person> persons;
     private Context context;
 
-    public ListAdapter(List<Friend> friendList, Context context) {
-        this.friends = friendList;
+    public ListAdapter(List<Person> persons, Context context) {
+        this.persons = persons;
         this.context = context;
     }
 
     @Override
     public int getCount() {
-        return friends.size();
+        return persons.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return friends.get(position);
+        return persons.get(position);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        Friend friend = friends.get(position);
+        Person person = persons.get(position);
 
         if(convertView == null){
             LayoutInflater inflater = LayoutInflater.from(context);
@@ -63,7 +63,7 @@ public class ListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.txtName.setText(friend.getName());
+        holder.txtName.setText(person.getFullName());
         holder.chatIcon.setImageResource(R.drawable.ic_stat_chat);
         holder.avatar.setImageResource(R.drawable.avatar);
 
