@@ -42,5 +42,8 @@
     <string name="action_tryagain">Thử lại</string>
     <string name="error_connection_title">Lỗi kết nối</string>
     <string name="progress_dialog">Đang xử lý...</string>
+    <string name="friend_accept">Xác nhận</string>
+    <string name="friend_dismiss">Xóa</string>
+    <string name="no_friend_item">Không có bạn</string>
 
 </resources>

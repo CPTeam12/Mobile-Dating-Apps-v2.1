@@ -80,13 +80,8 @@ public class CardPerson extends Card {
 //        if (count > 5 && count < 13) {
 //
 //            setTitle(title + " Swipe enabled");
-        setSwipeable(true);
-        setOnSwipeListener(new OnSwipeListener() {
-            @Override
-            public void onSwipe(Card card) {
-                Toast.makeText(getContext(), "Removed card=" + title, Toast.LENGTH_SHORT).show();
-            }
-        });
+        setSwipeable(false);
+
 //        }
 
     }

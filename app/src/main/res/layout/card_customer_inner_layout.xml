@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:weightSum="1">
 
     <LinearLayout
-        android:layout_width="260dp"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="0.99">
+        android:orientation="vertical">
+
         <TextView
             android:id="@+id/carddemo_myapps_main_inner_title"
             android:layout_width="wrap_content"
@@ -25,11 +25,28 @@
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:text="Accept"
-        android:src="@drawable/ic_action_friends"
-        android:id="@+id/accept" />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="right">
+
+        <Button
+            android:id="@+id/accept"
+            android:layout_width="wrap_content"
+            android:layout_height="29dp"
+            android:background="@drawable/friend_accept_button"
+            android:text="@string/friend_accept"
+            android:textColor="@color/md_white_1000" />
+
+        <Button
+            android:id="@+id/dismiss"
+            android:layout_width="wrap_content"
+            android:layout_height="29dp"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/friend_dismiss_button"
+            android:text="@string/friend_dismiss"
+            android:textColor="@color/md_white_1000"/>
+    </LinearLayout>
 
 </LinearLayout>

@@ -1,6 +1,8 @@
 package com.example.thang.mobile_dating_app_v20.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.thang.mobile_dating_app_v20.Activity.ProfileActivity;
+import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.R;
 
@@ -46,7 +50,7 @@ public class ListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        Person person = persons.get(position);
+        final Person person = persons.get(position);
 
         if(convertView == null){
             LayoutInflater inflater = LayoutInflater.from(context);
@@ -71,6 +75,18 @@ public class ListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "Clicked chat icon", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        holder.avatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle dataBundle = new Bundle();
+                dataBundle.putString("ProfileOf", DBHelper.USER_FLAG_FRIENDS);
+                dataBundle.putString("username", person.getUsername());
+                Intent intent1 = new Intent(context,ProfileActivity.class);
+                intent1.putExtras(dataBundle);
+                context.startActivity(intent1);
 
             }
         });

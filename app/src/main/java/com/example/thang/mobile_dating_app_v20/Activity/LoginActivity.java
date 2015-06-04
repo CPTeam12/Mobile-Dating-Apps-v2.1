@@ -52,14 +52,14 @@ import java.util.Arrays;
 import java.util.List;
 
 public class LoginActivity extends ActionBarActivity implements GoogleApiClient.OnConnectionFailedListener, ConnectionCallbacks {
-    private static final String URL_DOMAIN = "http://192.168.1.17:8084/DatingAppService/Service/auth?";
+    private static final String URL_DOMAIN = "http://datingappservice2.groundctrl.nl/datingapp/Service/auth?";
     private TextView loginError;
     private MaterialEditText username;
     private MaterialEditText password;
     private int TIME_OUT = 5000000;
     private MaterialDialog.Builder dialogBuilder;
     private MaterialDialog materialDialog;
-    // KhuongMH
+    //KhuongMH
     private boolean mSignInClicked;
     private GoogleApiClient gac;
     private boolean mIntentInProgress;
@@ -97,22 +97,22 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         btn.registerCallback(callbackManager, callback);
         //google plus
 
-        gac = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Plus.API, Plus.PlusOptions.builder().build())
-                .addScope(Plus.SCOPE_PLUS_LOGIN).build();
-
-        gac.connect();
-        Button mPlusSignInButton = (Button) findViewById(R.id.goolge_sign_in);
-        mPlusSignInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!gac.isConnecting()) {
-                    mSignInClicked = true;
-                    resolveSignInError();
-                }
-            }
-        });
+//        gac = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
+//                .addOnConnectionFailedListener(this)
+//                .addApi(Plus.API, Plus.PlusOptions.builder().build())
+//                .addScope(Plus.SCOPE_PLUS_LOGIN).build();
+//
+//        gac.connect();
+//        Button mPlusSignInButton = (Button) findViewById(R.id.goolge_sign_in);
+//        mPlusSignInButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (!gac.isConnecting()) {
+//                    mSignInClicked = true;
+//                    resolveSignInError();
+//                }
+//            }
+//        });
         //check whether this user have already logged in or not
         DBHelper dbHelper = new DBHelper(getApplicationContext());
         Person person = dbHelper.getCurrentUser();
@@ -186,7 +186,6 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                 materialDialog = dialogBuilder.build();
                 materialDialog.show();
 
-
             } else {
                 new MaterialDialog.Builder(LoginActivity.this)
                         .title(R.string.error_connection_title)
@@ -214,9 +213,10 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                 JSONObject jsonObject = new JSONObject(result);
                 List<Person> personList = ConnectionTool.fromJSON(jsonObject);
                 if (personList != null) {
-                    //insert into database
-                    DBHelper dbHelper = new DBHelper(getApplicationContext());
+                    //insert current user into database
+                    DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
                     dbHelper.insertPerson(personList.get(0),dbHelper.USER_FLAG_CURRENT);
+
                     //move to main activity
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
@@ -259,7 +259,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
     @Override
     protected void onActivityResult(int requestCode, int responseCode, Intent intent) {
         super.onActivityResult(requestCode, responseCode, intent);
-//        callbackManager.onActivityResult(requestCode, responseCode, intent);
+        callbackManager.onActivityResult(requestCode, responseCode, intent);
         if (requestCode == 0) {
             if (responseCode != RESULT_OK) {
                 mSignInClicked = false;
@@ -275,6 +275,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.e("debug",connectionResult.getErrorCode()+"");
         if (!connectionResult.hasResolution()) {
             GooglePlayServicesUtil.getErrorDialog(connectionResult.getErrorCode(), LoginActivity.this, 0).show();
             return;

@@ -58,6 +58,10 @@
     <string name="card_section_recommend">Person you may know</string>
     <string name="title_activity_test">TestActivity</string>
     <!-- progress dialog-->
+
     <string name="progress_dialog">Loading ...</string>
+    <string name="friend_accept">Accept</string>
+    <string name="friend_dismiss">Dismiss</string>
+    <string name="no_friend_item">No friend</string>
 
 </resources>
