@@ -1,13 +1,21 @@
 package com.example.thang.mobile_dating_app_v20.Fragments;
 
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ProgressBar;
 
+import com.example.thang.mobile_dating_app_v20.Adapters.ListAdapter;
+import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
+import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.MapTracker;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.Classes.Utils;
@@ -19,6 +27,19 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +51,7 @@ public class Map extends Fragment {
     SupportMapFragment mf;
     MapTracker tracker;
     List<Person> persons = new ArrayList<Person>();
+    private ProgressBar spiner;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,31 +73,66 @@ public class Map extends Fragment {
             persons.add(new Person(10.8494492,106.63203478));
             persons.add(new Person(10.85756262,106.62731409));
             persons.add(new Person(10.85206237,106.62647724));
-            scanNearBy(persons);
+            for(Person person : persons){
+                new DownloadJSONTask().execute(person);
+            }
         } else {
             tracker.showSettingsAlert();
         }
         return v;
     }
 
-    public List<Person> scanNearBy(List<Person> persons){
-        Person me = new Person(tracker.getLatitude(),tracker.getLongitude());
-        Utils u = new Utils();
-        List<Person> list = new ArrayList<Person>();
-        //if(tracker.canGetLocation()){
-        for(int i=0; i< persons.size();i++){
-            Person you = persons.get(i);
-            if(u.isNearLocation(me,you)){
-                MarkerOptions options = new MarkerOptions()
-                        .position(new LatLng(you.getLatitude(), you.getLongitude()))
-                        .title("I'm Here")
-                        .icon(BitmapDescriptorFactory
-                                .fromBitmap(u.getCircleBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.avatar)))).anchor(0.5f, 1);
+    private class DownloadJSONTask extends AsyncTask<Person, Void, JSONObject> {
+        private Person ppl;
+        @Override
+        protected void onPreExecute() {
+        }
 
-                map.addMarker(options);
+        @Override
+        protected JSONObject doInBackground(Person... params) {
+            String response;
+            ppl = params[0];
+            String to = ppl.getLatitude() + "," + ppl.getLongitude();
+            String from = tracker.getLatitude() + "," + tracker.getLongitude();
+            String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+ from + "&destinations=" + to + "&key=AIzaSyBrMkSinF3VVL3z_E5if1G_jU8cdLDBsKU";
+            try {
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost httppost = new HttpPost(url);
+                HttpResponse responce = httpclient.execute(httppost);
+                HttpEntity httpEntity = responce.getEntity();
+                response = EntityUtils.toString(httpEntity);
+                return new JSONObject(response);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject result)
+        {
+            super.onPostExecute(result);
+            //spiner.setVisibility(View.GONE);
+            if(result != null)
+            {
+                try
+                {
+                    JSONObject jobj = result.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0).getJSONObject("distance");
+                    int distance = jobj.getInt("value");
+                    if(distance < 1000){
+                        map.addMarker(new MarkerOptions().position(new LatLng(ppl.getLatitude(),ppl.getLongitude())));
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            else
+            {
             }
         }
-        //}
-        return list;
     }
+
+
 }
