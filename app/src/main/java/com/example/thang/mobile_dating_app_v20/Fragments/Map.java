@@ -74,6 +74,7 @@ public class Map extends Fragment {
             persons.add(new Person(10.85756262,106.62731409));
             persons.add(new Person(10.85206237,106.62647724));
             for(Person person : persons){
+
                 new DownloadJSONTask().execute(person);
             }
         } else {
