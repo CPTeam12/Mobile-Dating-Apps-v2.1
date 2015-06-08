@@ -59,7 +59,6 @@ public class Tab2 extends Fragment {
         empty.setVisibility(View.GONE);
         empty.setText("You have no friend");
 
-
         return v;
     }
 
