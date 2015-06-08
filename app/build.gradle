@@ -42,7 +42,7 @@ dependencies {
     //    google map
     compile 'com.google.android.gms:play-services:7.3.0'
     // facebook
-    compile 'com.facebook.android:facebook-android-sdk:4.1.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.0.0'
     //    chat
     compile 'com.parse.bolts:bolts-android:1.2.0'
     compile project(':Parse-1.9.1')
