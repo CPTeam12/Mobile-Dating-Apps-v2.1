@@ -77,6 +77,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                 public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
                     try {
                         p.setEmail(jsonObject.getString("email"));
+                        p.setUsername(jsonObject.getString("email"));
                         p.setFullName(jsonObject.getString("name"));
                         p.setGender(jsonObject.getString("gender"));
                     } catch (JSONException e) {
@@ -97,6 +98,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                         Person p = new Person();
                         try {
                             JSONObject j = jsonArray.getJSONObject(i);
+
                             p.setFullName(j.getString("name"));
                         } catch (JSONException e) {
                             e.printStackTrace();
