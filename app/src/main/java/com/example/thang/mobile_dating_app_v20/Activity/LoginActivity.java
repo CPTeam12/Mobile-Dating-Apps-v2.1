@@ -89,7 +89,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
             parameters.putString("fields", "id,name,email,gender, birthday");
             request.setParameters(parameters);
             request.executeAsync();
-            final DBHelper helper = new DBHelper(getApplicationContext());
+            final DBHelper helper = DBHelper.getInstance(getApplicationContext());
             helper.insertPerson(p,DBHelper.USER_FLAG_CURRENT);
             request = GraphRequest.newMyFriendsRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONArrayCallback() {
                 @Override
@@ -119,7 +119,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
 
         @Override
         public void onError(FacebookException e) {
-            Toast.makeText(getApplicationContext(),"Error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),e.toString(), Toast.LENGTH_LONG).show();
         }
     };
 

@@ -61,12 +61,16 @@ public class ProfileAdapter extends BaseAdapter {
         }
 
         switch (PROFILE_CASE[position]) {
+            case "EMAIL":
+                holder.profileIcon.setImageResource(R.drawable.profile_email);
+                holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                break;
             case "AGE":
-                holder.profileIcon.setImageResource(R.drawable.ic_birthday_black);
+                holder.profileIcon.setImageResource(R.drawable.profile_age);
                 holder.profileText.setText(profile.get(PROFILE_CASE[position]));
                 break;
             case "GENDER":
-                holder.profileIcon.setImageResource(R.drawable.ic_account_black);
+                holder.profileIcon.setImageResource(R.drawable.profile_gender);
                 holder.profileText.setText(profile.get(PROFILE_CASE[position]));
                 break;
             case "AVATAR":
@@ -74,17 +78,14 @@ public class ProfileAdapter extends BaseAdapter {
                 holder.profileText.setText(profile.get(PROFILE_CASE[position]));
                 break;
             case "ADDRESS":
-                holder.profileIcon.setImageResource(R.drawable.ic_account_black);
+                holder.profileIcon.setImageResource(R.drawable.profile_location);
                 holder.profileText.setText(profile.get(PROFILE_CASE[position]));
                 break;
             case "PHONE":
-                holder.profileIcon.setImageResource(R.drawable.ic_account_black);
+                holder.profileIcon.setImageResource(R.drawable.profile_phone);
                 holder.profileText.setText(profile.get(PROFILE_CASE[position]));
                 break;
-            case "EMAIL":
-                holder.profileIcon.setImageResource(R.drawable.ic_email_black);
-                holder.profileText.setText(profile.get(PROFILE_CASE[position]));
-                break;
+
         }
 
         return convertView;
