@@ -30,6 +30,8 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.ConnectionResult;
@@ -69,7 +71,43 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
     private FacebookCallback<LoginResult> callback = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
-            Toast.makeText(getApplicationContext(),"OK", Toast.LENGTH_SHORT).show();
+            final Person p = new Person();
+            GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                @Override
+                public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
+                    try {
+                        p.setEmail(jsonObject.getString("email"));
+                        p.setFullName(jsonObject.getString("name"));
+                        p.setGender(jsonObject.getString("gender"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            Bundle parameters = new Bundle();
+            parameters.putString("fields", "id,name,email,gender, birthday");
+            request.setParameters(parameters);
+            request.executeAsync();
+            final DBHelper helper = new DBHelper(getApplicationContext());
+            helper.insertPerson(p,DBHelper.USER_FLAG_CURRENT);
+            request = GraphRequest.newMyFriendsRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONArrayCallback() {
+                @Override
+                public void onCompleted(JSONArray jsonArray, GraphResponse graphResponse) {
+                    for (int i = 0; i<jsonArray.length();i++){
+                        Person p = new Person();
+                        try {
+                            JSONObject j = jsonArray.getJSONObject(i);
+                            p.setFullName(j.getString("name"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        helper.insertPerson(p,DBHelper.USER_FLAG_FRIENDS);
+                    }
+                }
+            });
+            request.executeAsync();
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
         }
 
         @Override
@@ -93,7 +131,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         setContentView(R.layout.activity_login);
         callbackManager = CallbackManager.Factory.create();
         LoginButton btn = (LoginButton) findViewById(R.id.facebook_sign_in);
-        btn.setReadPermissions(Arrays.asList("email", "user_friends"));
+        btn.setReadPermissions(Arrays.asList("public_profile, email, user_birthday, user_friends"));
         btn.registerCallback(callbackManager, callback);
         //google plus
 
