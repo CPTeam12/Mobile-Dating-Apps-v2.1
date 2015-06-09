@@ -197,6 +197,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         if (id == R.id.action_settings) {
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
