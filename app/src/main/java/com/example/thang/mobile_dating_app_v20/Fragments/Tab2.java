@@ -57,6 +57,19 @@ public class Tab2 extends Fragment {
         //show spin loader, hide textview
         spiner.setVisibility(View.GONE);
         empty.setVisibility(View.GONE);
+        empty.setText("You have no friend");
+
+        return v;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         DBHelper dbHelper = DBHelper.getInstance(getActivity());
         List<Person> personsList = dbHelper.getAllFriends();
@@ -83,19 +96,6 @@ public class Tab2 extends Fragment {
                 }
             });
         }
-
-
-        return v;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
     }
 
     private class DownloadJSONTask extends AsyncTask<String, Integer, String> {
@@ -135,7 +135,7 @@ public class Tab2 extends Fragment {
                 //start parsing jsonResponse
                 JSONObject jsonObject = new JSONObject(result);
                 List<Person> persons = ConnectionTool.fromJSON(jsonObject);
-                if (!persons.isEmpty()) {
+                if (persons != null) {
                     //insert user's friends into database
                     DBHelper dbHelper = DBHelper.getInstance(getActivity());
                     for (Person person : persons) {
