@@ -72,6 +72,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         @Override
         public void onSuccess(LoginResult loginResult) {
             final Person p = new Person();
+            final DBHelper helper = new DBHelper(getApplicationContext());
             GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                 @Override
                 public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
@@ -80,6 +81,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                         p.setUsername(jsonObject.getString("email"));
                         p.setFullName(jsonObject.getString("name"));
                         p.setGender(jsonObject.getString("gender"));
+                        helper.insertPerson(p, DBHelper.USER_FLAG_CURRENT);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -89,8 +91,6 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
             parameters.putString("fields", "id,name,email,gender, birthday");
             request.setParameters(parameters);
             request.executeAsync();
-            final DBHelper helper = new DBHelper(getApplicationContext());
-            helper.insertPerson(p,DBHelper.USER_FLAG_CURRENT);
             request = GraphRequest.newMyFriendsRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONArrayCallback() {
                 @Override
                 public void onCompleted(JSONArray jsonArray, GraphResponse graphResponse) {
@@ -119,7 +119,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
 
         @Override
         public void onError(FacebookException e) {
-            Toast.makeText(getApplicationContext(),"Error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),e.toString(), Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -137,22 +137,23 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         btn.registerCallback(callbackManager, callback);
         //google plus
 
-//        gac = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
-//                .addOnConnectionFailedListener(this)
-//                .addApi(Plus.API, Plus.PlusOptions.builder().build())
-//                .addScope(Plus.SCOPE_PLUS_LOGIN).build();
-//
-//        gac.connect();
-//        Button mPlusSignInButton = (Button) findViewById(R.id.goolge_sign_in);
-//        mPlusSignInButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (!gac.isConnecting()) {
-//                    mSignInClicked = true;
-//                    resolveSignInError();
-//                }
-//            }
-//        });
+        gac = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Plus.API, Plus.PlusOptions.builder().build())
+                .addScope(Plus.SCOPE_PLUS_LOGIN).build();
+
+        gac.connect();
+        Button mPlusSignInButton = (Button) findViewById(R.id.goolge_sign_in);
+        mPlusSignInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!gac.isConnecting()) {
+                    mSignInClicked = true;
+                    resolveSignInError();
+                }
+            }
+        });
+        gac.connect();
         //check whether this user have already logged in or not
         DBHelper dbHelper = new DBHelper(getApplicationContext());
         Person person = dbHelper.getCurrentUser();
@@ -284,6 +285,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
             person.setFullName(p.getDisplayName());
             int gender = p.getGender();
             person.setEmail(Plus.AccountApi.getAccountName(gac));
+            person.setUsername(Plus.AccountApi.getAccountName(gac));
             person.setAvatar(p.getImage().getUrl());
             //insert to SQLite
             DBHelper dbHelper = new DBHelper(getApplicationContext());
