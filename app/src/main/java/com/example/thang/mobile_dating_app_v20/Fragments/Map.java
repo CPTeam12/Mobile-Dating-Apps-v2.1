@@ -64,7 +64,6 @@ public class Map extends Fragment {
             double latitude = tracker.getLatitude();
             double longitude = tracker.getLongitude();
             LatLng latLng = new LatLng(latitude, longitude);
-            map.addMarker(new MarkerOptions().position(latLng));
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8));
             map.animateCamera(CameraUpdateFactory.zoomTo(18));
 
