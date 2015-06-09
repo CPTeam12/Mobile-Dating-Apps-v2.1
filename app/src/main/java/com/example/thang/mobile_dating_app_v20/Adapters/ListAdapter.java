@@ -83,7 +83,7 @@ public class ListAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Bundle dataBundle = new Bundle();
                 dataBundle.putString("ProfileOf", DBHelper.USER_FLAG_FRIENDS);
-                dataBundle.putString("username", person.getUsername());
+                dataBundle.putString("username", person.getEmail());
                 Intent intent1 = new Intent(context,ProfileActivity.class);
                 intent1.putExtras(dataBundle);
                 context.startActivity(intent1);

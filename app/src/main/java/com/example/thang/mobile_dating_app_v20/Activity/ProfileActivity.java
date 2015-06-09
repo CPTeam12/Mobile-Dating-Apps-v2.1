@@ -87,7 +87,7 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         if (flag.equals(DBHelper.USER_FLAG_CURRENT)) {
             person = dbHelper.getCurrentUser();
         }else{
-            person = dbHelper.getPersonByUsername(bundle.getString("username"));
+            person = dbHelper.getPersonByEmail(bundle.getString("username"));
         }
         setFriendAdapter(listView, person);
         //set icon for fab

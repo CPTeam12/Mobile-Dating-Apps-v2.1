@@ -163,24 +163,24 @@ public class ConnectionTool implements Serializable {
             if (object instanceof JSONObject) {
                 JSONObject jsonObject2 = jsonObject.getJSONObject("data");
                 String fullname = jsonObject2.getString("fullName");
-                String username = jsonObject2.getString("username");
+                //String username = jsonObject2.getString("username");
                 int age = Integer.parseInt(jsonObject2.getString("age"));
                 String email = jsonObject2.getString("email");
                 String gender = jsonObject2.getString("gender");
                 String password = jsonObject2.getString("password");
-                Person person = new Person(username, password, fullname, email, age, gender);
+                Person person = new Person(password, fullname, email, age, gender);
                 persons.add(person);
             } else {
                 JSONArray jsonArray = new JSONArray(data);
                 for (int j = 0; j < jsonArray.length(); j++) {
                     JSONObject jsonObject1 = jsonArray.getJSONObject(j);
                     String fullname = jsonObject1.getString("fullName");
-                    String username = jsonObject1.getString("username");
+                    //String username = jsonObject1.getString("username");
                     int age = Integer.parseInt(jsonObject1.getString("age"));
                     String email = jsonObject1.getString("email");
                     String gender = jsonObject1.getString("gender");
                     String password = jsonObject1.getString("password");
-                    Person person = new Person(username, password, fullname, email, age, gender);
+                    Person person = new Person(password, fullname, email, age, gender);
                     persons.add(person);
                 }
             }

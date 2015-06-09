@@ -63,5 +63,13 @@
     <string name="friend_accept">Accept</string>
     <string name="friend_dismiss">Dismiss</string>
     <string name="no_friend_item">No friend</string>
+    <string name="setting_dating">You are looking for</string>
+    <string name="setting_dating_men">Men</string>
+    <string name="setting_dating_women">Women</string>
+    <string name="setting_dating_hobbie">Person profile</string>
+    <string name="setting_dating_profile_summary">People with these words in their profile</string>
+    <string name="setting_dating_age">Ages</string>
+    <string name="setting_dating_age_summary">Age from</string>
+    <string name="add_friend">Add friend</string>
 
 </resources>

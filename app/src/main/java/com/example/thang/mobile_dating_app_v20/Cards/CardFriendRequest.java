@@ -3,9 +3,7 @@ package com.example.thang.mobile_dating_app_v20.Cards;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.thang.mobile_dating_app_v20.R;
 
@@ -15,7 +13,7 @@ import it.gmariotti.cardslib.library.internal.CardThumbnail;
 /**
  * Created by Thang on 5/26/2015.
  */
-public class CardPerson extends Card {
+public class CardFriendRequest extends Card {
     protected TextView mTitle;
     protected TextView mSecondaryTitle;
     //    protected ImageView mImageView;
@@ -26,11 +24,11 @@ public class CardPerson extends Card {
     protected String secondaryTitle;
 //    protected int imgSource;
 
-    public CardPerson(Context context) {
-        this(context, R.layout.card_customer_inner_layout);
+    public CardFriendRequest(Context context) {
+        this(context, R.layout.card_friendrequest_inner_layout);
     }
 
-    public CardPerson(Context context, int innerLayout) {
+    public CardFriendRequest(Context context, int innerLayout) {
         super(context, innerLayout);
     }
 

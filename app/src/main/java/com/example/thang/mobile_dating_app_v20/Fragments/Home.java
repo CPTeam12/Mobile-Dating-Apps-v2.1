@@ -55,7 +55,6 @@ public class Home extends Fragment implements MaterialTabListener{
             );
         }
 
-
         return v;
     }
 

@@ -7,7 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.thang.mobile_dating_app_v20.Cards.CardPerson;
+import com.example.thang.mobile_dating_app_v20.Cards.CardFriendRecommendation;
+import com.example.thang.mobile_dating_app_v20.Cards.CardFriendRequest;
 import com.example.thang.mobile_dating_app_v20.Cards.MyCardSection;
 import com.example.thang.mobile_dating_app_v20.Cards.SectionAdapter;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
@@ -18,7 +19,6 @@ import java.util.List;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
-import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.view.CardListView;
 
 /**
@@ -47,8 +47,8 @@ public class Tab1 extends Fragment {
 
         //Init an array of Cards
         ArrayList<Card> cards = new ArrayList<Card>();
-        for (int i = 0; i < 10; i++) {
-            CardPerson card = new CardPerson(this.getActivity());
+        for (int i = 0; i < 3; i++) {
+            CardFriendRequest card = new CardFriendRequest(this.getActivity());
             card.setTitle("Person name " + i);
             card.setSecondaryTitle("Description...");
 //            card.setImgSource(R.drawable.avatar);
@@ -56,6 +56,13 @@ public class Tab1 extends Fragment {
             if (i == 5 || i == 6){
                 card.setResourceIdThumbnail(R.drawable.avatar);
             }
+            card.init();
+            cards.add(card);
+        }
+        for (int i = 0; i<10; i++){
+            CardFriendRecommendation card = new CardFriendRecommendation(getActivity());
+            card.setTitle("Recommendation " + i);
+            card.setSecondaryTitle("Description...");
             card.init();
             cards.add(card);
         }

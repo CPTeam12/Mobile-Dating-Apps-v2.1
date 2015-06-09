@@ -12,6 +12,7 @@ import com.example.thang.mobile_dating_app_v20.R;
 
 public class SettingActivity extends ActionBarActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

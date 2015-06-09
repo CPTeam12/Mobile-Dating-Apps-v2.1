@@ -75,7 +75,7 @@ public class Tab2 extends Fragment {
         List<Person> personsList = dbHelper.getAllFriends();
         if (personsList.isEmpty()) {
             //get JSON list friend from webservice and insert into SQLite
-            String urlParams = "username=" + dbHelper.getCurrentUser().getUsername();
+            String urlParams = "email=" + dbHelper.getCurrentUser().getEmail();
             new DownloadJSONTask().execute(HTTP_URL + urlParams);
         } else {
             mAdapter = new ListAdapter(personsList, getActivity());

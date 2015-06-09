@@ -1,27 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sample="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory android:title="@string/setting_notify">
         <SwitchPreference
             android:defaultValue="true"
-            android:summaryOn="@string/setting_notify_on"
+            android:key="setting_notification"
             android:summaryOff="@string/setting_notify_off"
-            android:key="Notification"
-            android:title="@string/setting_notify"/>
+            android:summaryOn="@string/setting_notify_on"
+            android:title="@string/setting_notify" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/setting_privacy">
         <SwitchPreference
             android:defaultValue="false"
-            android:key="prefSendReport"
-            android:summaryOn="@string/setting_privacy_profile_summary_on"
+            android:key="setting_privacy_profile"
             android:summaryOff="@string/setting_privacy_profile_summary_off"
-            android:title="@string/setting_privacy_profile"/>
+            android:summaryOn="@string/setting_privacy_profile_summary_on"
+            android:title="@string/setting_privacy_profile" />
 
         <ListPreference
             android:entries="@array/setting_privacy_location_entries"
             android:entryValues="@array/setting_privacy_location_entries_values"
-            android:key="prefSyncFrequency"
+            android:key="setting_privacy_location"
             android:summary="@string/setting_privacy_location_summary"
-            android:title="@string/setting_privacy_location"/>
+            android:title="@string/setting_privacy_location" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/setting_dating">
+        <CheckBoxPreference
+            android:key="setting_dating_men"
+            android:title="@string/setting_dating_men"/>
+        <CheckBoxPreference
+            android:key="setting_dating_women"
+            android:title="@string/setting_dating_women"/>
+        <EditTextPreference
+            android:key="setting_dating_age"
+            android:title="@string/setting_dating_age"
+            android:summary="@string/setting_dating_age_summary"
+            android:defaultValue="18"
+            android:inputType="number"/>
+
+        <EditTextPreference
+            android:key="setting_dating_profile"
+            android:dialogTitle="@string/setting_dating_profile_summary"
+            android:summary="@string/setting_dating_profile_summary"
+            android:title="@string/setting_dating_hobbie"/>
     </PreferenceCategory>
 </PreferenceScreen>

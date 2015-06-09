@@ -56,7 +56,7 @@ import java.util.List;
 public class LoginActivity extends ActionBarActivity implements GoogleApiClient.OnConnectionFailedListener, ConnectionCallbacks {
     private static final String URL_DOMAIN = "http://datingappservice2.groundctrl.nl/datingapp/Service/auth?";
     private TextView loginError;
-    private MaterialEditText username;
+    private MaterialEditText email;
     private MaterialEditText password;
     private int TIME_OUT = 5000000;
     private MaterialDialog.Builder dialogBuilder;
@@ -78,7 +78,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                 public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
                     try {
                         p.setEmail(jsonObject.getString("email"));
-                        p.setUsername(jsonObject.getString("email"));
+                        //p.setUsername(jsonObject.getString("email"));
                         p.setFullName(jsonObject.getString("name"));
                         p.setGender(jsonObject.getString("gender"));
                         helper.insertPerson(p, DBHelper.USER_FLAG_CURRENT);
@@ -158,7 +158,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         Person person = dbHelper.getCurrentUser();
         if (person.getEmail() == null) {
             loginError = (TextView) findViewById(R.id.login_error);
-            username = (MaterialEditText) findViewById(R.id.login_email);
+            email = (MaterialEditText) findViewById(R.id.login_email);
             password = (MaterialEditText) findViewById(R.id.password);
 
 
@@ -166,7 +166,6 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
             signIn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO: Login function
                     if (validateLogin())
                         checkLogin();
 
@@ -203,13 +202,13 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
     private boolean validateLogin() {
         //username.validate("^(?=\\s*\\S).*$","Username cannot empty.");
         String error = getResources().getString(R.string.error_field_required);
-        boolean a = username.validateWith(new RegexpValidator(error, "^(?=\\s*\\S).*$"));
+        boolean a = email.validateWith(new RegexpValidator(error, "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$"));
         boolean b = password.validateWith(new RegexpValidator(error, "^(?=\\s*\\S).*$"));
         return (a && b);
     }
 
     public void checkLogin() {
-        String urlParams = "username=" + username.getText().toString().trim() +
+        String urlParams = "email=" + email.getText().toString().trim() +
                 "&password=" + password.getText().toString().trim();
         new DownloadTextTask().execute(URL_DOMAIN + urlParams);
     }
@@ -283,8 +282,14 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
             Person person = new Person();
             person.setFullName(p.getDisplayName());
             int gender = p.getGender();
+            if (gender == 0){
+                person.setGender("Male");
+            }else{
+                person.setGender("Female");
+            }
             person.setEmail(Plus.AccountApi.getAccountName(gac));
-            person.setUsername(Plus.AccountApi.getAccountName(gac));
+
+            //person.setUsername(Plus.AccountApi.getAccountName(gac));
             person.setAvatar(p.getImage().getUrl());
             //insert to SQLite
             DBHelper dbHelper = new DBHelper(getApplicationContext());

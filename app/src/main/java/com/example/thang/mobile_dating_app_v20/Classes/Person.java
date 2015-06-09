@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class Person implements Serializable{
     //Profile
-    private String username;
+    //private String username;
     private String password;
     private String fullName;
     private String email;
@@ -40,8 +40,8 @@ public class Person implements Serializable{
 
 
 
-    public Person(String username, String password, String fullName, String email, int age, String gender) {
-        this.username = username;
+    public Person( String password, String fullName, String email, int age, String gender) {
+        //this.username = username;
         this.password = password;
         this.fullName = fullName;
         this.email = email;
@@ -49,13 +49,13 @@ public class Person implements Serializable{
         this.gender = gender;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
+//    public String getUsername() {
+//        return username;
+//    }
+//
+//    public void setUsername(String username) {
+//        this.username = username;
+//    }
 
     public String getPassword() {
         return password;
@@ -147,7 +147,7 @@ public class Person implements Serializable{
 
     @Override
     public String toString(){
-        return "Username: " + username + "; Fullname: " + fullName + "; Gender: " + gender;
+        return " Fullname: " + fullName + "; Gender: " + gender;
     }
 
 
