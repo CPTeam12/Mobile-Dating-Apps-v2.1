@@ -98,7 +98,6 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                         Person p = new Person();
                         try {
                             JSONObject j = jsonArray.getJSONObject(i);
-
                             p.setFullName(j.getString("name"));
                         } catch (JSONException e) {
                             e.printStackTrace();
