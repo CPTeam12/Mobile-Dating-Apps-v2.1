@@ -85,6 +85,7 @@ public class Map extends Fragment {
 
     private class DownloadJSONTask extends AsyncTask<Person, Void, JSONObject> {
         private Person ppl;
+        Utils u = new Utils();
         @Override
         protected void onPreExecute() {
         }
@@ -121,7 +122,13 @@ public class Map extends Fragment {
                     JSONObject jobj = result.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0).getJSONObject("distance");
                     int distance = jobj.getInt("value");
                     if(distance < 1000){
-                        map.addMarker(new MarkerOptions().position(new LatLng(ppl.getLatitude(),ppl.getLongitude())));
+                        MarkerOptions options = new MarkerOptions()
+                                .position(new LatLng(ppl.getLatitude(),ppl.getLongitude()))
+                                .title("I'm Here")
+                                .icon(BitmapDescriptorFactory
+                                        .fromBitmap(u.getCircleBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.avatar)))).anchor(0.5f, 1);
+
+                        map.addMarker(options);
                     }
                 }
                 catch (Exception e)
