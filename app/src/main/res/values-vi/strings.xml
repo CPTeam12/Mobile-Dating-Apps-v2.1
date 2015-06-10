@@ -63,5 +63,4 @@
     <string name="register_gender_male">Nam</string>
     <string name="register_back_login">Đã có tài khoản ? <b>Đăng nhập</b></string>
     <string name="action_register">Chưa có tài khoản ? <b>Đăng ký</b></string>
-
 </resources>
