@@ -14,8 +14,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingTop="40dp">
+            android:paddingRight="20dp">
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@mipmap/ic_launcher" />
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/register_email"
                 android:layout_width="match_parent"
