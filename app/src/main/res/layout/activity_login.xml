@@ -84,8 +84,6 @@
                         app:met_primaryColor="@color/md_white_1000"
                         app:met_errorColor="#ffdd4c3a"
                         app:met_textColorHint="@color/md_white_1000"/>
-
-
                     <TextView
                         android:id="@+id/login_error"
                         android:layout_width="fill_parent"
@@ -105,7 +103,16 @@
                         android:text="@string/action_sign_in"
                         android:textColor="#ffffff"
                         android:textStyle="bold" />
-
+                    <Button
+                        android:id="@+id/register_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@android:color/transparent"
+                        android:textColor="#ffffff"
+                        android:textAllCaps="false"
+                        android:text="@string/action_register"
+                        style="?android:attr/borderlessButtonStyle"/>
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
