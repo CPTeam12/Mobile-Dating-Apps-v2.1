@@ -373,7 +373,6 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         }
     }
 
-
     private void resolveSignInError() {
         if (cr.hasResolution()) {
             try {
