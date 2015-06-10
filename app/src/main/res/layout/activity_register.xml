@@ -1,0 +1,151 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/blue"
+    tools:context="com.example.thang.mobile_dating_app_v20.Activity.RegisterActivity">
+
+    <ScrollView
+        android:id="@+id/login_form"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="40dp">
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/register_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/prompt_email"
+                app:met_baseColor="@color/md_white_1000"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/md_white_1000"
+                app:met_errorColor="#ffdd4c3a"
+                app:met_textColorHint="@color/md_white_1000"/>
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/register_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/prompt_password"
+                android:inputType="textPassword"
+                app:met_baseColor="@color/md_white_1000"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/md_white_1000"
+                app:met_errorColor="#ffdd4c3a"
+                app:met_textColorHint="@color/md_white_1000"/>
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/register_confirm_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/prompt_confirm_password"
+                android:inputType="textPassword"
+                app:met_baseColor="@color/md_white_1000"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/md_white_1000"
+                app:met_errorColor="#ffdd4c3a"
+                app:met_textColorHint="@color/md_white_1000"/>
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/register_fullname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/prompt_fullname"
+                app:met_baseColor="@color/md_white_1000"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/md_white_1000"
+                app:met_errorColor="#ffdd4c3a"
+                app:met_textColorHint="@color/md_white_1000"/>
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/register_birthyear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/prompt_yearbirth"
+                android:inputType="date"
+                app:met_baseColor="@color/md_white_1000"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/md_white_1000"
+                app:met_errorColor="#ffdd4c3a"
+                app:met_textColorHint="@color/md_white_1000"/>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/register_gender"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="20dp"/>
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="16dp"
+                    android:weightSum="1"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/register_male"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:checked="true"
+                        android:layout_marginLeft="20dp"
+                        android:textSize="16dp"
+                        android:text="@string/register_gender_male"
+                        android:textColor="@color/white"
+                        android:buttonTint="@color/md_blue_800"/>
+                    <RadioButton
+                        android:id="@+id/register_female"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:checked="false"
+                        android:layout_marginLeft="20dp"
+                        android:textSize="16dp"
+                        android:text="@string/register_gender_female"
+                        android:textColor="@color/white"/>
+                </RadioGroup>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/register_policy"
+                android:textColor="@color/white"
+                android:id="@+id/textView2"
+                android:layout_gravity="center_horizontal" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="16dp"
+                android:background="#ce2aa7d6"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:text="@string/register_reg"
+                android:id="@+id/register_accept"
+                android:layout_gravity="center_horizontal" />
+
+            <Button
+                android:id="@+id/register_back_login"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="16dp"
+                android:background="@android:color/transparent"
+                android:textColor="#ffffff"
+                android:textAllCaps="false"
+                android:text="@string/action_register"
+                style="?android:attr/borderlessButtonStyle"/>
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>
