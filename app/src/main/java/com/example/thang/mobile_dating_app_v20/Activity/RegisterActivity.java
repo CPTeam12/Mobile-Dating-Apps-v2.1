@@ -1,5 +1,6 @@
 package com.example.thang.mobile_dating_app_v20.Activity;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,6 +12,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -28,7 +30,7 @@ public class RegisterActivity extends ActionBarActivity {
     MaterialEditText fullname;
     MaterialEditText birthyear;
     RadioButton male, female;
-    Button accept;
+    Button accept, back;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +42,7 @@ public class RegisterActivity extends ActionBarActivity {
         birthyear = (MaterialEditText) findViewById(R.id.register_birthyear);
         male = (RadioButton) findViewById(R.id.register_male);
         female = (RadioButton) findViewById(R.id.register_female);
+        back = (Button) findViewById(R.id.register_back_login);
         accept = (Button) findViewById(R.id.register_accept);
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,14 +58,23 @@ public class RegisterActivity extends ActionBarActivity {
                     } else {
                         person.setGender("Female");
                     }
+                    DBHelper helper = new DBHelper(getApplicationContext());
+                    helper.insertPerson(person,DBHelper.USER_FLAG_CURRENT);
                 }
             }
         });
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
         Bundle bundle = getIntent().getExtras();
-        if(!bundle.isEmpty()){
-            email.setText(bundle.getString(""));
-            fullname.setText(bundle.getString(""));
-            birthyear.setText("");
+        if(bundle!=null){
+            email.setText(bundle.getString("email"));
+            fullname.setText(bundle.getString("name"));
+            birthyear.setText(bundle.getString(""));
             String a = "";
         }
     }
@@ -96,7 +108,7 @@ public class RegisterActivity extends ActionBarActivity {
         boolean b = password.validateWith(new RegexpValidator(error, "^(?=\\s*\\S).*$"));
         boolean c = confirm_password.validateWith(new RegexpValidator(error, "^(?=\\s*\\S).*$"));
         boolean d = fullname.validateWith(new RegexpValidator(error, "^(?=\\s*\\S).*$"));
-        boolean e = birthyear.validateWith(new RegexpValidator("Only Number Please !", "^[A-Z._%+-]+@[A-Z.-]+\\.[A-Z]{2,6}$"));
+        boolean e = birthyear.validateWith(new RegexpValidator("Only Number Please !", "^(\\d{1,4})([\\.|,]\\d{1,2})?$"));
         return (a && b && c && d && e);
     }
 }
