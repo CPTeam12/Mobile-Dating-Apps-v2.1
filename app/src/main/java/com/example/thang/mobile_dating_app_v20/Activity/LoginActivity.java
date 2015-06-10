@@ -80,9 +80,8 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                         p.setEmail(jsonObject.getString("email"));
                         p.setFullName(jsonObject.getString("name"));
                         p.setGender(jsonObject.getString("gender"));
-                        p.setFacebookId(jsonObject.getInt("id"));
                         // TODO : checking existed account's email on service
-
+                        ConnectionTool tool = new ConnectionTool();
                         helper.insertPerson(p, DBHelper.USER_FLAG_CURRENT);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -116,7 +115,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
 
         @Override
         public void onCancel() {
-            Toast.makeText(getApplicationContext(),"alo", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"Cancel", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -143,6 +142,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                 .addOnConnectionFailedListener(this)
                 .addApi(Plus.API, Plus.PlusOptions.builder().build())
                 .addScope(Plus.SCOPE_PLUS_LOGIN).build();
+
         gac.connect();
         Button mPlusSignInButton = (Button) findViewById(R.id.goolge_sign_in);
         mPlusSignInButton.setOnClickListener(new View.OnClickListener() {
@@ -175,7 +175,6 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
             signIn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO: Login function
                     if (validateLogin())
                         checkLogin();
 
@@ -212,13 +211,13 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
     private boolean validateLogin() {
         //username.validate("^(?=\\s*\\S).*$","Username cannot empty.");
         String error = getResources().getString(R.string.error_field_required);
-        boolean a = email.validateWith(new RegexpValidator(error, "^(?=\\s*\\S).*$"));
+        boolean a = email.validateWith(new RegexpValidator(error, "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$"));
         boolean b = password.validateWith(new RegexpValidator(error, "^(?=\\s*\\S).*$"));
         return (a && b);
     }
 
     public void checkLogin() {
-        String urlParams = "username=" + email.getText().toString().trim() +
+        String urlParams = "email=" + email.getText().toString().trim() +
                 "&password=" + password.getText().toString().trim();
         new DownloadTextTask().execute(URL_DOMAIN + urlParams);
     }
@@ -279,66 +278,8 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
             }
         }
     }
+
 //    KhuongMH
-
-    private class checkExistedAccount extends AsyncTask<String, Integer, String>{
-        Person person = new Person();
-
-        public checkExistedAccount(Person person){
-            this.person = person;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            ConnectionTool connectionTool = new ConnectionTool(LoginActivity.this);
-            if (connectionTool.isNetworkAvailable()) {
-                dialogBuilder = new MaterialDialog.Builder(LoginActivity.this)
-                        .cancelable(false)
-                        .content(R.string.progress_dialog)
-                        .progress(true, 0);
-                materialDialog = dialogBuilder.build();
-                materialDialog.show();
-
-            } else {
-                new MaterialDialog.Builder(LoginActivity.this)
-                        .title(R.string.error_connection_title)
-                        .content(R.string.error_connection)
-                        .titleColorRes(R.color.md_red_400)
-                        .show();
-            }
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            int i = 0;
-            return ConnectionTool.readJSONFeed(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            try {
-                //close loading dialog
-                if(materialDialog != null){
-                    materialDialog.dismiss();
-                }
-                //start parsing jsonResponse
-                JSONObject jsonObject = new JSONObject(result);
-                List<Person> personList = ConnectionTool.fromJSON(jsonObject);
-                if(personList.size() == 0){
-                    Bundle bundle = new Bundle();
-                    bundle.putString("email", person.getEmail());
-                    bundle.putString("name",person.getFullName());
-                    bundle.putString("gender",person.getGender());
-                    bundle.putString("id",person.getFacebookId() + "");
-                    Intent intent = new Intent(LoginActivity.this,RegisterActivity.class);
-                    intent.putExtra("package", bundle);
-                    startActivity(intent);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -350,13 +291,14 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
             Person person = new Person();
             person.setFullName(p.getDisplayName());
             int gender = p.getGender();
-            if(gender == 0){
-                person.setGender("male");
-            }
-            else{
-                person.setGender("female");
+            if (gender == 0){
+                person.setGender("Male");
+            }else{
+                person.setGender("Female");
             }
             person.setEmail(Plus.AccountApi.getAccountName(gac));
+
+            //person.setUsername(Plus.AccountApi.getAccountName(gac));
             person.setAvatar(p.getImage().getUrl());
             //insert to SQLite
             DBHelper dbHelper = new DBHelper(getApplicationContext());
@@ -441,4 +383,5 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
             }
         }
     }
+
 }

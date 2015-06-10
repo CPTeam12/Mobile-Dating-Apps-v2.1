@@ -1,10 +1,12 @@
 package com.example.thang.mobile_dating_app_v20.Activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +33,11 @@ public class MainActivity extends ActionBarActivity {
     public Drawer.Result result = null;
 
     @Override
+    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+        return super.onCreateView(parent, name, context, attrs);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -38,22 +45,33 @@ public class MainActivity extends ActionBarActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         //get current Account from database
-        DBHelper dbHelper = DBHelper.getInstance(this);
+        DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
         Person person = dbHelper.getCurrentUser();
+        String email;
+        String fullname;
+        email = person.getEmail();
+        fullname = person.getFullName();
 
         AccountHeader.Result headerResult = new AccountHeader()
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.blueboken)
                 .addProfiles(new ProfileDrawerItem().
-                        withName(person.getFullName()).
-                        withEmail(person.getEmail()).
+                        withName(fullname).
+                        withEmail(email).
                         withIcon(getResources().getDrawable(R.drawable.avatar)))
-                .withOnAccountHeaderSelectionViewClickListener(new AccountHeader.OnAccountHeaderSelectionViewClickListener() {
-                    @Override
-                    public boolean onClick(View view, IProfile iProfile) {
-                        return false;
-                    }
-                })
+//                .withOnAccountHeaderSelectionViewClickListener(new AccountHeader.OnAccountHeaderSelectionViewClickListener() {
+//                    @Override
+//                    public boolean onClick(View view, IProfile iProfile) {
+//                        result.closeDrawer();
+//                        Bundle dataBundle = new Bundle();
+//                        dataBundle.putString("ProfileOf", DBHelper.USER_FLAG_CURRENT);
+//                        Intent intent1 = new Intent(getApplicationContext(), ProfileActivity.class);
+//                        intent1.putExtras(dataBundle);
+//                        startActivity(intent1);
+//
+//                        return true;
+//                    }
+//                })
                 .build();
 
         result = new Drawer()
