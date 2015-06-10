@@ -194,12 +194,12 @@ public class ConnectionTool implements Serializable {
         return persons;
     }
 
-    public static void sendJson(String url, List<Person> persons){
+    public static void sendJson(String url, Person person){
         HttpURLConnection urlConnection;
         String result = null;
 
         Gson gson = new Gson();
-        result = gson.toJson(persons);
+        result = gson.toJson(person);
 
         try {
             //connect
