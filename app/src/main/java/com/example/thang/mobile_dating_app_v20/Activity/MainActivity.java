@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
+import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.Fragments.Setting;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -36,13 +37,16 @@ public class MainActivity extends ActionBarActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
+        //get current Account from database
+        DBHelper dbHelper = DBHelper.getInstance(this);
+        Person person = dbHelper.getCurrentUser();
 
         AccountHeader.Result headerResult = new AccountHeader()
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.blueboken)
                 .addProfiles(new ProfileDrawerItem().
-                        withName("ThangPham").
-                        withEmail("phamvanthang310@gmail.com").
+                        withName(person.getFullName()).
+                        withEmail(person.getEmail()).
                         withIcon(getResources().getDrawable(R.drawable.avatar)))
                 .withOnAccountHeaderSelectionViewClickListener(new AccountHeader.OnAccountHeaderSelectionViewClickListener() {
                     @Override
@@ -81,7 +85,7 @@ public class MainActivity extends ActionBarActivity {
                                 case 2:
                                     Bundle dataBundle = new Bundle();
                                     dataBundle.putString("ProfileOf", DBHelper.USER_FLAG_CURRENT);
-                                    Intent intent1 = new Intent(getApplicationContext(),ProfileActivity.class);
+                                    Intent intent1 = new Intent(getApplicationContext(), ProfileActivity.class);
                                     intent1.putExtras(dataBundle);
                                     startActivity(intent1);
                                     break;
@@ -89,11 +93,11 @@ public class MainActivity extends ActionBarActivity {
                                     switchFragment(3, "", "");
                                     break;
                                 case 4:
-                                    Intent intent3 = new Intent(getApplicationContext(),TestActivity.class);
+                                    Intent intent3 = new Intent(getApplicationContext(), TestActivity.class);
                                     startActivity(intent3);
                                     break;
                                 case 5:
-                                    Intent intent2 = new Intent(getApplicationContext(),SettingActivity.class);
+                                    Intent intent2 = new Intent(getApplicationContext(), SettingActivity.class);
                                     startActivity(intent2);
                                     break;
                             }

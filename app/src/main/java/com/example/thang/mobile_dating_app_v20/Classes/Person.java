@@ -23,6 +23,11 @@ public class Person implements Serializable{
     private int phone;
     private String address;
 
+    //facebook
+    private int facebookId;
+
+
+
     //Position
     private double longitude;
     private double latitude;
@@ -57,6 +62,13 @@ public class Person implements Serializable{
 //        this.username = username;
 //    }
 
+    public int getFacebookId() {
+        return facebookId;
+    }
+
+    public void setFacebookId(int facebookId) {
+        this.facebookId = facebookId;
+    }
     public String getPassword() {
         return password;
     }

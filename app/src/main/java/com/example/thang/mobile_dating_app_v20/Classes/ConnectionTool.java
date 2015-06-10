@@ -5,6 +5,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -18,10 +21,14 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -47,9 +54,6 @@ public class ConnectionTool implements Serializable {
         int response = -1;
         URL url = new URL(urlString);
         URLConnection con = url.openConnection();
-
-
-
 
         if (!(con instanceof HttpURLConnection)) {
             throw new IOException("Http connection is required");
@@ -188,5 +192,33 @@ public class ConnectionTool implements Serializable {
             return null;
         }
         return persons;
+    }
+
+    public static void sendJson(String url, List<Person> persons){
+        HttpURLConnection urlConnection;
+        String result = null;
+
+        Gson gson = new Gson();
+        result = gson.toJson(persons);
+
+        try {
+            //connect
+            urlConnection = (HttpURLConnection)(new URL(url).openConnection());
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestProperty("Content-Type", "application/json");
+            urlConnection.setRequestProperty("Accept", "application/json");
+            urlConnection.setRequestMethod("POST");
+            urlConnection.connect();
+
+            //write
+            OutputStream outputStream = urlConnection.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+            writer.write(result);
+            writer.close();
+            outputStream.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
