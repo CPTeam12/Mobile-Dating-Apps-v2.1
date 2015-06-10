@@ -53,7 +53,7 @@
     <string name="setting_dating_age">Độ tuổi</string>
     <string name="setting_dating_age_summary">Những người có độ tuổi từ</string>
     <string name="add_friend">kết bạn</string>
-    <string name="register_policy">Khi nhấp "Chấp nhận và đăng nhập" là bạn đã đồng ý với Điều khoản dịch vụ và chính sách bảo mật của chúng tôi.</string>
+    <string name="register_policy">Khi nhấn "TẠO TÀI KHOẢN" là bạn đã đồng ý với Điều khoản dịch vụ và chính sách bảo mật của chúng tôi.</string>
     <string name="register_reg">Tạo Tài Khoản</string>
     <string name="prompt_fullname">Tên đầy đủ</string>
     <string name="prompt_yearbirth">Năm Sinh </string>

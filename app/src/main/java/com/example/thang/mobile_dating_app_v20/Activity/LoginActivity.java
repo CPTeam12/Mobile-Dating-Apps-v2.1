@@ -1,18 +1,23 @@
 package com.example.thang.mobile_dating_app_v20.Activity;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -78,6 +83,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                         person.setFullName(jsonObject.getString("name"));
                         person.setGender(jsonObject.getString("gender"));
                         // TODO : checking existed account's email on service
+                        ConnectionTool tool = new ConnectionTool();
                         helper.insertPerson(person, DBHelper.USER_FLAG_CURRENT);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -176,7 +182,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
 
                 }
             });
-        } else {
+        }else{
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
         }
