@@ -54,7 +54,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class LoginActivity extends ActionBarActivity implements GoogleApiClient.OnConnectionFailedListener, ConnectionCallbacks {
-    private static final String URL_DOMAIN = "http://datingappservice2.groundctrl.nl/datingapp/Service/auth?";
+    private static final String URL_AUTH = "http://datingappservice2.groundctrl.nl/datingapp/Service/auth?";
+    private static final String URL_CHECK_FB = "http://datingappservice2.groundctrl.nl/datingapp/Service/facebook";
     private TextView loginError;
     private MaterialEditText email;
     private MaterialEditText password;
@@ -71,18 +72,18 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
     private FacebookCallback<LoginResult> callback = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
-            final Person p = new Person();
-            final DBHelper helper = new DBHelper(getApplicationContext());
+            final Person person = new Person();
+            final DBHelper helper = DBHelper.getInstance(getApplicationContext());
             GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                 @Override
                 public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
                     try {
-                        p.setEmail(jsonObject.getString("email"));
-                        p.setFullName(jsonObject.getString("name"));
-                        p.setGender(jsonObject.getString("gender"));
+                        person.setEmail(jsonObject.getString("email"));
+                        person.setFullName(jsonObject.getString("name"));
+                        person.setGender(jsonObject.getString("gender"));
                         // TODO : checking existed account's email on service
                         ConnectionTool tool = new ConnectionTool();
-                        helper.insertPerson(p, DBHelper.USER_FLAG_CURRENT);
+                        helper.insertPerson(person, DBHelper.USER_FLAG_CURRENT);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -96,7 +97,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
             request = GraphRequest.newMyFriendsRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONArrayCallback() {
                 @Override
                 public void onCompleted(JSONArray jsonArray, GraphResponse graphResponse) {
-                    for (int i = 0; i<jsonArray.length();i++){
+                    for (int i = 0; i < jsonArray.length(); i++) {
                         Person p = new Person();
                         try {
                             JSONObject j = jsonArray.getJSONObject(i);
@@ -116,12 +117,12 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
 
         @Override
         public void onCancel() {
-            Toast.makeText(getApplicationContext(),"Cancel", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Cancel", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onError(FacebookException e) {
-            Toast.makeText(getApplicationContext(),e.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -180,7 +181,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
 
                 }
             });
-        }else{
+        } else {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
         }
@@ -219,7 +220,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
     public void checkLogin() {
         String urlParams = "username=" + email.getText().toString().trim() +
                 "&password=" + password.getText().toString().trim();
-        new DownloadTextTask().execute(URL_DOMAIN + urlParams);
+        new DownloadTextTask().execute(URL_AUTH + urlParams);
     }
 
     private class DownloadTextTask extends AsyncTask<String, Integer, String> {
@@ -254,7 +255,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         protected void onPostExecute(String result) {
             try {
                 //close loading dialog
-                if(materialDialog != null){
+                if (materialDialog != null) {
                     materialDialog.dismiss();
                 }
                 //start parsing jsonResponse
@@ -263,7 +264,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                 if (personList != null) {
                     //insert current user into database
                     DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
-                    dbHelper.insertPerson(personList.get(0),dbHelper.USER_FLAG_CURRENT);
+                    dbHelper.insertPerson(personList.get(0), dbHelper.USER_FLAG_CURRENT);
 
                     //move to main activity
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -287,14 +288,14 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         mSignInClicked = false;
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 
-        if (Plus.PeopleApi.getCurrentPerson(gac) != null){
+        if (Plus.PeopleApi.getCurrentPerson(gac) != null) {
             com.google.android.gms.plus.model.people.Person p = Plus.PeopleApi.getCurrentPerson(gac);
             Person person = new Person();
             person.setFullName(p.getDisplayName());
             int gender = p.getGender();
-            if (gender == 0){
+            if (gender == 0) {
                 person.setGender("Male");
-            }else{
+            } else {
                 person.setGender("Female");
             }
             person.setEmail(Plus.AccountApi.getAccountName(gac));
@@ -332,7 +333,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.e("debug",connectionResult.getErrorCode()+"");
+        Log.e("debug", connectionResult.getErrorCode() + "");
         if (!connectionResult.hasResolution()) {
             GooglePlayServicesUtil.getErrorDialog(connectionResult.getErrorCode(), LoginActivity.this, 0).show();
             return;
