@@ -78,9 +78,9 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                 public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
                     try {
                         p.setEmail(jsonObject.getString("email"));
-                        //p.setUsername(jsonObject.getString("email"));
                         p.setFullName(jsonObject.getString("name"));
                         p.setGender(jsonObject.getString("gender"));
+                        // TODO : checking existed account's email on service
                         helper.insertPerson(p, DBHelper.USER_FLAG_CURRENT);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -162,7 +162,14 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
             email = (MaterialEditText) findViewById(R.id.login_email);
             password = (MaterialEditText) findViewById(R.id.password);
 
-
+            Button register = (Button) findViewById(R.id.register_button);
+            register.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                    startActivity(intent);
+                }
+            });
             Button signIn = (Button) findViewById(R.id.email_sign_in_button);
             signIn.setOnClickListener(new View.OnClickListener() {
                 @Override
