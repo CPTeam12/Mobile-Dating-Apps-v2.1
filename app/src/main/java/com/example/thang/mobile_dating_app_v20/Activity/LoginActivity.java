@@ -81,6 +81,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                         p.setFullName(jsonObject.getString("name"));
                         p.setGender(jsonObject.getString("gender"));
                         // TODO : checking existed account's email on service
+                        ConnectionTool tool = new ConnectionTool();
                         helper.insertPerson(p, DBHelper.USER_FLAG_CURRENT);
                     } catch (JSONException e) {
                         e.printStackTrace();
