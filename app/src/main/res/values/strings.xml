@@ -63,8 +63,6 @@
     <string name="register_back_login">Already have account ? <b>Sign in</b></string>
     <!--facebook login-->
     <string name="facebook_app_id">935300426536787</string>
-    <string name="com_facebook_loginview_log_in_button">Connect</string>
-    <string name="com_facebook_loginview_log_out_button">Your Logout</string>
     <!-- Profile-->
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="card_section_request">Friend requests</string>

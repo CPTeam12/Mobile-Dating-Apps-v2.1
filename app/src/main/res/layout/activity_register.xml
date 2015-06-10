@@ -20,6 +20,7 @@
                 android:layout_height="100dp"
                 android:layout_gravity="center_horizontal"
                 android:src="@mipmap/ic_launcher" />
+
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/register_email"
                 android:layout_width="match_parent"
@@ -147,7 +148,7 @@
                 android:background="@android:color/transparent"
                 android:textColor="#ffffff"
                 android:textAllCaps="false"
-                android:text="@string/action_register"
+                android:text="@string/register_back_login"
                 style="?android:attr/borderlessButtonStyle"/>
         </LinearLayout>
     </ScrollView>

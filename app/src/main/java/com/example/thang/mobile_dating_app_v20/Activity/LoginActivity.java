@@ -101,6 +101,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                         try {
                             JSONObject j = jsonArray.getJSONObject(i);
                             p.setFullName(j.getString("name"));
+                            p.setFacebookId(j.getInt("id"));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -154,7 +155,6 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                 }
             }
         });
-        gac.connect();
         //check whether this user have already logged in or not
         DBHelper dbHelper = new DBHelper(getApplicationContext());
         Person person = dbHelper.getCurrentUser();
@@ -211,13 +211,13 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
     private boolean validateLogin() {
         //username.validate("^(?=\\s*\\S).*$","Username cannot empty.");
         String error = getResources().getString(R.string.error_field_required);
-        boolean a = email.validateWith(new RegexpValidator(error, "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$"));
+        boolean a = email.validateWith(new RegexpValidator(error, "^(?=\\s*\\S).*$"));
         boolean b = password.validateWith(new RegexpValidator(error, "^(?=\\s*\\S).*$"));
         return (a && b);
     }
 
     public void checkLogin() {
-        String urlParams = "email=" + email.getText().toString().trim() +
+        String urlParams = "username=" + email.getText().toString().trim() +
                 "&password=" + password.getText().toString().trim();
         new DownloadTextTask().execute(URL_DOMAIN + urlParams);
     }
@@ -279,6 +279,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         }
     }
 
+
 //    KhuongMH
 
     @Override
@@ -306,6 +307,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         }
         startActivity(intent);
     }
+
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -383,5 +385,4 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
             }
         }
     }
-
 }
