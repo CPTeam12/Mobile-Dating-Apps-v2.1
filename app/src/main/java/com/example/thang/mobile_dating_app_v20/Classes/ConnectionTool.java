@@ -194,7 +194,7 @@ public class ConnectionTool implements Serializable {
         return persons;
     }
 
-    public static void sendJson(String url, Person person){
+    public static String makeRequest(String url, Person person){
         HttpURLConnection urlConnection;
         String result = null;
 
@@ -217,8 +217,23 @@ public class ConnectionTool implements Serializable {
             writer.close();
             outputStream.close();
 
+            //Read
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
+
+            String line = null;
+            StringBuilder sb = new StringBuilder();
+
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+
+            bufferedReader.close();
+            result = sb.toString();
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return result;
     }
 }

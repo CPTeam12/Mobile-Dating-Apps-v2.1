@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Toast;
@@ -29,13 +30,20 @@ public class Setting extends PreferenceFragment implements SharedPreferences.OnS
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
+        Toast.makeText(getActivity(), "Some thing changed", Toast.LENGTH_LONG);
     }
+
 
     @Override
     public void onPause() {
         super.onPause();
         //TODO: code onPause for preference setting
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        boolean dating_men = sharedPref.getBoolean(Setting.KEY_SETTING_DATTING_MEN, false);
+        boolean dating_women = sharedPref.getBoolean(Setting.KEY_SETTING_DATTING_WOMEN, false);
+        String age = sharedPref.getString(Setting.KEY_SETTING_DATTING_AGE,"").toString();
+        String profile = sharedPref.getString(Setting.KEY_SETTING_DATTING_PROFILE,"").toString();
+        String location = sharedPref.getString(Setting.KEY_SETTING_PRIVACY_LOCATION,"").toString();
         Toast.makeText(getActivity(), "Pause", Toast.LENGTH_LONG);
     }
 }

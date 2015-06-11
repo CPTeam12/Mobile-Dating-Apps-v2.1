@@ -56,6 +56,7 @@ import java.util.List;
 public class LoginActivity extends ActionBarActivity implements GoogleApiClient.OnConnectionFailedListener, ConnectionCallbacks {
     private static final String URL_AUTH = "http://datingappservice2.groundctrl.nl/datingapp/Service/auth?";
     private static final String URL_CHECK_FB = "http://datingappservice2.groundctrl.nl/datingapp/Service/facebook";
+
     private TextView loginError;
     private MaterialEditText email;
     private MaterialEditText password;
@@ -212,13 +213,14 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
     private boolean validateLogin() {
         //username.validate("^(?=\\s*\\S).*$","Username cannot empty.");
         String error = getResources().getString(R.string.error_field_required);
+        //boolean a = email.validateWith(new RegexpValidator(error, "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$"));
         boolean a = email.validateWith(new RegexpValidator(error, "^(?=\\s*\\S).*$"));
         boolean b = password.validateWith(new RegexpValidator(error, "^(?=\\s*\\S).*$"));
         return (a && b);
     }
 
     public void checkLogin() {
-        String urlParams = "username=" + email.getText().toString().trim() +
+        String urlParams = "email=" + email.getText().toString().trim() +
                 "&password=" + password.getText().toString().trim();
         new DownloadTextTask().execute(URL_AUTH + urlParams);
     }
@@ -280,7 +282,6 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         }
     }
 
-
 //    KhuongMH
 
     @Override
@@ -308,7 +309,6 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         }
         startActivity(intent);
     }
-
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -374,7 +374,6 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         }
     }
 
-
     private void resolveSignInError() {
         if (cr.hasResolution()) {
             try {
@@ -386,4 +385,5 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
             }
         }
     }
+
 }

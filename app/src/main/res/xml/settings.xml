@@ -12,13 +12,14 @@
 
     <PreferenceCategory android:title="@string/setting_privacy">
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="setting_privacy_profile"
             android:summaryOff="@string/setting_privacy_profile_summary_off"
             android:summaryOn="@string/setting_privacy_profile_summary_on"
             android:title="@string/setting_privacy_profile" />
 
         <ListPreference
+            android:defaultValue="3"
             android:entries="@array/setting_privacy_location_entries"
             android:entryValues="@array/setting_privacy_location_entries_values"
             android:key="setting_privacy_location"
@@ -28,9 +29,11 @@
 
     <PreferenceCategory android:title="@string/setting_dating">
         <CheckBoxPreference
+
             android:key="setting_dating_men"
             android:title="@string/setting_dating_men"/>
         <CheckBoxPreference
+
             android:key="setting_dating_women"
             android:title="@string/setting_dating_women"/>
         <EditTextPreference
