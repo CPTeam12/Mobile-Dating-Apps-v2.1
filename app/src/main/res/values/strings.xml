@@ -55,12 +55,24 @@
     <string name="prompt_username">Username</string>
     <string name="prompt_fullname">Full Name</string>
     <string name="prompt_yearbirth">Birth Year</string>
-    <string name="register_policy">By clicking "Accept And Login", you agree you have read and consent to our policies.</string>
+    <string name="register_policy">By clicking "Create a account", you agree you have read and consent to our policies.</string>
     <string name="register_reg">Create a Account</string>
     <string name="register_gender">Gender</string>
     <string name="register_gender_male">Male</string>
     <string name="register_gender_female">Female</string>
     <string name="register_back_login">Already have account ? <b>Sign in</b></string>
+    <string name="register_dating">Friend\'s Gender</string>
+    <string name="register_hobby">Your Hobbies</string>
+    <string-array name="register_hobbies">
+        <item>Music</item>
+        <item>Noob</item>
+        <item>Newbie</item>
+        <item>Stupid</item>
+        <item>KhuongMH</item>
+        <item>Hello</item>
+        <item>Bye Bye</item>
+    </string-array>
+    <string name="register_datingage">Minimum Dating Age</string>
     <!--facebook login-->
     <string name="facebook_app_id">935300426536787</string>
     <!-- Profile-->

@@ -196,6 +196,35 @@ public class ConnectionTool implements Serializable {
         return persons;
     }
 
+    public static boolean sendPersonRegister(String url, List<Person> persons){
+        HttpURLConnection urlConnection;
+        String result = null;
+        String data = null;
+
+        Gson gson = new Gson();
+        data = gson.toJson(persons);
+        try {
+            //connect
+            urlConnection = (HttpURLConnection)(new URL(url).openConnection());
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestProperty("Content-type", "application/json");
+            urlConnection.setRequestProperty("Accept", "application/json");
+            urlConnection.setRequestMethod("POST");
+            urlConnection.connect();
+
+            //write
+            OutputStream outputStream = urlConnection.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+            writer.write(data);
+            writer.close();
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     public static String makePostRequest(String url, List<Person> persons){
         HttpURLConnection urlConnection;
         String result = null;

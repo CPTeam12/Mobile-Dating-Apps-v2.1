@@ -97,7 +97,7 @@
                     android:orientation="horizontal">
 
                     <RadioButton
-                        android:id="@+id/register_male"
+                        android:id="@+id/register_male_rb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
@@ -108,7 +108,7 @@
                         android:textColor="@color/white"
                         android:buttonTint="@color/md_blue_800"/>
                     <RadioButton
-                        android:id="@+id/register_female"
+                        android:id="@+id/register_female_rb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
@@ -120,6 +120,61 @@
                 </RadioGroup>
             </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/register_dating"
+                android:textColor="@color/white"
+                android:layout_marginTop="1dp"/>
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/register_male_cb"
+                android:layout_marginLeft="20dp"
+                android:textSize="16dp"
+                android:text="@string/setting_dating_men"
+                android:textColor="@color/white"
+                android:buttonTint="@color/md_blue_800"/>
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/register_female_cb"
+                android:layout_marginLeft="20dp"
+                android:textSize="16dp"
+                android:text="@string/setting_dating_women"
+                android:textColor="@color/white"
+                android:buttonTint="@color/md_blue_800"/>
+        </LinearLayout>
+
+            <MultiAutoCompleteTextView
+                android:id="@+id/register_hobby"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/register_hobby"
+                android:textColor="@color/md_white_1000"
+                android:completionThreshold="1"
+                android:layout_marginTop="5dp"/>
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/register_datingage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/register_datingage"
+                android:inputType="date"
+                app:met_baseColor="@color/md_white_1000"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/md_white_1000"
+                app:met_errorColor="#ffdd4c3a"
+                app:met_textColorHint="@color/md_white_1000"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -127,7 +182,8 @@
                 android:text="@string/register_policy"
                 android:textColor="@color/white"
                 android:id="@+id/textView2"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"/>
 
             <Button
                 android:layout_width="match_parent"
