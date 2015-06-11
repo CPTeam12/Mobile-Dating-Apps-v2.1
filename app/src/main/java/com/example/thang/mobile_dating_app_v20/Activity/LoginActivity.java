@@ -57,7 +57,6 @@ import java.util.List;
 public class LoginActivity extends ActionBarActivity implements GoogleApiClient.OnConnectionFailedListener, ConnectionCallbacks {
     private static final String URL_AUTH = "http://datingappservice2.groundctrl.nl/datingapp/Service/auth?";
     private static final String URL_CHECK_FB = "http://datingappservice2.groundctrl.nl/datingapp/Service/facebook";
-    private static final String URL_REGISTER = "http://datingappservice2.groundctrl.nl/datingapp/Service/register";
 
     private TextView loginError;
     private MaterialEditText email;
