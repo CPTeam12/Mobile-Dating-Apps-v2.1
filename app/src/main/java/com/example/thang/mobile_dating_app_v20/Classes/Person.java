@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by Thang on 5/31/2015.
  */
-public class Person implements Serializable{
+public class Person implements Serializable {
     //Profile
     //private String username;
     private String password;
@@ -20,12 +20,13 @@ public class Person implements Serializable{
     private int age;
     private String gender;
     private String avatar;
+    //optionals
     private int phone;
     private String address;
+    private String hobbies;
 
     //facebook
     private int facebookId;
-
 
     //Position
     private double longitude;
@@ -33,23 +34,21 @@ public class Person implements Serializable{
     private int lastKnown;
 
     //dating search options
-    private boolean dating_men;
-    private boolean dating_women;
-    private String dating_profile;
-    private int dating_age;
+    private boolean datingMen;
+    private boolean datingWomen;
+    private String datingProfile;
+    private int datingAge;
 
-    public Person(){
+    public Person() {
 
     }
 
-    public Person(double latitude,double longitude ){
+    public Person(double latitude, double longitude) {
         this.longitude = longitude;
         this.latitude = latitude;
     }
 
-
-
-    public Person( String password, String fullName, String email, int age, String gender) {
+    public Person(String password, String fullName, String email, int age, String gender) {
         //this.username = username;
         this.password = password;
         this.fullName = fullName;
@@ -58,13 +57,6 @@ public class Person implements Serializable{
         this.gender = gender;
     }
 
-//    public String getUsername() {
-//        return username;
-//    }
-//
-//    public void setUsername(String username) {
-//        this.username = username;
-//    }
 
     public int getFacebookId() {
         return facebookId;
@@ -73,6 +65,7 @@ public class Person implements Serializable{
     public void setFacebookId(int facebookId) {
         this.facebookId = facebookId;
     }
+
     public String getPassword() {
         return password;
     }
@@ -161,12 +154,49 @@ public class Person implements Serializable{
         this.address = address;
     }
 
-    @Override
-    public String toString(){
-        return " Fullname: " + fullName + "; Gender: " + gender;
+    public String getHobbies() {
+        return hobbies;
     }
 
+    public void setHobbies(String hobbies) {
+        this.hobbies = hobbies;
+    }
 
+    public boolean isDatingMen() {
+        return datingMen;
+    }
 
+    public void setDatingMen(boolean datingMen) {
+        this.datingMen = datingMen;
+    }
+
+    public boolean isDatingWomen() {
+        return datingWomen;
+    }
+
+    public void setDatingWomen(boolean datingWomen) {
+        this.datingWomen = datingWomen;
+    }
+
+    public String getDatingProfile() {
+        return datingProfile;
+    }
+
+    public void setDatingProfile(String datingProfile) {
+        this.datingProfile = datingProfile;
+    }
+
+    public int getDatingAge() {
+        return datingAge;
+    }
+
+    public void setDatingAge(int datingAge) {
+        this.datingAge = datingAge;
+    }
+
+    @Override
+    public String toString() {
+        return " Fullname: " + fullName + "; Gender: " + gender;
+    }
 
 }
