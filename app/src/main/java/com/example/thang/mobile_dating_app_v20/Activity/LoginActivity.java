@@ -73,6 +73,14 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
     private FacebookCallback<LoginResult> callback = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
+            if(dialogBuilder == null){
+                dialogBuilder = new MaterialDialog.Builder(LoginActivity.this)
+                        .cancelable(false)
+                        .content(R.string.progress_dialog)
+                        .progress(true, 0);
+                materialDialog = dialogBuilder.build();
+                materialDialog.show();
+            }
             final Person person = new Person();
             final DBHelper helper = DBHelper.getInstance(getApplicationContext());
             GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
@@ -82,9 +90,8 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                         person.setEmail(jsonObject.getString("email"));
                         person.setFullName(jsonObject.getString("name"));
                         person.setGender(jsonObject.getString("gender"));
-                        // TODO : checking existed account's email on service
-                        ConnectionTool tool = new ConnectionTool();
-                        helper.insertPerson(person, DBHelper.USER_FLAG_CURRENT);
+                        person.setFacebookId(jsonObject.getInt("id"));
+                        new checkExistedAccount().execute(person);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -95,25 +102,23 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
             parameters.putString("fields", "id,name,email,gender, birthday");
             request.setParameters(parameters);
             request.executeAsync();
-            request = GraphRequest.newMyFriendsRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONArrayCallback() {
-                @Override
-                public void onCompleted(JSONArray jsonArray, GraphResponse graphResponse) {
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        Person p = new Person();
-                        try {
-                            JSONObject j = jsonArray.getJSONObject(i);
-                            p.setFullName(j.getString("name"));
-                            p.setFacebookId(j.getInt("id"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        helper.insertPerson(p,DBHelper.USER_FLAG_FRIENDS);
-                    }
-                }
-            });
-            request.executeAsync();
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
+//            request = GraphRequest.newMyFriendsRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONArrayCallback() {
+//                @Override
+//                public void onCompleted(JSONArray jsonArray, GraphResponse graphResponse) {
+//                    for (int i = 0; i < jsonArray.length(); i++) {
+//                        Person p = new Person();
+//                        try {
+//                            JSONObject j = jsonArray.getJSONObject(i);
+//                            p.setFullName(j.getString("name"));
+//                            p.setFacebookId(j.getInt("id"));
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                        helper.insertPerson(p,DBHelper.USER_FLAG_FRIENDS);
+//                    }
+//                }
+//            });
+//            request.executeAsync();
         }
 
         @Override
@@ -242,7 +247,6 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                 new MaterialDialog.Builder(LoginActivity.this)
                         .title(R.string.error_connection_title)
                         .content(R.string.error_connection)
-//                        .positiveText(R.string.action_tryagain)
                         .titleColorRes(R.color.md_red_400)
                         .show();
             }
@@ -287,11 +291,63 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
 
 //    KhuongMH
 
+    private class checkExistedAccount extends AsyncTask<Person, Integer, String> {
+        Person person;
+        @Override
+        protected void onPreExecute() {
+            ConnectionTool connectionTool = new ConnectionTool(LoginActivity.this);
+            if (connectionTool.isNetworkAvailable() && dialogBuilder == null) {
+                dialogBuilder = new MaterialDialog.Builder(LoginActivity.this)
+                        .cancelable(false)
+                        .content(R.string.progress_dialog)
+                        .progress(true, 0);
+                materialDialog = dialogBuilder.build();
+                materialDialog.show();
+
+            }
+        }
+
+        @Override
+        protected String doInBackground(Person... params) {
+            person = params[0];
+            return ConnectionTool.makePostRequest(URL_CHECK_FB,person);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                //start parsing jsonResponse
+                JSONObject jsonObject = new JSONObject(result);
+                List<Person> personList = ConnectionTool.fromJSON(jsonObject);
+                //close loading dialog
+                if (materialDialog != null) {
+                    materialDialog.dismiss();
+                }
+                if (personList.get(0).getPassword().isEmpty()) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("email", person.getEmail());
+                    bundle.putString("name", person.getFullName());
+                    bundle.putString("gender",person.getGender());
+                    bundle.putInt("id",person.getFacebookId());
+                    Intent intent = new Intent(LoginActivity.this,RegisterActivity.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+                else {
+                    DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
+                    dbHelper.insertPerson(personList.get(0), dbHelper.USER_FLAG_CURRENT);
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Override
     public void onConnected(Bundle bundle) {
         mSignInClicked = false;
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-
         if (Plus.PeopleApi.getCurrentPerson(gac) != null) {
             com.google.android.gms.plus.model.people.Person p = Plus.PeopleApi.getCurrentPerson(gac);
             Person person = new Person();
@@ -303,14 +359,9 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                 person.setGender("Female");
             }
             person.setEmail(Plus.AccountApi.getAccountName(gac));
-
-            //person.setUsername(Plus.AccountApi.getAccountName(gac));
             person.setAvatar(p.getImage().getUrl());
-            //insert to SQLite
-            DBHelper dbHelper = new DBHelper(getApplicationContext());
-            dbHelper.insertPerson(person, dbHelper.USER_FLAG_CURRENT);
+            new checkExistedAccount().execute(person);
         }
-        startActivity(intent);
     }
 
     @Override
