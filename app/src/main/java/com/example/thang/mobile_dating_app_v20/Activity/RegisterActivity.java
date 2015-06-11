@@ -164,12 +164,13 @@ public class RegisterActivity extends ActionBarActivity {
     private boolean validateLogin() {
         //username.validate("^(?=\\s*\\S).*$","Username cannot empty.");
         String error = getResources().getString(R.string.error_field_required);
-        boolean a = email.validateWith(new RegexpValidator(error, "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$"));
+        //boolean a = email.validateWith(new RegexpValidator(error, "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$"));
+        boolean a = email.validateWith(new RegexpValidator(error, "[a-zA-Z0-9._-]+@[a-z]+\\\\.+[a-z]+"));
         boolean b = password.validateWith(new RegexpValidator(error, "^(?=\\s*\\S).*$"));
         boolean c = confirm_password.validateWith(new RegexpValidator(error, "^(?=\\s*\\S).*$"));
         boolean d = fullname.validateWith(new RegexpValidator(error, "^(?=\\s*\\S).*$"));
         boolean e = birthyear.validateWith(new RegexpValidator("4 Digit Numbers Please !", "^(\\d{4})([\\.|,]\\d{1,2})?$"));
-        boolean f = datingage.validateWith(new RegexpValidator("4 Digit Numbers Please !", "^(\\d{4})([\\.|,]\\d{1,2})?$"));
+        boolean f = datingage.validateWith(new RegexpValidator("2 Digit Numbers Please !", "^(\\d{2})([\\.|,]\\d{1,2})?$"));
         return (a && b && c && d && e && f);
     }
 
