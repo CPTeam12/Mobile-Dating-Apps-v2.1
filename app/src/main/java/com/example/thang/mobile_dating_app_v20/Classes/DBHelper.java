@@ -18,7 +18,6 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "LocalUser.db";
     private static final String USER_TABLE_NAME = "User";
 
-    //private static final String USER_COL_USERNAME = "username";
     private static final String USER_COL_FULLNAME = "fullname";
     private static final String USER_COL_EMAIL = "email";
     private static final String USER_COL_AGE = "age";
@@ -48,10 +47,8 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String databaseCreate = "CREATE TABLE " + USER_TABLE_NAME + "("
-//                + USER_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + USER_COL_EMAIL + " text primary key not null, "
                 + USER_COL_FULLNAME + " text not null, "
-                //+ USER_COL_USERNAME + " text, "
                 + USER_COL_AGE + " integer, "
                 + USER_COL_AVATAR + " text, "
                 + USER_COL_ADDRESS + " text, "
@@ -78,7 +75,6 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(USER_COL_EMAIL, person.getEmail());
         contentValues.put(USER_COL_FULLNAME, person.getFullName());
         contentValues.put(USER_COL_GENDER, person.getGender());
-        //contentValues.put(USER_COL_USERNAME, person.getUsername());
         contentValues.put(USER_COL_PHONE, person.getPhone());
         contentValues.put(USER_FLAG, flag);
 
@@ -95,7 +91,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
         while (res.moveToNext()) {
             Person person = new Person();
-            //person.setUsername(res.getString(res.getColumnIndex(USER_COL_USERNAME)));
             person.setAddress(res.getString(res.getColumnIndex(USER_COL_ADDRESS)));
             person.setFullName(res.getString(res.getColumnIndex(USER_COL_FULLNAME)));
             person.setAge(Integer.parseInt(res.getString(res.getColumnIndex(USER_COL_AGE))));
@@ -121,7 +116,6 @@ public class DBHelper extends SQLiteOpenHelper {
         res.moveToFirst();
         int a = res.getCount();
         if (res.getCount() != 0) {
-            //person.setUsername(res.getString(res.getColumnIndex(USER_COL_USERNAME)));
             person.setAddress(res.getString(res.getColumnIndex(USER_COL_ADDRESS)));
             person.setFullName(res.getString(res.getColumnIndex(USER_COL_FULLNAME)));
             person.setAge(Integer.parseInt(res.getString(res.getColumnIndex(USER_COL_AGE))));
@@ -145,7 +139,6 @@ public class DBHelper extends SQLiteOpenHelper {
         res.moveToFirst();
         int a = res.getCount();
         if (res.getCount() != 0) {
-            //person.setUsername(res.getString(res.getColumnIndex(USER_COL_USERNAME)));
             person.setAddress(res.getString(res.getColumnIndex(USER_COL_ADDRESS)));
             person.setFullName(res.getString(res.getColumnIndex(USER_COL_FULLNAME)));
             person.setAge(Integer.parseInt(res.getString(res.getColumnIndex(USER_COL_AGE))));

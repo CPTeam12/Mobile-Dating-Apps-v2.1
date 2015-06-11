@@ -223,6 +223,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         String urlParams = "email=" + email.getText().toString().trim() +
                 "&password=" + password.getText().toString().trim();
         new DownloadTextTask().execute(URL_AUTH + urlParams);
+        //new DownloadTextTask().execute(URL_CHECK_FB);
     }
 
     private class DownloadTextTask extends AsyncTask<String, Integer, String> {
@@ -250,7 +251,9 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         @Override
         protected String doInBackground(String... params) {
             int i = 0;
-            return ConnectionTool.readJSONFeed(params[0]);
+            //return ConnectionTool.readJSONFeed(params[0]);
+            return  ConnectionTool.makeGetRequest(params[0]);
+            //return ConnectionTool.makePostRequest(params[0],new Person("a","asd","asd@asd.com",22,"Female"));
         }
 
         @Override

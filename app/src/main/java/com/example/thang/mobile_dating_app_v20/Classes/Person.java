@@ -27,12 +27,16 @@ public class Person implements Serializable{
     private int facebookId;
 
 
-
     //Position
     private double longitude;
     private double latitude;
     private int lastKnown;
 
+    //dating search options
+    private boolean dating_men;
+    private boolean dating_women;
+    private String dating_profile;
+    private int dating_age;
 
     public Person(){
 

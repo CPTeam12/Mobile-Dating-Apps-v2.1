@@ -20,6 +20,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -194,18 +196,21 @@ public class ConnectionTool implements Serializable {
         return persons;
     }
 
-    public static String makeRequest(String url, Person person){
+    public static String makePostRequest(String url, Person person){
         HttpURLConnection urlConnection;
         String result = null;
+        String data = null;
+        List<Person> persons = new ArrayList<>();
+        persons.add(person);
 
         Gson gson = new Gson();
-        result = gson.toJson(person);
+        data = gson.toJson(persons);
 
         try {
             //connect
             urlConnection = (HttpURLConnection)(new URL(url).openConnection());
             urlConnection.setDoOutput(true);
-            urlConnection.setRequestProperty("Content-Type", "application/json");
+            urlConnection.setRequestProperty("Content-type", "application/json");
             urlConnection.setRequestProperty("Accept", "application/json");
             urlConnection.setRequestMethod("POST");
             urlConnection.connect();
@@ -213,7 +218,7 @@ public class ConnectionTool implements Serializable {
             //write
             OutputStream outputStream = urlConnection.getOutputStream();
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-            writer.write(result);
+            writer.write(data);
             writer.close();
             outputStream.close();
 
@@ -235,5 +240,33 @@ public class ConnectionTool implements Serializable {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public static String makeGetRequest(String url){
+        HttpURLConnection urlConnection;
+        String result = null;
+        try {
+            //Connect
+            urlConnection = (HttpURLConnection) ((new URL(url).openConnection()));
+            urlConnection.setRequestMethod("GET");
+            urlConnection.connect();
+
+            //Read
+            InputStream is = new BufferedInputStream(urlConnection.getInputStream());
+            String line = null;
+            StringBuilder sb = new StringBuilder();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
+
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+
+            bufferedReader.close();
+            result = sb.toString();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return  result;
     }
 }
