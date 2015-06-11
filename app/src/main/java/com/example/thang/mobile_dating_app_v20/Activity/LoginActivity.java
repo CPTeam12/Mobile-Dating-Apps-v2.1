@@ -110,7 +110,10 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                     try {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject j = jsonArray.getJSONObject(i);
-                        persons.add(new Person(j.getInt("id"),j.getString("name")));
+                        Person p = new Person();
+                        p.setFacebookId(j.getInt("id"));
+                        p.setFullName(j.getString("name"));
+                        persons.add(p);
                     }
                     new checkExistedAccount();
                     } catch (JSONException e) {
