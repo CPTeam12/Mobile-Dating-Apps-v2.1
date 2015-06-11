@@ -65,6 +65,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
     private int TIME_OUT = 5000000;
     private MaterialDialog.Builder dialogBuilder;
     private MaterialDialog materialDialog;
+    
     //KhuongMH
     private boolean mSignInClicked;
     private GoogleApiClient gac;
