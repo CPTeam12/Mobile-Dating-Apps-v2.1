@@ -50,6 +50,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -102,23 +103,22 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
             parameters.putString("fields", "id,name,email,gender, birthday");
             request.setParameters(parameters);
             request.executeAsync();
-//            request = GraphRequest.newMyFriendsRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONArrayCallback() {
-//                @Override
-//                public void onCompleted(JSONArray jsonArray, GraphResponse graphResponse) {
-//                    for (int i = 0; i < jsonArray.length(); i++) {
-//                        Person p = new Person();
-//                        try {
-//                            JSONObject j = jsonArray.getJSONObject(i);
-//                            p.setFullName(j.getString("name"));
-//                            p.setFacebookId(j.getInt("id"));
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                        helper.insertPerson(p,DBHelper.USER_FLAG_FRIENDS);
-//                    }
-//                }
-//            });
-//            request.executeAsync();
+            request = GraphRequest.newMyFriendsRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONArrayCallback() {
+                @Override
+                public void onCompleted(JSONArray jsonArray, GraphResponse graphResponse) {
+                    List<Person> persons = new ArrayList<Person>();
+                    try {
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject j = jsonArray.getJSONObject(i);
+                        persons.add(new Person(j.getInt("id"),j.getString("name")));
+                    }
+                    new checkExistedAccount();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            request.executeAsync();
         }
 
         @Override
@@ -291,26 +291,29 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
 
 //    KhuongMH
 
+    private class getInformationFriend extends AsyncTask<List<Person>, Integer, String>{
+
+        @Override
+        protected String doInBackground(List<Person>... persons) {
+            List<Person> p = persons[0];
+            return ConnectionTool.makePostRequest(URL_CHECK_FB,p);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+        }
+    }
+
     private class checkExistedAccount extends AsyncTask<Person, Integer, String> {
         Person person;
-        @Override
-        protected void onPreExecute() {
-            ConnectionTool connectionTool = new ConnectionTool(LoginActivity.this);
-            if (connectionTool.isNetworkAvailable() && dialogBuilder == null) {
-                dialogBuilder = new MaterialDialog.Builder(LoginActivity.this)
-                        .cancelable(false)
-                        .content(R.string.progress_dialog)
-                        .progress(true, 0);
-                materialDialog = dialogBuilder.build();
-                materialDialog.show();
-
-            }
-        }
 
         @Override
         protected String doInBackground(Person... params) {
             person = params[0];
-            return ConnectionTool.makePostRequest(URL_CHECK_FB,person);
+            List<Person> persons = new ArrayList<>();
+            persons.add(person);
+            return ConnectionTool.makePostRequest(URL_CHECK_FB,persons);
         }
 
         @Override
@@ -393,12 +396,8 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
             return;
         }
         if (!mIntentInProgress) {
-            // Store the ConnectionResult for later usage
             cr = connectionResult;
             if (mSignInClicked) {
-                // The user has already clicked 'sign-in' so we attempt to
-                // resolve all
-                // errors until the user is signed in, or they cancel.
                 resolveSignInError();
             }
         }
