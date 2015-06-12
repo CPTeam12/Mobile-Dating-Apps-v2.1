@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/blue"
+
     tools:context="com.example.thang.mobile_dating_app_v20.Activity.RegisterActivity">
 
     <ScrollView
@@ -26,11 +26,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_email"
-                app:met_baseColor="@color/md_white_1000"
+                app:met_baseColor="@color/primary_text"
                 app:met_floatingLabel="highlight"
-                app:met_primaryColor="@color/md_white_1000"
+                app:met_primaryColor="@color/primary_text"
                 app:met_errorColor="#ffdd4c3a"
-                app:met_textColorHint="@color/md_white_1000"/>
+                app:met_textColorHint="@color/primary_text"/>
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/register_password"
@@ -38,11 +38,11 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_password"
                 android:inputType="textPassword"
-                app:met_baseColor="@color/md_white_1000"
+                app:met_baseColor="@color/primary_text"
                 app:met_floatingLabel="highlight"
-                app:met_primaryColor="@color/md_white_1000"
+                app:met_primaryColor="@color/primary_text"
                 app:met_errorColor="#ffdd4c3a"
-                app:met_textColorHint="@color/md_white_1000"/>
+                app:met_textColorHint="@color/primary_text"/>
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/register_confirm_password"
@@ -50,22 +50,22 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_confirm_password"
                 android:inputType="textPassword"
-                app:met_baseColor="@color/md_white_1000"
+                app:met_baseColor="@color/primary_text"
                 app:met_floatingLabel="highlight"
-                app:met_primaryColor="@color/md_white_1000"
+                app:met_primaryColor="@color/primary_text"
                 app:met_errorColor="#ffdd4c3a"
-                app:met_textColorHint="@color/md_white_1000"/>
+                app:met_textColorHint="@color/primary_text"/>
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/register_fullname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_fullname"
-                app:met_baseColor="@color/md_white_1000"
+                app:met_baseColor="@color/primary_text"
                 app:met_floatingLabel="highlight"
-                app:met_primaryColor="@color/md_white_1000"
+                app:met_primaryColor="@color/primary_text"
                 app:met_errorColor="#ffdd4c3a"
-                app:met_textColorHint="@color/md_white_1000"/>
+                app:met_textColorHint="@color/primary_text"/>
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/register_birthyear"
@@ -73,11 +73,11 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_yearbirth"
                 android:inputType="date"
-                app:met_baseColor="@color/md_white_1000"
+                app:met_baseColor="@color/primary_text"
                 app:met_floatingLabel="highlight"
-                app:met_primaryColor="@color/md_white_1000"
-                app:met_minCharacters="4"
-                app:met_maxCharacters="4"/>
+                app:met_primaryColor="@color/primary_text"
+                app:met_errorColor="#ffdd4c3a"
+                app:met_textColorHint="@color/primary_text"/>
 
             <com.rengwuxian.materialedittext.MaterialMultiAutoCompleteTextView
                 android:layout_width="match_parent"
@@ -85,10 +85,11 @@
                 android:id="@+id/register_hobby"
                 android:hint="@string/register_hobby"
                 android:completionThreshold="1"
-                app:met_baseColor="@color/md_white_1000"
+                app:met_baseColor="@color/primary_text"
                 app:met_floatingLabel="highlight"
-                app:met_primaryColor="@color/md_white_1000"
-                app:met_textColorHint="@color/md_white_1000"/>
+                app:met_primaryColor="@color/primary_text"
+                app:met_errorColor="#ffdd4c3a"
+                app:met_textColorHint="@color/primary_text"/>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -99,13 +100,12 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/register_gender"
-                    android:textColor="@color/white"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginLeft="5dp"/>
+                    android:textColor="@color/primary_text"
+                    android:layout_marginTop="15dp" />
                 <RadioGroup
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="10dp"
                     android:weightSum="1"
                     android:orientation="horizontal">
 
@@ -118,7 +118,7 @@
                         android:layout_marginLeft="20dp"
                         android:textSize="16dp"
                         android:text="@string/setting_dating_men"
-                        android:textColor="@color/white"
+                        android:textColor="@color/primary_text"
                         android:buttonTint="@color/md_blue_800"/>
                     <RadioButton
                         android:id="@+id/register_female_rb"
@@ -129,7 +129,7 @@
                         android:layout_marginLeft="20dp"
                         android:textSize="16dp"
                         android:text="@string/setting_dating_women"
-                        android:textColor="@color/white"
+                        android:textColor="@color/primary_text"
                         android:buttonTint="@color/md_blue_800"/>
                 </RadioGroup>
             </LinearLayout>
@@ -139,9 +139,8 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/register_buddy"
-                android:textColor="@color/white"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="5dp"/>
+                android:textColor="@color/primary_text"
+                android:layout_marginBottom="10dp" />
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -153,9 +152,8 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/register_gender"
-                android:textColor="@color/white"
-                android:layout_marginTop="1dp"
-                android:layout_marginLeft="5dp"/>
+                android:textColor="@color/primary_text"
+                android:layout_marginTop="1dp" />
 
             <CheckBox
                 android:layout_width="wrap_content"
@@ -164,7 +162,7 @@
                 android:layout_marginLeft="20dp"
                 android:textSize="16dp"
                 android:text="@string/setting_dating_men"
-                android:textColor="@color/white"
+                android:textColor="@color/primary_text"
                 android:buttonTint="@color/md_blue_800"/>
 
             <CheckBox
@@ -174,7 +172,7 @@
                 android:layout_marginLeft="20dp"
                 android:textSize="16dp"
                 android:text="@string/setting_dating_women"
-                android:textColor="@color/white"
+                android:textColor="@color/primary_text"
                 android:buttonTint="@color/md_blue_800"/>
         </LinearLayout>
 
@@ -184,9 +182,9 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/register_datingage"
                 android:text="18"
-                app:met_baseColor="@color/md_white_1000"
+                app:met_baseColor="@color/primary_text"
                 app:met_floatingLabel="highlight"
-                app:met_primaryColor="@color/md_white_1000"
+                app:met_primaryColor="@color/primary_text"
                 app:met_minCharacters="2"
                 app:met_maxCharacters="2"/>
 
@@ -195,18 +193,17 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/register_policy"
-                android:textColor="@color/white"
+                android:textColor="@color/primary_text"
                 android:id="@+id/textView2"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="5dp"/>
+                android:layout_marginTop="10dp" />
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="16dp"
                 android:background="#ce2aa7d6"
-                android:textColor="#ffffff"
+                android:textColor="@color/md_white_1000"
                 android:textStyle="bold"
                 android:text="@string/register_reg"
                 android:id="@+id/register_accept"
@@ -218,7 +215,7 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="16dp"
                 android:background="@android:color/transparent"
-                android:textColor="#ffffff"
+                android:textColor="@color/primary_text"
                 android:textAllCaps="false"
                 android:text="@string/register_back_login"
                 style="?android:attr/borderlessButtonStyle"/>

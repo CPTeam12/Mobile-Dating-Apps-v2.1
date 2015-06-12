@@ -19,12 +19,16 @@ import android.widget.MultiAutoCompleteTextView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rengwuxian.materialedittext.validation.RegexpValidator;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -34,6 +38,9 @@ import java.util.List;
 
 public class RegisterActivity extends ActionBarActivity {
     private static final String URL_REGISTER = "http://datingappservice2.groundctrl.nl/datingapp/Service/register";
+    private MaterialDialog.Builder dialogBuilder;
+    private MaterialDialog materialDialog;
+
     MaterialEditText email;
     MaterialEditText password;
     MaterialEditText confirm_password;
@@ -44,6 +51,7 @@ public class RegisterActivity extends ActionBarActivity {
     Button accept, back;
     MultiAutoCompleteTextView hobby;
     CheckBox cb_male,cb_female;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +82,8 @@ public class RegisterActivity extends ActionBarActivity {
                     person.setEmail(email.getText().toString());
                     person.setPassword(password.getText().toString());
                     person.setFullName(fullname.getText().toString());
-                    person.setAge(Calendar.YEAR - Integer.parseInt(birthyear.getText().toString()));
+                    //person.setAge(Calendar.YEAR - Integer.parseInt(birthyear.getText().toString()));
+                    person.setAge(Calendar.getInstance().get(Calendar.YEAR) - Integer.parseInt(birthyear.getText().toString()));
                     person.setHobbies(hobby.getText().toString());
                     person.setDatingAge(Integer.parseInt(datingage.getText().toString()));
                     if(cb_male.isChecked()){
@@ -118,6 +127,69 @@ public class RegisterActivity extends ActionBarActivity {
                 rb_male.setChecked(false);
                 rb_female.setChecked(true);
             }
+        }
+    }
+
+    private class getInformationFriend extends AsyncTask<List<Person>, Integer, String> {
+
+        @Override
+        protected void onPreExecute() {
+            ConnectionTool connectionTool = new ConnectionTool(RegisterActivity.this);
+            if (connectionTool.isNetworkAvailable()) {
+                dialogBuilder = new MaterialDialog.Builder(RegisterActivity.this)
+                        .cancelable(false)
+                        .content(R.string.progress_dialog)
+                        .progress(true, 0);
+                materialDialog = dialogBuilder.build();
+                materialDialog.show();
+
+            } else {
+                new MaterialDialog.Builder(RegisterActivity.this)
+                        .title(R.string.error_connection_title)
+                        .content(R.string.error_connection)
+                        .titleColorRes(R.color.md_red_400)
+                        .show();
+            }
+        }
+
+        @Override
+        protected String doInBackground(List<Person>... persons) {
+            List<Person> p = persons[0];
+            return ConnectionTool.makePostRequest(URL_REGISTER, p);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                //close loading dialog
+                if (materialDialog != null) {
+                    materialDialog.dismiss();
+                }
+
+                //start parsing jsonResponse
+                JSONObject jsonObject = new JSONObject(result);
+                List<Person> personList = ConnectionTool.fromJSON(jsonObject);
+                if(personList != null){
+
+                    //insert current user into database
+                    DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
+                    dbHelper.insertPerson(personList.get(0), dbHelper.USER_FLAG_CURRENT);
+
+                    //move to main activity
+                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(getApplicationContext(),getApplicationContext().getResources().getString(R.string.register_duplicate_email),
+                            Toast.LENGTH_SHORT).show();
+                    email.setText("");
+                    password.setText("");
+                    confirm_password.setText("");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
@@ -182,26 +254,5 @@ public class RegisterActivity extends ActionBarActivity {
         return (a && b && c && d && e && f && g);
     }
 
-    private class getInformationFriend extends AsyncTask<List<Person>, Integer, Boolean> {
-        Person person;
-        @Override
-        protected Boolean doInBackground(List<Person>... persons) {
-            List<Person> p = persons[0];
-            person = p.get(0);
-            return ConnectionTool.sendPersonRegister(URL_REGISTER, p);
-        }
 
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if(result){
-                DBHelper helper = new DBHelper(getApplicationContext());
-                helper.insertPerson(person,DBHelper.USER_FLAG_CURRENT);
-                Intent intent = new Intent(RegisterActivity.this,MainActivity.class);
-                startActivity(intent);
-            }
-            else {
-                Toast.makeText(getApplicationContext(),"Register fail ! Check your connection again !",Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 }

@@ -51,33 +51,6 @@ public class ConnectionTool implements Serializable {
         this.context = context;
     }
 
-    public static InputStream openHttpConnection(String urlString) throws IOException {
-        InputStream is = null;
-        int response = -1;
-        URL url = new URL(urlString);
-        URLConnection con = url.openConnection();
-
-        if (!(con instanceof HttpURLConnection)) {
-            throw new IOException("Http connection is required");
-        }
-        try {
-            HttpURLConnection httpCon = (HttpURLConnection) con;
-            httpCon.setAllowUserInteraction(false);
-            httpCon.setInstanceFollowRedirects(true);
-            httpCon.setRequestMethod("GET");
-            httpCon.connect();
-            response = httpCon.getResponseCode();
-            if (response == HttpURLConnection.HTTP_OK) {
-                is = httpCon.getInputStream();
-            }
-
-        } catch (Exception ex) {
-            Log.d("Networking", ex.getLocalizedMessage());
-            throw new IOException("ERROR CONNECTING");
-        }
-        return is;
-    }
-
     public static boolean isConnectedToServer(String url,int timeout){
         try {
             URL myUrl = new URL(url);
@@ -95,63 +68,6 @@ public class ConnectionTool implements Serializable {
                 = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-    public static String downloadText(String url) {
-        int buffer_size = 2000;
-        InputStream is = null;
-        try {
-            is = openHttpConnection(url);
-        } catch (IOException e) {
-            Log.d("Networking", e.getLocalizedMessage());
-            return "";
-        }
-
-        InputStreamReader isr = new InputStreamReader(is);
-        int charRead;
-        String result = "";
-        char[] inputBuffer = new char[buffer_size];
-        try {
-            while ((charRead = isr.read(inputBuffer)) > 0) {
-                String readString = String.copyValueOf(inputBuffer, 0, charRead);
-                result += readString;
-                inputBuffer = new char[buffer_size];
-            }
-            is.close();
-        } catch (IOException e) {
-            Log.d("Networking-process", e.getLocalizedMessage());
-            return "";
-        }
-        return result;
-    }
-
-    public static String readJSONFeed(String url) {
-        StringBuilder sb = new StringBuilder();
-
-        HttpClient httpClient = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet(url);
-        try {
-            HttpResponse response = httpClient.execute(httpGet);
-            StatusLine statusLine = response.getStatusLine();
-            int statusCode = statusLine.getStatusCode();
-            if (statusCode == 200) {
-                HttpEntity entity = response.getEntity();
-                InputStream is = entity.getContent();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-                String line = "";
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-                }
-            } else {
-                Log.e("JSON", "Fail to download");
-            }
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Log.d("JSON", sb.toString());
-        return sb.toString();
     }
 
     public static List<Person> fromJSON(JSONObject jsonObject) throws JSONException {
@@ -194,35 +110,6 @@ public class ConnectionTool implements Serializable {
             return null;
         }
         return persons;
-    }
-
-    public static boolean sendPersonRegister(String url, List<Person> persons){
-        HttpURLConnection urlConnection;
-        String result = null;
-        String data = null;
-
-        Gson gson = new Gson();
-        data = gson.toJson(persons);
-        try {
-            //connect
-            urlConnection = (HttpURLConnection)(new URL(url).openConnection());
-            urlConnection.setDoOutput(true);
-            urlConnection.setRequestProperty("Content-type", "application/json");
-            urlConnection.setRequestProperty("Accept", "application/json");
-            urlConnection.setRequestMethod("POST");
-            urlConnection.connect();
-
-            //write
-            OutputStream outputStream = urlConnection.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-            writer.write(data);
-            writer.close();
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
     }
 
     public static String makePostRequest(String url, List<Person> persons){

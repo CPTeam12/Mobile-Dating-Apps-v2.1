@@ -5,6 +5,8 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.transition.Explode;
+import android.transition.Fade;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,9 +55,17 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         setContentView(R.layout.activity_profile);
 
 
-        if (Build.VERSION.SDK_INT >= 18) {
+        if (Build.VERSION.SDK_INT >= 21) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            //setup animation
+            Explode explode = new Explode();
+            explode.setDuration(2000);
+            getWindow().setEnterTransition(explode);
+
+            Fade fade = new Fade();
+            fade.setDuration(2000);
+            getWindow().setReturnTransition(fade);
         }
 
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
@@ -79,6 +89,16 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         paddingView.setClickable(true);
         listView.addHeaderView(paddingView);
 
+        //init fab button
+        FloatingActionButton fabAddFriend = (FloatingActionButton) findViewById(R.id.fab_addfriend);
+        FloatingActionsMenu fabFriendEditor = (FloatingActionsMenu) findViewById(R.id.multiple_actions_down);
+        FloatingActionButton fabProfileEditor = (FloatingActionButton) findViewById(R.id.fab_editor);
+        //gone as default
+        fabAddFriend.setVisibility(View.GONE);
+        fabFriendEditor.setVisibility(View.GONE);
+        fabProfileEditor.setVisibility(View.GONE);
+
+
         //get current user profile
         Person person = new Person();
         Bundle bundle = getIntent().getExtras();
@@ -86,13 +106,19 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
         if (flag.equals(DBHelper.USER_FLAG_CURRENT)) {
             person = dbHelper.getCurrentUser();
-        }else{
+            //TODO: show edit fab, hide the rest
+            fabProfileEditor.setVisibility(View.VISIBLE);
+        } else if (flag.equals(DBHelper.USER_FLAG_FRIENDS)) {
             person = dbHelper.getPersonByEmail(bundle.getString("username"));
+            //TODO: show add close friend/ block, hide the rest
+            fabFriendEditor.setVisibility(View.VISIBLE);
+        } else {
+            person = dbHelper.getPersonByEmail(bundle.getString("username"));
+            //TODO: show add friend fab, hide the rest
+            fabAddFriend.setVisibility(View.VISIBLE);
         }
         setFriendAdapter(listView, person);
-        //set icon for fab
-        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab_edit);
-        floatingActionButton.setIcon(R.drawable.ic_create_white_48dp);
+
 
         final View subLayer = findViewById(R.id.sub_layer);
         subLayer.setVisibility(View.GONE);
@@ -103,13 +129,13 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
             @Override
             public void onMenuExpanded() {
                 subLayer.setVisibility(View.VISIBLE);
-                subLayer.setBackgroundColor(getResources().getColor(R.color.black_layer));
+                //subLayer.setBackgroundColor(getResources().getColor(R.color.black_layer));
             }
 
             @Override
             public void onMenuCollapsed() {
                 subLayer.setVisibility(View.GONE);
-                subLayer.setBackgroundColor(getResources().getColor(R.color.no_layer));
+                //subLayer.setBackgroundColor(getResources().getColor(R.color.no_layer));
             }
         };
 
@@ -157,7 +183,7 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         int minOverlayTransitionY = mActionBarSize - mOverlayView.getHeight();
         ViewHelper.setTranslationY(mOverlayView, ScrollUtils.getFloat(-scrollY, minOverlayTransitionY, 0));
         ViewHelper.setTranslationY(mImageView, ScrollUtils.getFloat(-scrollY / 2, minOverlayTransitionY, 0));
-        ViewHelper.setTranslationY(profileAvatar,ScrollUtils.getFloat(-scrollY / 2, minOverlayTransitionY, 0));
+        ViewHelper.setTranslationY(profileAvatar, ScrollUtils.getFloat(-scrollY / 2, minOverlayTransitionY, 0));
 
         // Translate list background
         ViewHelper.setTranslationY(mListBackgroundView, Math.max(0, -scrollY + mFlexibleSpaceImageHeight));

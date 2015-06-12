@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/blue"
+
     android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context=".LoginActivity">
@@ -68,11 +68,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/prompt_email"
-                        app:met_baseColor="@color/md_white_1000"
+                        app:met_baseColor="@color/primary_text"
                         app:met_floatingLabel="highlight"
-                        app:met_primaryColor="@color/md_white_1000"
+                        app:met_primaryColor="@color/primary_text"
                         app:met_errorColor="#ffdd4c3a"
-                        app:met_textColorHint="@color/md_white_1000"/>
+                        app:met_textColorHint="@color/primary_text"/>
 
 
                     <com.rengwuxian.materialedittext.MaterialEditText
@@ -81,11 +81,11 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/prompt_password"
                         android:inputType="textPassword"
-                        app:met_baseColor="@color/md_white_1000"
+                        app:met_baseColor="@color/primary_text"
                         app:met_floatingLabel="highlight"
-                        app:met_primaryColor="@color/md_white_1000"
+                        app:met_primaryColor="@color/primary_text"
                         app:met_errorColor="#ffdd4c3a"
-                        app:met_textColorHint="@color/md_white_1000"/>
+                        app:met_textColorHint="@color/primary_text"/>
                     <TextView
                         android:id="@+id/login_error"
                         android:layout_width="fill_parent"
@@ -111,7 +111,7 @@
                         android:layout_height="40dp"
                         android:layout_marginTop="16dp"
                         android:background="@android:color/transparent"
-                        android:textColor="#ffffff"
+                        android:textColor="@color/primary_text"
                         android:textAllCaps="false"
                         android:text="@string/action_register"
                         style="?android:attr/borderlessButtonStyle"/>

@@ -105,4 +105,5 @@
     <string name="setting_dating_age_summary">Age from</string>
     <string name="add_friend">Add friend</string>
     <string name="title_activity_register">RegisterActivity</string>
+    <string name="register_duplicate_email">This email is exists, please try another email.</string>
 </resources>

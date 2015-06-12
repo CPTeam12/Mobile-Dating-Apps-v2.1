@@ -64,7 +64,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
     private int TIME_OUT = 5000000;
     private MaterialDialog.Builder dialogBuilder;
     private MaterialDialog materialDialog;
-    
+
     //KhuongMH
     private boolean mSignInClicked;
     private GoogleApiClient gac;
@@ -284,8 +284,9 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                 } else {
-                    loginError.setText(getResources().getString(R.string.error_invalid_login));
-                    loginError.setVisibility(View.VISIBLE);
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.error_invalid_login),Toast.LENGTH_SHORT).show();
+//                    loginError.setText(getResources().getString(R.string.error_invalid_login));
+//                    loginError.setVisibility(View.VISIBLE);
                     password.setText("");
                 }
             } catch (JSONException e) {
@@ -295,7 +296,6 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
     }
 
 //    KhuongMH
-
     private class getInformationFriend extends AsyncTask<List<Person>, Integer, String>{
 
         @Override

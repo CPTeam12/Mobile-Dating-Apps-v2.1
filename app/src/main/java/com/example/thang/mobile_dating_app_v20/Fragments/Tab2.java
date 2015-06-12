@@ -124,7 +124,7 @@ public class Tab2 extends Fragment {
         @Override
         protected String doInBackground(String... params) {
             int i = 0;
-            return ConnectionTool.readJSONFeed(params[0]);
+            return ConnectionTool.makeGetRequest(params[0]);
         }
 
         @Override

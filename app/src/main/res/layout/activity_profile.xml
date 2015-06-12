@@ -2,9 +2,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/root_view"
     tools:context=".MainActivity">
 
     <ImageView
@@ -79,60 +79,77 @@
         android:id="@+id/sub_layer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
+        android:background="@color/white_layer">
 
     </RelativeLayout>
 
 
 
-        <com.getbase.floatingactionbutton.FloatingActionsMenu
-            android:id="@+id/multiple_actions_down"
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/multiple_actions_down"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        fab:fab_addButtonColorNormal="@color/md_red_500"
+        fab:fab_addButtonColorPressed="@color/md_red_400"
+        fab:fab_addButtonPlusIconColor="@color/md_white_1000"
+        fab:fab_expandDirection="up"
+        fab:fab_labelStyle="@style/menu_labels_style">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_blockfriend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            fab:fab_addButtonColorNormal="@color/md_red_500"
-            fab:fab_addButtonColorPressed="@color/md_red_400"
-            fab:fab_addButtonPlusIconColor="@color/md_white_1000"
-            fab:fab_expandDirection="up"
-            fab:fab_labelStyle="@style/menu_labels_style">
+            app:fab_icon="@drawable/ic_lock_white"
+            fab:fab_colorNormal="@color/md_blue_900"
+            fab:fab_colorPressed="@color/md_blue_800"
+            fab:fab_size="mini"
+            fab:fab_title="Block" />
 
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_edit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:fab_icon="@drawable/ic_create_white_48dp"
-                fab:fab_colorNormal="@color/md_yellow_500"
-                fab:fab_colorPressed="@color/md_yellow_400"
-                fab:fab_size="mini"
-                fab:fab_title="Edit" />
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_closefriend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_star_white"
+            fab:fab_colorNormal="@color/md_blue_900"
+            fab:fab_colorPressed="@color/md_blue_800"
+            fab:fab_size="mini"
+            fab:fab_title="Close friend" />
 
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/button_remove"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:fab_icon="@drawable/ic_create_white_48dp"
-                fab:fab_colorNormal="@color/md_orange_500"
-                fab:fab_colorPressed="@color/md_orange_400"
-                fab:fab_size="mini"
-                fab:fab_title="Block" />
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/button_gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:fab_icon="@drawable/ic_create_white_48dp"
-                fab:fab_colorNormal="@color/md_green_500"
-                fab:fab_colorPressed="@color/md_green_400"
-                fab:fab_size="mini"
-                fab:fab_title="Add friend" />
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_addfriend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        app:fab_icon="@drawable/ic_action_addfriends"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        fab:fab_colorNormal="@color/md_red_500"
+        fab:fab_colorPressed="@color/md_red_400"/>
 
-        </com.getbase.floatingactionbutton.FloatingActionsMenu>
-
-
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_editor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        app:fab_icon="@drawable/ic_create_white_48dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        fab:fab_colorNormal="@color/md_red_500"
+        fab:fab_colorPressed="@color/md_red_400"/>
 
 </RelativeLayout>

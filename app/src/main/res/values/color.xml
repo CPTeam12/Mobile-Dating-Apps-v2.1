@@ -12,7 +12,7 @@
     <color name="MainBackground">#ffffff</color>
 
     <!--test-->
-    <color name="black_semi_transparent">#B2000000</color>
+    <color name="white_semi_transparent">#B3ffffff</color>
     <color name="background">#e5e5e5</color>
     <color name="half_black">#808080</color>
     <color name="white">#fafafa</color>
@@ -23,5 +23,6 @@
     <color name="blue_semi_transparent_pressed">#80738ffe</color>
     <!-- Color-->
     <color name="black_layer">#BF666666</color>
-    <color name="no_layer">#00FFFFFF</color>
+    <color name="white_layer">#E6E5E5E5</color>
+    <color name="no_layer">#80FFFFFF</color>
 </resources>
