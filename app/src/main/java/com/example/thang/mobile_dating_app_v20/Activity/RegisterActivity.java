@@ -165,13 +165,21 @@ public class RegisterActivity extends ActionBarActivity {
         //username.validate("^(?=\\s*\\S).*$","Username cannot empty.");
         String error = getResources().getString(R.string.error_field_required);
         //boolean a = email.validateWith(new RegexpValidator(error, "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$"));
-        boolean a = email.validateWith(new RegexpValidator(error, "[a-zA-Z0-9._-]+@[a-z]+\\\\.+[a-z]+"));
+        boolean a = email.validateWith(new RegexpValidator(error, "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"));
         boolean b = password.validateWith(new RegexpValidator(error, "^(?=\\s*\\S).*$"));
         boolean c = confirm_password.validateWith(new RegexpValidator(error, "^(?=\\s*\\S).*$"));
         boolean d = fullname.validateWith(new RegexpValidator(error, "^(?=\\s*\\S).*$"));
-        boolean e = birthyear.validateWith(new RegexpValidator("4 Digit Numbers Please !", "^(\\d{4})([\\.|,]\\d{1,2})?$"));
-        boolean f = datingage.validateWith(new RegexpValidator("2 Digit Numbers Please !", "^(\\d{2})([\\.|,]\\d{1,2})?$"));
-        return (a && b && c && d && e && f);
+        boolean e = birthyear.validateWith(new RegexpValidator(getResources().getString(R.string.error_invalid_year), "^(\\d{4})([\\.|,]\\d{1,2})?$"));
+        boolean f = datingage.validateWith(new RegexpValidator(getResources().getString(R.string.error_invalid_age), "^(\\d{2})([\\.|,]\\d{1,2})?$"));
+        boolean g = password.getText().toString().equals(confirm_password.getText().toString());
+        if(!password.getText().toString().equals(confirm_password.getText().toString())){
+            confirm_password.setError(getResources().getText(R.string.error_password));
+        }
+        if(Integer.parseInt(datingage.getText().toString()) < 18){
+            datingage.setError(getResources().getText(R.string.error_dating_age));
+        }
+        return (a && b && c && d && e && f && g);
     }
 
     private class getInformationFriend extends AsyncTask<List<Person>, Integer, Boolean> {

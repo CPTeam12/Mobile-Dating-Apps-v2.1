@@ -76,8 +76,20 @@
                 app:met_baseColor="@color/md_white_1000"
                 app:met_floatingLabel="highlight"
                 app:met_primaryColor="@color/md_white_1000"
-                app:met_errorColor="#ffdd4c3a"
+                app:met_minCharacters="4"
+                app:met_maxCharacters="4"/>
+
+            <com.rengwuxian.materialedittext.MaterialMultiAutoCompleteTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/register_hobby"
+                android:hint="@string/register_hobby"
+                android:completionThreshold="1"
+                app:met_baseColor="@color/md_white_1000"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/md_white_1000"
                 app:met_textColorHint="@color/md_white_1000"/>
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
@@ -88,7 +100,8 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/register_gender"
                     android:textColor="@color/white"
-                    android:layout_marginTop="20dp"/>
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="5dp"/>
                 <RadioGroup
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
@@ -116,9 +129,19 @@
                         android:layout_marginLeft="20dp"
                         android:textSize="16dp"
                         android:text="@string/setting_dating_women"
-                        android:textColor="@color/white"/>
+                        android:textColor="@color/white"
+                        android:buttonTint="@color/md_blue_800"/>
                 </RadioGroup>
             </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/register_buddy"
+                android:textColor="@color/white"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="5dp"/>
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -129,9 +152,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/register_dating"
+                android:text="@string/register_gender"
                 android:textColor="@color/white"
-                android:layout_marginTop="1dp"/>
+                android:layout_marginTop="1dp"
+                android:layout_marginLeft="5dp"/>
 
             <CheckBox
                 android:layout_width="wrap_content"
@@ -154,27 +178,17 @@
                 android:buttonTint="@color/md_blue_800"/>
         </LinearLayout>
 
-            <MultiAutoCompleteTextView
-                android:id="@+id/register_hobby"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/register_hobby"
-                android:textColorHint="@color/white"
-                android:textColor="@color/white"
-                android:completionThreshold="1"
-                android:layout_marginTop="5dp"/>
-
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/register_datingage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/register_datingage"
-                android:inputType="date"
+                android:text="18"
                 app:met_baseColor="@color/md_white_1000"
                 app:met_floatingLabel="highlight"
                 app:met_primaryColor="@color/md_white_1000"
-                app:met_errorColor="#ffdd4c3a"
-                app:met_textColorHint="@color/md_white_1000"/>
+                app:met_minCharacters="2"
+                app:met_maxCharacters="2"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -184,7 +198,8 @@
                 android:textColor="@color/white"
                 android:id="@+id/textView2"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"/>
 
             <Button
                 android:layout_width="match_parent"

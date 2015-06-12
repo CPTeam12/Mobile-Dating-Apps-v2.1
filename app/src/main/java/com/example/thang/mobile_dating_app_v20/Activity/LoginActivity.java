@@ -223,7 +223,8 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         //username.validate("^(?=\\s*\\S).*$","Username cannot empty.");
         String error = getResources().getString(R.string.error_field_required);
         //boolean a = email.validateWith(new RegexpValidator(error, "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$"));
-        boolean a = email.validateWith(new RegexpValidator(error, "^(?=\\s*\\S).*$"));
+        boolean a = email.validateWith(new RegexpValidator(error, "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"));
         boolean b = password.validateWith(new RegexpValidator(error, "^(?=\\s*\\S).*$"));
         return (a && b);
     }
@@ -305,7 +306,19 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
 
         @Override
         protected void onPostExecute(String result) {
-
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = new JSONObject(result);
+                List<Person> personList = ConnectionTool.fromJSON(jsonObject);
+                if(personList != null){
+                    DBHelper helper = new DBHelper(getApplicationContext());
+                    for(Person person : personList){
+                        helper.insertPerson(person,DBHelper.USER_FLAG_FRIENDS);
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -330,7 +343,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                 if (materialDialog != null) {
                     materialDialog.dismiss();
                 }
-                if (personList.get(0).getPassword().isEmpty()) {
+                if (personList != null) {
                     Bundle bundle = new Bundle();
                     bundle.putString("email", person.getEmail());
                     bundle.putString("name", person.getFullName());

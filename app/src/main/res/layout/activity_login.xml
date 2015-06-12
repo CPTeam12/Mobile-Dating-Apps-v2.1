@@ -45,7 +45,9 @@
                         android:layout_height="40dp"
                         android:layout_centerHorizontal="true"
                         android:layout_gravity="center_horizontal"
-                        android:scaleType="centerInside"/>
+                        android:scaleType="centerInside"
+                        android:drawableLeft="@drawable/facebook_login"
+                        android:drawablePadding="2dp"/>
 
                     <Button
                         android:id="@+id/goolge_sign_in"
