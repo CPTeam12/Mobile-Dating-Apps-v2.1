@@ -36,6 +36,7 @@
     <string name="title_activity_setting">Setting</string>
     <string name="setting_notify_on">Enable notification</string>
     <string name="setting_notify_off">Disable notification</string>
+
     <!-- Strings related to login -->
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
@@ -44,11 +45,18 @@
     <string name="action_sign_in_google">Login with Google</string>
     <string name="action_sign_in_facebook">Login with Facebook</string>
     <string name="action_register">Not a member ? <b>Register</b> now</string>
+    <string name="action_tryagain">Try again</string>
+
+    <!--error-->
     <string name="error_invalid_login">Invalid username or password!</string>
     <string name="error_field_required">This field is required</string>
     <string name="error_connection">Unable to connect with the server. Check your internet connection and try again.</string>
     <string name="error_connection_title">Connection Error</string>
-    <string name="action_tryagain">Try again</string>
+    <string name="error_invalid_year">Invalid year (4 digits)</string>
+    <string name="error_invalid_age">Invalid age (2 digits)</string>
+    <string name="error_password">Password doesn\'t match</string>
+    <string name="error_dating_age">Age must be upper than 18</string>
+
     <!--register login-->
     <string name="prompt_password">Password</string>
     <string name="prompt_confirm_password">Retype Password</string>
@@ -61,7 +69,6 @@
     <string name="register_gender_male">Male</string>
     <string name="register_gender_female">Female</string>
     <string name="register_back_login">Already have account ? <b>Sign in</b></string>
-    <string name="register_dating">Friend\'s Gender</string>
     <string name="register_hobby">Your Hobbies</string>
     <string-array name="register_hobbies">
         <item>Music</item>
@@ -73,15 +80,18 @@
         <item>Bye Bye</item>
     </string-array>
     <string name="register_datingage">Minimum Dating Age</string>
+    <string name="register_buddy"><b>You want to date with</b></string>
+
     <!--facebook login-->
     <string name="facebook_app_id">935300426536787</string>
+
     <!-- Profile-->
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="card_section_request">Friend requests</string>
     <string name="card_section_recommend">Person you may know</string>
     <string name="title_activity_test">TestActivity</string>
-    <!-- progress dialog-->
 
+    <!-- progress dialog-->
     <string name="progress_dialog">Loading ...</string>
     <string name="friend_accept">Accept</string>
     <string name="friend_dismiss">Dismiss</string>

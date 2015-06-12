@@ -63,4 +63,12 @@
     <string name="register_gender_male">Nam</string>
     <string name="register_back_login">Đã có tài khoản ? <b>Đăng nhập</b></string>
     <string name="action_register">Chưa có tài khoản ? <b>Đăng ký</b></string>
+    <string name="register_dating">Giới tính bạn bè</string>
+    <string name="register_datingage">Độ tuổi bạn bè</string>
+    <string name="register_hobby">Sở thích </string>
+    <string name="error_invalid_year">Thông tin không chính xác (4 chữ số)</string>
+    <string name="register_buddy"><b>Bạn muốn hẹn hò với</b></string>
+    <string name="error_password">Password không trùng khớp</string>
+    <string name="error_dating_age">Độ tuổi phải hơn 18</string>
+    <string name="error_invalid_age">Thông tin không chính xác (2 chữ số)</string>
 </resources>
