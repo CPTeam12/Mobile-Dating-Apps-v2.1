@@ -26,7 +26,7 @@ public class Person implements Serializable {
     private String hobbies;
 
     //facebook
-    private int facebookId;
+    private double facebookId;
 
     //Position
     private double longitude;
@@ -57,11 +57,11 @@ public class Person implements Serializable {
     }
 
 
-    public int getFacebookId() {
+    public double getFacebookId() {
         return facebookId;
     }
 
-    public void setFacebookId(int facebookId) {
+    public void setFacebookId(double facebookId) {
         this.facebookId = facebookId;
     }
 
