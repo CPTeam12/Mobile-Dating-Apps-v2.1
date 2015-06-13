@@ -105,11 +105,10 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         fabProfileEditor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getFragmentManager().beginTransaction().replace(R.id.profileFragment, new EditProfile()).commit();
-//                FragmentTransaction fm = getFragmentManager().beginTransaction();
-//                fm.addToBackStack(null);
-//                fm.replace(R.id.profileFragment, new EditProfile());
-//                fm.commit();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.addToBackStack(null);
+                ft.replace(R.id.profileFragment, new EditProfile());
+                ft.commit();
             }
         });
 
@@ -168,6 +167,16 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         mTitleView.setText(person.getFullName());
         setTitle(null);
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fm = getFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
