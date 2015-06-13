@@ -81,6 +81,14 @@ public class DBHelper extends SQLiteOpenHelper {
         db.insert(USER_TABLE_NAME, null, contentValues);
     }
 
+    public void updatePerson(Person person){
+        String query = "DELETE FROM " + USER_TABLE_NAME + " WHERE "
+                + USER_FLAG + " = '" + USER_FLAG_CURRENT + "'";
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(query);
+        insertPerson(person, USER_FLAG_CURRENT);
+    }
+
     public List<Person> getAllFriends() {
         List<Person> persons = new ArrayList<>();
         String query = "SELECT * FROM " + USER_TABLE_NAME + " WHERE "
@@ -108,7 +116,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public Person getCurrentUser() {
         Person person = new Person();
-
         String query = "SELECT * FROM " + USER_TABLE_NAME + " WHERE "
                 + USER_FLAG + " = '" + USER_FLAG_CURRENT + "'";
         SQLiteDatabase db = this.getReadableDatabase();
