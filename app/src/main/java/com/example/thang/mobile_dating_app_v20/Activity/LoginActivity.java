@@ -38,6 +38,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
+import com.google.gson.Gson;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rengwuxian.materialedittext.validation.RegexpValidator;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -83,9 +84,28 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                 materialDialog = dialogBuilder.build();
                 materialDialog.show();
             }
+            GraphRequest request = GraphRequest.newMyFriendsRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONArrayCallback() {
+                @Override
+                public void onCompleted(JSONArray jsonArray, GraphResponse graphResponse) {
+                    List<Person> persons = new ArrayList<Person>();
+                    try {
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject j = jsonArray.getJSONObject(i);
+                            Person p = new Person();
+                            p.setFacebookId(j.getInt("id"));
+                            p.setFullName(j.getString("name"));
+                            persons.add(p);
+                        }
+                        new getInformationFriend().execute(persons);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            request.executeAsync();
             final Person person = new Person();
             final DBHelper helper = DBHelper.getInstance(getApplicationContext());
-            GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+            request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                 @Override
                 public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
                     try {
@@ -103,25 +123,6 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
             Bundle parameters = new Bundle();
             parameters.putString("fields", "id,name,email,gender, birthday");
             request.setParameters(parameters);
-            request.executeAsync();
-            request = GraphRequest.newMyFriendsRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONArrayCallback() {
-                @Override
-                public void onCompleted(JSONArray jsonArray, GraphResponse graphResponse) {
-                    List<Person> persons = new ArrayList<Person>();
-                    try {
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject j = jsonArray.getJSONObject(i);
-                        Person p = new Person();
-                        p.setFacebookId(j.getInt("id"));
-                        p.setFullName(j.getString("name"));
-                        persons.add(p);
-                    }
-                    new checkExistedAccount();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
             request.executeAsync();
         }
 
@@ -345,10 +346,9 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                 }
                 if (personList == null) {
                     Bundle bundle = new Bundle();
-                    bundle.putString("email", person.getEmail());
-                    bundle.putString("name", person.getFullName());
-                    bundle.putString("gender",person.getGender());
-                    bundle.putInt("id",person.getFacebookId());
+                    Gson gson = new Gson();
+                    String json = gson.toJson(person);
+                    bundle.putString("json",json);
                     Intent intent = new Intent(LoginActivity.this,RegisterActivity.class);
                     intent.putExtras(bundle);
                     startActivity(intent);

@@ -24,6 +24,7 @@ import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.R;
+import com.google.gson.Gson;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rengwuxian.materialedittext.validation.RegexpValidator;
 
@@ -82,7 +83,6 @@ public class RegisterActivity extends ActionBarActivity {
                     person.setEmail(email.getText().toString());
                     person.setPassword(password.getText().toString());
                     person.setFullName(fullname.getText().toString());
-                    //person.setAge(Calendar.YEAR - Integer.parseInt(birthyear.getText().toString()));
                     person.setAge(Calendar.getInstance().get(Calendar.YEAR) - Integer.parseInt(birthyear.getText().toString()));
                     person.setHobbies(hobby.getText().toString());
                     person.setDatingAge(Integer.parseInt(datingage.getText().toString()));
@@ -117,9 +117,11 @@ public class RegisterActivity extends ActionBarActivity {
         });
         Bundle bundle = getIntent().getExtras();
         if(bundle!=null){
-            email.setText(bundle.getString("email"));
-            fullname.setText(bundle.getString("name"));
-            String gender = bundle.getString("gender");
+            Gson gson = new Gson();
+            Person person = gson.fromJson(bundle.getString("json"),Person.class);
+            email.setText(person.getEmail());
+            fullname.setText(person.getFullName());
+            String gender = person.getGender();
             if(gender.equalsIgnoreCase("Male")){
                 rb_male.setChecked(true);
                 rb_female.setChecked(false);
