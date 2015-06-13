@@ -26,7 +26,8 @@
             app:met_floatingLabel="highlight"
             app:met_primaryColor="@color/primary_text"
             app:met_errorColor="#ffdd4c3a"
-            app:met_textColorHint="@color/primary_text"/>
+            app:met_textColorHint="@color/primary_text"
+            android:layout_marginLeft="2dp"/>
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/edit_password"
@@ -38,7 +39,8 @@
             app:met_floatingLabel="highlight"
             app:met_primaryColor="@color/primary_text"
             app:met_errorColor="#ffdd4c3a"
-            app:met_textColorHint="@color/primary_text"/>
+            app:met_textColorHint="@color/primary_text"
+            android:layout_marginLeft="2dp"/>
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/edit_confirm_password"
@@ -50,7 +52,8 @@
             app:met_floatingLabel="highlight"
             app:met_primaryColor="@color/primary_text"
             app:met_errorColor="#ffdd4c3a"
-            app:met_textColorHint="@color/primary_text"/>
+            app:met_textColorHint="@color/primary_text"
+            android:layout_marginLeft="2dp"/>
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/edit_age"
@@ -61,7 +64,8 @@
             app:met_floatingLabel="highlight"
             app:met_primaryColor="@color/primary_text"
             app:met_minCharacters="2"
-            app:met_maxCharacters="2"/>
+            app:met_maxCharacters="2"
+            android:layout_marginLeft="2dp"/>
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -126,7 +130,9 @@
             android:hint="@string/edit_phone"
             app:met_baseColor="@color/primary_text"
             app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/primary_text"/>
+            app:met_primaryColor="@color/primary_text"
+            app:met_textColorHint="@color/primary_text"
+            android:layout_marginLeft="2dp"/>
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/edit_address"
@@ -137,7 +143,8 @@
             app:met_floatingLabel="highlight"
             app:met_primaryColor="@color/primary_text"
             app:met_errorColor="#ffdd4c3a"
-            app:met_textColorHint="@color/primary_text"/>
+            app:met_textColorHint="@color/primary_text"
+            android:layout_marginLeft="2dp"/>
 
         <Button
             android:layout_width="match_parent"
