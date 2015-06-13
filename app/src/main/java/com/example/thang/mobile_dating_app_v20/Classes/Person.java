@@ -21,7 +21,7 @@ public class Person implements Serializable {
     private String gender;
     private String avatar;
     //optionals
-    private int phone;
+    private String phone;
     private String address;
     private String hobbies;
 
@@ -113,11 +113,11 @@ public class Person implements Serializable {
         this.avatar = avatar;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
