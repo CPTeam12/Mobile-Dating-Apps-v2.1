@@ -1,10 +1,13 @@
 package com.example.thang.mobile_dating_app_v20.Activity;
 
 import android.annotation.TargetApi;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.transition.Explode;
 import android.transition.Fade;
 import android.view.LayoutInflater;
@@ -21,6 +24,8 @@ import android.widget.Toast;
 
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
+import com.example.thang.mobile_dating_app_v20.Fragments.Chat;
+import com.example.thang.mobile_dating_app_v20.Fragments.EditProfile;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -97,6 +102,15 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         fabAddFriend.setVisibility(View.GONE);
         fabFriendEditor.setVisibility(View.GONE);
         fabProfileEditor.setVisibility(View.GONE);
+        fabProfileEditor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction fm = getFragmentManager().beginTransaction();
+                fm.addToBackStack(null);
+                fm.replace(R.id.profileFragment, new EditProfile());
+                fm.commit();
+            }
+        });
 
 
         //get current user profile

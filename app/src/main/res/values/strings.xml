@@ -91,6 +91,10 @@
     <string name="card_section_request">Friend requests</string>
     <string name="card_section_recommend">Person you may know</string>
     <string name="title_activity_test">TestActivity</string>
+    <string name="edit_age">Age</string>
+    <string name="edit_agree">Update Profile</string>
+    <string name="edit_phone">Phone Number</string>
+    <string name="edit_address">Address</string>
 
     <!-- progress dialog-->
     <string name="progress_dialog">Loading ...</string>

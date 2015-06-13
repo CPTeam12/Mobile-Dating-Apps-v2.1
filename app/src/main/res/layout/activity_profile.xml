@@ -151,5 +151,10 @@
         android:layout_marginRight="16dp"
         fab:fab_colorNormal="@color/md_red_500"
         fab:fab_colorPressed="@color/md_red_400"/>
-
+    <FrameLayout
+        android:id="@+id/profileFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/MainBackground"
+        android:layout_alignParentBottom="true" />
 </RelativeLayout>

@@ -73,4 +73,8 @@
     <string name="error_invalid_age">Thông tin không chính xác (2 chữ số)</string>
     <string name="register_duplicate_email">Địa chỉ email này đã tồn tại, vui lòng nhập 1 địa chỉ khác.</string>
     <string name="action_sign_out_facebook">Đăng xuất</string>
+    <string name="edit_age">Tuổi</string>
+    <string name="edit_agree">Cập nhật thông tin</string>
+    <string name="edit_phone">Số điện thoại</string>
+    <string name="edit_address">Địa chỉ</string>
 </resources>

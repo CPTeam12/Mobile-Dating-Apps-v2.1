@@ -233,6 +233,8 @@ public class RegisterActivity extends ActionBarActivity {
         }
     }
 
+
+
     private boolean validateLogin() {
         //username.validate("^(?=\\s*\\S).*$","Username cannot empty.");
         String error = getResources().getString(R.string.error_field_required);
