@@ -343,7 +343,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                 if (materialDialog != null) {
                     materialDialog.dismiss();
                 }
-                if (personList != null) {
+                if (personList == null) {
                     Bundle bundle = new Bundle();
                     bundle.putString("email", person.getEmail());
                     bundle.putString("name", person.getFullName());
