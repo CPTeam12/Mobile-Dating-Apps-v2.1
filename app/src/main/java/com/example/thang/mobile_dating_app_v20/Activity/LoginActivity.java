@@ -112,7 +112,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                         person.setEmail(jsonObject.getString("email"));
                         person.setFullName(jsonObject.getString("name"));
                         person.setGender(jsonObject.getString("gender"));
-                        person.setFacebookId(Integer.parseInt(jsonObject.getString("id")));
+                        person.setFacebookId(Double.parseDouble(jsonObject.getString("id")));
                         new checkExistedAccount().execute(person);
                     } catch (JSONException e) {
                         e.printStackTrace();

@@ -105,7 +105,7 @@ public class DBHelper extends SQLiteOpenHelper {
             person.setAvatar(res.getString(res.getColumnIndex(USER_COL_AVATAR)));
             person.setEmail(res.getString(res.getColumnIndex(USER_COL_EMAIL)));
             person.setGender(res.getString(res.getColumnIndex(USER_COL_GENDER)));
-            person.setPhone(Integer.parseInt(res.getString(res.getColumnIndex(USER_COL_PHONE))));
+            person.setPhone(res.getString(res.getColumnIndex(USER_COL_PHONE)));
             persons.add(person);
         }
 
@@ -129,7 +129,7 @@ public class DBHelper extends SQLiteOpenHelper {
             person.setAvatar(res.getString(res.getColumnIndex(USER_COL_AVATAR)));
             person.setEmail(res.getString(res.getColumnIndex(USER_COL_EMAIL)));
             person.setGender(res.getString(res.getColumnIndex(USER_COL_GENDER)));
-            person.setPhone(Integer.parseInt(res.getString(res.getColumnIndex(USER_COL_PHONE))));
+            person.setPhone(res.getString(res.getColumnIndex(USER_COL_PHONE)));
         }
         res.close();
 
@@ -152,7 +152,7 @@ public class DBHelper extends SQLiteOpenHelper {
             person.setAvatar(res.getString(res.getColumnIndex(USER_COL_AVATAR)));
             person.setEmail(res.getString(res.getColumnIndex(USER_COL_EMAIL)));
             person.setGender(res.getString(res.getColumnIndex(USER_COL_GENDER)));
-            person.setPhone(Integer.parseInt(res.getString(res.getColumnIndex(USER_COL_PHONE))));
+            person.setPhone(res.getString(res.getColumnIndex(USER_COL_PHONE)));
         }
         res.close();
 

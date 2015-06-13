@@ -52,7 +52,7 @@ public class RegisterActivity extends ActionBarActivity {
     Button accept, back;
     MultiAutoCompleteTextView hobby;
     CheckBox cb_male,cb_female;
-    int facebookLogin = 0;
+    double facebookLogin = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
