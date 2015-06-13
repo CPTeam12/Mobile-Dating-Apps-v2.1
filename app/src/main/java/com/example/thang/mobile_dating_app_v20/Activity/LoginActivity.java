@@ -170,7 +170,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         //check whether this user have already logged in or not
         DBHelper dbHelper = new DBHelper(getApplicationContext());
         Person person = dbHelper.getCurrentUser();
-        if (person.getEmail() == null) {
+        if (person.getEmail()==null) {
             loginError = (TextView) findViewById(R.id.login_error);
             email = (MaterialEditText) findViewById(R.id.login_email);
             password = (MaterialEditText) findViewById(R.id.password);
