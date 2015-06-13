@@ -116,8 +116,8 @@ public class ConnectionTool implements Serializable {
 
     public static String makePostRequest(String url, List<Person> persons){
         HttpURLConnection urlConnection;
-        String result = null;
-        String data = null;
+        String result = "";
+        String data = "";
 
         Gson gson = new Gson();
         data = gson.toJson(persons);

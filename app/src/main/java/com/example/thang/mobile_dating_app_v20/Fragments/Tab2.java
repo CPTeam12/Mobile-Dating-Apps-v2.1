@@ -22,6 +22,7 @@ import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.R;
+import com.google.gson.Gson;
 
 
 import org.json.JSONException;
@@ -86,11 +87,16 @@ public class Tab2 extends Fragment {
             mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Person person = (Person) mList.getItemAtPosition(position);
                     getActivity().setTitle("Chat");
                     final FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.addToBackStack(null);
                     ft.hide(Tab2.this);
-                    ft.add(R.id.mainFragment, new Chat(), "Chat");
+                    Fragment chat = new Chat();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("friend", person.getEmail());
+                    chat.setArguments(bundle);
+                    ft.add(R.id.mainFragment, chat, "Chat");
                     ft.setBreadCrumbTitle("Chat");
                     ft.commit();
                 }
@@ -150,11 +156,18 @@ public class Tab2 extends Fragment {
                     mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Person person = (Person) mList.getItemAtPosition(position);
                             getActivity().setTitle("Chat");
                             final FragmentTransaction ft = getFragmentManager().beginTransaction();
                             ft.addToBackStack(null);
                             ft.hide(Tab2.this);
-                            ft.add(R.id.mainFragment, new Chat(), "Chat");
+                            Fragment chat = new Chat();
+                            Bundle bundle = new Bundle();
+                            Gson gson = new Gson();
+                            String json = gson.toJson(person);
+                            bundle.putString("json", json);
+                            chat.setArguments(bundle);
+                            ft.add(R.id.mainFragment, chat, "Chat");
                             ft.setBreadCrumbTitle("Chat");
                             ft.commit();
                         }
