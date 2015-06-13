@@ -52,7 +52,7 @@ public class RegisterActivity extends ActionBarActivity {
     Button accept, back;
     MultiAutoCompleteTextView hobby;
     CheckBox cb_male,cb_female;
-
+    int facebookLogin = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,6 +101,7 @@ public class RegisterActivity extends ActionBarActivity {
                     } else {
                         person.setGender("Female");
                     }
+                    person.setFacebookId(facebookLogin);
                     List<Person> persons = new ArrayList<Person>();
                     persons.add(person);
                     new getInformationFriend().execute(persons);
@@ -119,6 +120,7 @@ public class RegisterActivity extends ActionBarActivity {
         if(bundle!=null){
             Gson gson = new Gson();
             Person person = gson.fromJson(bundle.getString("json"),Person.class);
+            if(person.getFacebookId() != 0) facebookLogin = person.getFacebookId();
             email.setText(person.getEmail());
             fullname.setText(person.getFullName());
             String gender = person.getGender();
