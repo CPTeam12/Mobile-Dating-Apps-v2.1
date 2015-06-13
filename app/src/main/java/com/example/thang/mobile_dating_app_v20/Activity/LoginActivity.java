@@ -92,7 +92,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject j = jsonArray.getJSONObject(i);
                             Person p = new Person();
-                            p.setFacebookId(j.getInt("id"));
+                            p.setFacebookId(Integer.parseInt(j.getString("id")));
                             p.setFullName(j.getString("name"));
                             persons.add(p);
                         }
@@ -103,16 +103,16 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                 }
             });
             request.executeAsync();
-            final Person person = new Person();
             final DBHelper helper = DBHelper.getInstance(getApplicationContext());
             request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                 @Override
                 public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
                     try {
+                        Person person = new Person();
                         person.setEmail(jsonObject.getString("email"));
                         person.setFullName(jsonObject.getString("name"));
                         person.setGender(jsonObject.getString("gender"));
-                        person.setFacebookId(jsonObject.getInt("id"));
+                        person.setFacebookId(Integer.parseInt(jsonObject.getString("id")));
                         new checkExistedAccount().execute(person);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -348,7 +348,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                     Bundle bundle = new Bundle();
                     Gson gson = new Gson();
                     String json = gson.toJson(person);
-                    bundle.putString("json",json);
+                    bundle.putString("json", json);
                     Intent intent = new Intent(LoginActivity.this,RegisterActivity.class);
                     intent.putExtras(bundle);
                     startActivity(intent);
