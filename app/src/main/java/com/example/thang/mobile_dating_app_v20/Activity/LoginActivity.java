@@ -309,6 +309,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         protected void onPostExecute(String result) {
             JSONObject jsonObject = null;
             try {
+
                 jsonObject = new JSONObject(result);
                 List<Person> personList = ConnectionTool.fromJSON(jsonObject);
                 if(personList != null){
