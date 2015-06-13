@@ -105,10 +105,11 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         fabProfileEditor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentTransaction fm = getFragmentManager().beginTransaction();
-                fm.addToBackStack(null);
-                fm.replace(R.id.profileFragment, new EditProfile());
-                fm.commit();
+                getFragmentManager().beginTransaction().replace(R.id.profileFragment, new EditProfile()).commit();
+//                FragmentTransaction fm = getFragmentManager().beginTransaction();
+//                fm.addToBackStack(null);
+//                fm.replace(R.id.profileFragment, new EditProfile());
+//                fm.commit();
             }
         });
 
@@ -118,6 +119,7 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         Bundle bundle = getIntent().getExtras();
         String flag = bundle.getString("ProfileOf");
         DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
+
         if (flag.equals(DBHelper.USER_FLAG_CURRENT)) {
             person = dbHelper.getCurrentUser();
             //TODO: show edit fab, hide the rest

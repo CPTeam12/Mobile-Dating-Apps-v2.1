@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/md_white_1000"
     tools:context="com.example.thang.mobile_dating_app_v20.Fragments.EditProfile">
 
     <ScrollView
