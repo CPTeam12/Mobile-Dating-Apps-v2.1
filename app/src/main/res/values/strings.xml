@@ -44,6 +44,7 @@
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_google">Login with Google</string>
     <string name="action_sign_in_facebook">Login with Facebook</string>
+    <string name="action_sign_out_facebook">Log out</string>
     <string name="action_register">Not a member ? <b>Register</b> now</string>
     <string name="action_tryagain">Try again</string>
 
@@ -106,4 +107,7 @@
     <string name="add_friend">Add friend</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="register_duplicate_email">This email is exists, please try another email.</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
