@@ -40,7 +40,23 @@ public class Person implements Serializable {
     private int datingAge;
 
     public Person() {
-
+        this.password = "";
+        this.fullName = "";
+        this.email = "";
+        this.age = 0;
+        this.gender = "";
+        this.avatar = "";
+        this.phone = 0;
+        this.address = "";
+        this.hobbies = "";
+        this.facebookId = 0;
+        this.longitude = 0;
+        this.latitude = 0;
+        this.lastKnown = 0;
+        this.datingMen = false;
+        this.datingWomen = false;
+        this.datingProfile = "";
+        this.datingAge = 0;
     }
 
     public Person(double latitude, double longitude) {
