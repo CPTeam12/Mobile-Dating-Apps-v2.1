@@ -40,6 +40,7 @@
                     android:weightSum="1">
 
                     <com.facebook.login.widget.LoginButton
+                        xmlns:facebook="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/facebook_sign_in"
                         android:layout_width="fill_parent"
                         android:layout_height="40dp"
@@ -47,7 +48,9 @@
                         android:layout_gravity="center_horizontal"
                         android:scaleType="centerInside"
                         android:drawableLeft="@drawable/facebook_login"
-                        android:drawablePadding="2dp"/>
+                        android:drawablePadding="2dp"
+                        facebook:login_text="@string/action_sign_in_facebook"
+                        facebook:logout_text="@string/action_sign_out_facebook"/>
 
                     <Button
                         android:id="@+id/goolge_sign_in"
@@ -58,7 +61,8 @@
                         android:drawablePadding="2dp"
                         android:text="@string/action_sign_in_google"
                         android:textColor="#ffffff"
-                        android:textStyle="bold"
+                        android:textSize="15.5dp"
+                        android:textAllCaps="false"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp" />
 
