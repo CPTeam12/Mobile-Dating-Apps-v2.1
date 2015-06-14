@@ -85,26 +85,44 @@ public class ConnectionTool implements Serializable {
             if (object instanceof JSONObject) {
                 JSONObject jsonObject2 = jsonObject.getJSONObject("data");
                 if (jsonObject2 != null){
-                    String fullname = jsonObject2.getString("fullName");
-                    //String username = jsonObject2.getString("username");
-                    int age = Integer.parseInt(jsonObject2.getString("age"));
-                    String email = jsonObject2.getString("email");
-                    String gender = jsonObject2.getString("gender");
-                    String password = jsonObject2.getString("password");
-                    Person person = new Person(password, fullname, email, age, gender);
+                    Person person = new Person();
+                    person.setAge(Integer.parseInt(jsonObject2.getString("age")));
+                    person.setFullName(jsonObject2.getString("fullName"));
+                    person.setGender(jsonObject2.getString("gender"));
+                    person.setEmail(jsonObject2.getString("email"));
+                    person.setPhone(jsonObject2.getString("phone"));
+
+                    person.setLastKnown(Integer.parseInt(jsonObject2.getString("lastKnown")));
+                    person.setLatitude(Double.parseDouble(jsonObject2.getString("latitude")));
+                    person.setLongitude(Double.parseDouble(jsonObject2.getString("longitude")));
+
+                    person.setHobbies(jsonObject2.getString("hobbies"));
+                    person.setDatingMen(Boolean.getBoolean(jsonObject2.getString("datingMen")));
+                    person.setDatingWomen(Boolean.getBoolean(jsonObject2.getString("datingWomen")));
+                    person.setDatingAge(Integer.parseInt(jsonObject2.getString("datingAge")));
+
                     persons.add(person);
                 }
             } else {
                 JSONArray jsonArray = new JSONArray(data);
                 for (int j = 0; j < jsonArray.length(); j++) {
                     JSONObject jsonObject1 = jsonArray.getJSONObject(j);
-                    String fullname = jsonObject1.getString("fullName");
-                    //String username = jsonObject1.getString("username");
-                    int age = Integer.parseInt(jsonObject1.getString("age"));
-                    String email = jsonObject1.getString("email");
-                    String gender = jsonObject1.getString("gender");
-                    String password = jsonObject1.getString("password");
-                    Person person = new Person(password, fullname, email, age, gender);
+                    Person person = new Person();
+                    person.setAge(Integer.parseInt(jsonObject1.getString("age")));
+                    person.setFullName(jsonObject1.getString("fullName"));
+                    person.setGender(jsonObject1.getString("gender"));
+                    person.setEmail(jsonObject1.getString("email"));
+                    person.setPhone(jsonObject1.getString("phone"));
+
+                    person.setLastKnown(Integer.parseInt(jsonObject1.getString("lastKnown")));
+                    person.setLatitude(Double.parseDouble(jsonObject1.getString("latitude")));
+                    person.setLongitude(Double.parseDouble(jsonObject1.getString("longitude")));
+
+                    person.setHobbies(jsonObject1.getString("hobbies"));
+                    person.setDatingMen(Boolean.getBoolean(jsonObject1.getString("datingMen")));
+                    person.setDatingWomen(Boolean.getBoolean(jsonObject1.getString("datingWomen")));
+                    person.setDatingAge(Integer.parseInt(jsonObject1.getString("datingAge")));
+
                     persons.add(person);
                 }
             }
@@ -140,17 +158,13 @@ public class ConnectionTool implements Serializable {
 
             //Read
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
-
             String line = null;
             StringBuilder sb = new StringBuilder();
-
             while ((line = bufferedReader.readLine()) != null) {
                 sb.append(line);
             }
-
             bufferedReader.close();
             result = sb.toString();
-
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -172,11 +186,9 @@ public class ConnectionTool implements Serializable {
             String line = null;
             StringBuilder sb = new StringBuilder();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
-
             while ((line = bufferedReader.readLine()) != null) {
                 sb.append(line);
             }
-
             bufferedReader.close();
             result = sb.toString();
 

@@ -48,15 +48,6 @@ public class Person implements Serializable {
         this.latitude = latitude;
     }
 
-    public Person(String password, String fullName, String email, int age, String gender) {
-        //this.username = username;
-        this.password = password;
-        this.fullName = fullName;
-        this.email = email;
-        this.age = age;
-        this.gender = gender;
-    }
-
 
     public double getFacebookId() {
         return facebookId;
