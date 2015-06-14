@@ -119,7 +119,6 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                     }
                 }
             });
-
             Bundle parameters = new Bundle();
             parameters.putString("fields", "id,name,email,gender, birthday");
             request.setParameters(parameters);
