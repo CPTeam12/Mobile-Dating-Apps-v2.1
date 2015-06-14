@@ -2,14 +2,19 @@ package com.example.thang.mobile_dating_app_v20.Fragments;
 
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
@@ -18,6 +23,7 @@ import com.example.thang.mobile_dating_app_v20.Activity.MainActivity;
 import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
+import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.rengwuxian.materialedittext.MaterialAutoCompleteTextView;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -27,7 +33,10 @@ import com.rengwuxian.materialedittext.validation.RegexpValidator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,6 +50,7 @@ public class EditProfile extends Fragment {
     Button update;
     MaterialMultiAutoCompleteTextView hobby;
     Person currentPerson;
+    CircleImageView profile;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,10 +72,21 @@ public class EditProfile extends Fragment {
         male = (RadioButton) getView().findViewById(R.id.edit_male_rb);
         female = (RadioButton) getView().findViewById(R.id.edit_female_rb);
         update = (Button) getView().findViewById(R.id.edit_accept);
+
         hobby = (MaterialMultiAutoCompleteTextView) getView().findViewById(R.id.edit_hobby);
         String[] hobbies = getResources().getStringArray(R.array.register_hobbies);
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),R.layout.simple_dropdown_item,hobbies);
         hobby.setAdapter(adapter);
+        hobby.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+        profile = (CircleImageView) getView().findViewById(R.id.edit_profile_avatar);
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i, 200);
+            }
+        });
+
         setupProfile();
         update.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +100,9 @@ public class EditProfile extends Fragment {
                     if(!address.getText().toString().isEmpty()) currentPerson.setAddress(address.getText().toString());
                     if(male.isChecked()) currentPerson.setGender("male");
                     if(female.isChecked()) currentPerson.setGender("female");
+                    List<Person> persons = new ArrayList<Person>();
+                    persons.add(currentPerson);
+                    new getInformationFriend().execute(persons);
             }
             }
         });
@@ -168,4 +192,19 @@ public class EditProfile extends Fragment {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 200 && resultCode == -1 && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+            Utils u = new Utils();
+            profile.setImageBitmap(u.getCircleBitmap(BitmapFactory.decodeFile(picturePath)));
+        }
+    }
 }

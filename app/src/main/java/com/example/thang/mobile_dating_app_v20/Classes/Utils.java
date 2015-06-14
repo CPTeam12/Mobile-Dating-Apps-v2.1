@@ -1,13 +1,19 @@
 package com.example.thang.mobile_dating_app_v20.Classes;
 
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * Created by Thang on 5/28/2015.
@@ -18,17 +24,22 @@ public class Utils {
     public Utils() {
     }
 
-    public boolean isNearLocation(Person user,Person friend){
-        if(Math.sqrt(Math.pow(user.getLatitude() - friend.getLatitude(),2) + Math.pow(user.getLongitude() - friend.getLongitude(),2)) < DISTANCE_RADIUS){
-            return true;
-        }
-        return false;
+    public Bitmap resizeBitmap(Bitmap bitmap){
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        float scaleWidth = ((float) 400) / width;
+        float scaleHeight = ((float) 400) / height;
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+        Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, false);
+
+        return resizedBitmap;
     }
 
     public Bitmap getCircleBitmap(Bitmap bitmap) {
-
+        bitmap = resizeBitmap(bitmap);
         final Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-                bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+                bitmap.getHeight(), Bitmap.Config.RGB_565);
         final Canvas canvas = new Canvas(output);
 
         final int color = Color.RED;
