@@ -97,22 +97,15 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
 
         //init fab button
         FloatingActionButton fabAddFriend = (FloatingActionButton) findViewById(R.id.fab_addfriend);
-        FloatingActionsMenu fabFriendEditor = (FloatingActionsMenu) findViewById(R.id.multiple_actions_down);
         FloatingActionButton fabProfileEditor = (FloatingActionButton) findViewById(R.id.fab_editor);
+        FloatingActionsMenu fabFriendEditor = (FloatingActionsMenu) findViewById(R.id.multiple_actions_down);
+        FloatingActionButton fabBlockFriend = (FloatingActionButton) findViewById(R.id.fab_blockfriend);
+        FloatingActionButton fabCloseFriend = (FloatingActionButton) findViewById(R.id.fab_closefriend);
+
         //gone as default
         fabAddFriend.setVisibility(View.GONE);
         fabFriendEditor.setVisibility(View.GONE);
         fabProfileEditor.setVisibility(View.GONE);
-        fabProfileEditor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.addToBackStack(null);
-                ft.replace(R.id.profileFragment, new EditProfile());
-                ft.commit();
-            }
-        });
-
 
         //get current user profile
         Person person = new Person();
@@ -122,8 +115,17 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
 
         if (flag.equals(DBHelper.USER_FLAG_CURRENT)) {
             person = dbHelper.getCurrentUser();
-            //TODO: show edit fab, hide the rest
+            //show edit fab, onclick to update profile
             fabProfileEditor.setVisibility(View.VISIBLE);
+            fabProfileEditor.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.addToBackStack(null);
+                    ft.replace(R.id.profileFragment, new EditProfile());
+                    ft.commit();
+                }
+            });
         } else if (flag.equals(DBHelper.USER_FLAG_FRIENDS)) {
             person = dbHelper.getPersonByEmail(bundle.getString("username"));
             //TODO: show add close friend/ block, hide the rest
@@ -136,6 +138,7 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         setFriendAdapter(listView, person);
 
 
+        //animation for menu fab
         final View subLayer = findViewById(R.id.sub_layer);
         subLayer.setVisibility(View.GONE);
 

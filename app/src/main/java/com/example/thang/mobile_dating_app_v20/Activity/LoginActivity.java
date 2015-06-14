@@ -140,7 +140,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //initial view
-        //KhuongMH
+        //---KhuongMH----
         //facebook
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
@@ -166,6 +166,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                 }
             }
         });
+        //---End KhuongMH---
         //check whether this user have already logged in or not
         DBHelper dbHelper = new DBHelper(getApplicationContext());
         Person person = dbHelper.getCurrentUser();

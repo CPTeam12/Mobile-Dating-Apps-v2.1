@@ -10,6 +10,6 @@
         android:text="Medium Text"
         android:id="@+id/section_title"
         android:textStyle="bold"
-        android:textColor="#FF5252"
-        android:paddingLeft="16dp" />
+        android:textColor="@color/md_grey_500"
+        android:paddingLeft="8dp" />
 </LinearLayout>

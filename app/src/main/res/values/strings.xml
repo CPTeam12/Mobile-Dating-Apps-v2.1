@@ -114,4 +114,8 @@
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="profile_phone">Phone</string>
+    <string name="profile_address">Address</string>
+    <string name="profile_age">Age</string>
+    <string name="profile_hobbies">Hobbies</string>
 </resources>

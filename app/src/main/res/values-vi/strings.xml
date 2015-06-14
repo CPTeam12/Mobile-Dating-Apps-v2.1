@@ -77,4 +77,8 @@
     <string name="edit_agree">Cập nhật thông tin</string>
     <string name="edit_phone">Số điện thoại</string>
     <string name="edit_address">Địa chỉ</string>
+    <string name="profile_phone">Số điện thoại</string>
+    <string name="profile_address">Địa chỉ</string>
+    <string name="profile_age">Độ tuổi</string>
+    <string name="profile_hobbies">Sở thích</string>
 </resources>

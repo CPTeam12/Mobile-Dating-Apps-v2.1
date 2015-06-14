@@ -19,7 +19,7 @@ import java.util.Map;
 public class ProfileAdapter extends BaseAdapter {
     private Map<String, String> profile = new HashMap<String, String>();
     private Context context;
-    private static final String[] PROFILE_CASE = {"AGE", "GENDER", "EMAIL", "AVATAR", "PHONE", "ADDRESS"};
+    private static final String[] PROFILE_CASE = {"AGE", "GENDER", "EMAIL", "PHONE", "ADDRESS", "HOBBIES"};
 
     public ProfileAdapter(Map<String, String> profile, Context context) {
         this.profile = profile;
@@ -53,6 +53,7 @@ public class ProfileAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.profileIcon = (ImageView) convertView.findViewById(R.id.profile_icon);
             holder.profileText = (TextView) convertView.findViewById(R.id.profile_text);
+            holder.profileHeaderText = (TextView) convertView.findViewById(R.id.profile_header_text);
 
             convertView.setTag(holder);
 
@@ -64,28 +65,33 @@ public class ProfileAdapter extends BaseAdapter {
             case "EMAIL":
                 holder.profileIcon.setImageResource(R.drawable.profile_email);
                 holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                holder.profileHeaderText.setText(R.string.prompt_email);
                 break;
             case "AGE":
                 holder.profileIcon.setImageResource(R.drawable.profile_age);
                 holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                holder.profileHeaderText.setText(R.string.profile_age);
                 break;
             case "GENDER":
                 holder.profileIcon.setImageResource(R.drawable.profile_gender);
                 holder.profileText.setText(profile.get(PROFILE_CASE[position]));
-                break;
-            case "AVATAR":
-                holder.profileIcon.setImageResource(R.drawable.ic_account_black);
-                holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                holder.profileHeaderText.setText(R.string.register_gender);
                 break;
             case "ADDRESS":
                 holder.profileIcon.setImageResource(R.drawable.profile_location);
                 holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                holder.profileHeaderText.setText(R.string.profile_address);
                 break;
             case "PHONE":
                 holder.profileIcon.setImageResource(R.drawable.profile_phone);
                 holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                holder.profileHeaderText.setText(R.string.profile_phone);
                 break;
-
+            case "HOBBIES":
+                holder.profileIcon.setImageResource(R.drawable.ic_account_black);
+                holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                holder.profileHeaderText.setText(R.string.profile_hobbies);
+                break;
         }
 
         return convertView;
@@ -94,6 +100,7 @@ public class ProfileAdapter extends BaseAdapter {
     private class ViewHolder {
         public ImageView profileIcon;
         public TextView profileText;
+        public TextView profileHeaderText;
     }
 
 

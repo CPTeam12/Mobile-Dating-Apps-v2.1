@@ -25,6 +25,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String USER_COL_AVATAR = "avatar";
     private static final String USER_COL_PHONE = "phone";
     private static final String USER_COL_ADDRESS = "address";
+    private static final String USER_COL_HOBBIES = "hobbies";
 
     //flag for separate between localuser and their friends
     //flag = localuser for current account
@@ -53,7 +54,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 + USER_COL_AVATAR + " text, "
                 + USER_COL_ADDRESS + " text, "
                 + USER_COL_GENDER + " text, "
-                + USER_COL_PHONE + " text,"
+                + USER_COL_PHONE + " text, "
+                + USER_COL_HOBBIES + " text, "
                 + USER_FLAG + " text not null"
                 + ");";
         db.execSQL(databaseCreate);
@@ -76,6 +78,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(USER_COL_FULLNAME, person.getFullName());
         contentValues.put(USER_COL_GENDER, person.getGender());
         contentValues.put(USER_COL_PHONE, person.getPhone());
+        contentValues.put(USER_COL_HOBBIES,person.getHobbies());
         contentValues.put(USER_FLAG, flag);
 
         db.insert(USER_TABLE_NAME, null, contentValues);
@@ -106,6 +109,7 @@ public class DBHelper extends SQLiteOpenHelper {
             person.setEmail(res.getString(res.getColumnIndex(USER_COL_EMAIL)));
             person.setGender(res.getString(res.getColumnIndex(USER_COL_GENDER)));
             person.setPhone(res.getString(res.getColumnIndex(USER_COL_PHONE)));
+            person.setHobbies(res.getString(res.getColumnIndex(USER_COL_HOBBIES)));
             persons.add(person);
         }
 
@@ -130,6 +134,7 @@ public class DBHelper extends SQLiteOpenHelper {
             person.setEmail(res.getString(res.getColumnIndex(USER_COL_EMAIL)));
             person.setGender(res.getString(res.getColumnIndex(USER_COL_GENDER)));
             person.setPhone(res.getString(res.getColumnIndex(USER_COL_PHONE)));
+            person.setHobbies(res.getString(res.getColumnIndex(USER_COL_HOBBIES)));
         }
         res.close();
 
@@ -153,6 +158,7 @@ public class DBHelper extends SQLiteOpenHelper {
             person.setEmail(res.getString(res.getColumnIndex(USER_COL_EMAIL)));
             person.setGender(res.getString(res.getColumnIndex(USER_COL_GENDER)));
             person.setPhone(res.getString(res.getColumnIndex(USER_COL_PHONE)));
+            person.setHobbies(res.getString(res.getColumnIndex(USER_COL_HOBBIES)));
         }
         res.close();
 

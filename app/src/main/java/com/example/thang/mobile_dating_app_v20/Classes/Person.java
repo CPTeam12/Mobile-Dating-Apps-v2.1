@@ -40,6 +40,7 @@ public class Person implements Serializable {
     private int datingAge;
 
     public Person() {
+
     }
 
     public Person(double latitude, double longitude) {
