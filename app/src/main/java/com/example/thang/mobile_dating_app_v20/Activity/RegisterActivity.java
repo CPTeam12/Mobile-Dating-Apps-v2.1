@@ -131,7 +131,11 @@ public class RegisterActivity extends ActionBarActivity {
                     for(Person p : friends){
                         friendUser.add(p);
                     }
+
+                    //register
                     new registerNew().execute(currentUser);
+
+                    //set relationship
                     new registerNew().execute(friendUser);
                 }
             }
@@ -201,6 +205,8 @@ public class RegisterActivity extends ActionBarActivity {
             List<Person> p = persons[0];
             String response;
             for(Person person : p){
+
+                //get image facebook for each person
                 if(person.getFacebookId() != null){
                     String url = "http://graph.facebook.com/"+ person.getFacebookId()+"/picture?type=large&redirect=false";
                     try {
@@ -222,6 +228,8 @@ public class RegisterActivity extends ActionBarActivity {
                     }
                 }
             }
+
+            // checking register new account or set relationship for user's friends
             if(p.size() > 1){
                 return ConnectionTool.makePostRequest(URL_INITIAL_FB,p);
             }
@@ -246,9 +254,13 @@ public class RegisterActivity extends ActionBarActivity {
 
                 }
                 else if(personList != null && localUser.getEmail() != null){
+
+                    //insert friend
                     for (int i = 0; i< personList.size();i++){
                         dbHelper.insertPerson(personList.get(i), dbHelper.USER_FLAG_FRIENDS);
                     }
+
+                    //move to MainActivity
                     Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                     startActivity(intent);
                 } else {
