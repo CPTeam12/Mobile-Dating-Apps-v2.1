@@ -19,7 +19,7 @@
             android:drawSelectorOnTop="true" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_chat"
+            android:id="@+id/fab_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

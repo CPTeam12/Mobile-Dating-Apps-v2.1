@@ -81,4 +81,5 @@
     <string name="profile_address">Địa chỉ</string>
     <string name="profile_age">Độ tuổi</string>
     <string name="profile_hobbies">Sở thích</string>
+    <string name="search_hint">Tìm kiếm theo tên</string>
 </resources>

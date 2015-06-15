@@ -17,11 +17,14 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.thang.mobile_dating_app_v20.Activity.MainActivity;
+import com.example.thang.mobile_dating_app_v20.Activity.SearchActivity;
+import com.example.thang.mobile_dating_app_v20.Activity.SettingActivity;
 import com.example.thang.mobile_dating_app_v20.Adapters.ListAdapter;
 import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.R;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
 
@@ -59,6 +62,15 @@ public class Tab2 extends Fragment {
         spiner.setVisibility(View.GONE);
         empty.setVisibility(View.GONE);
         empty.setText("You have no friend");
+        //fab search friend
+        FloatingActionButton fab_search = (FloatingActionButton)v.findViewById(R.id.fab_search);
+        fab_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent2 = new Intent(getActivity(), SearchActivity.class);
+                startActivity(intent2);
+            }
+        });
 
         return v;
     }

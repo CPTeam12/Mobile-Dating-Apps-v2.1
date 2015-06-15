@@ -91,6 +91,7 @@ public class ConnectionTool implements Serializable {
                     person.setGender(jsonObject2.getString("gender"));
                     person.setEmail(jsonObject2.getString("email"));
                     person.setPhone(jsonObject2.getString("phone"));
+                    person.setAddress(jsonObject2.getString("address"));
 
                     person.setLastKnown(Integer.parseInt(jsonObject2.getString("lastKnown")));
                     person.setLatitude(Double.parseDouble(jsonObject2.getString("latitude")));
@@ -113,6 +114,7 @@ public class ConnectionTool implements Serializable {
                     person.setGender(jsonObject1.getString("gender"));
                     person.setEmail(jsonObject1.getString("email"));
                     person.setPhone(jsonObject1.getString("phone"));
+                    person.setAddress(jsonObject1.getString("address"));
 
                     person.setLastKnown(Integer.parseInt(jsonObject1.getString("lastKnown")));
                     person.setLatitude(Double.parseDouble(jsonObject1.getString("latitude")));
