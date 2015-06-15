@@ -37,6 +37,7 @@ public class SearchActivity extends ActionBarActivity {
                 onBackPressed();
             }
         });
+
         items.add("abc");
         items.add("adef");
         items.add("alibaba");
