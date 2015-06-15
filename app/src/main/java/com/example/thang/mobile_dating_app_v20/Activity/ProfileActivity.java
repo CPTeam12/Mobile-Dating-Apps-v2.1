@@ -89,13 +89,7 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         mImageView = findViewById(R.id.image);
         mOverlayView = findViewById(R.id.overlay);
         profileAvatar = (CircleImageView) findViewById(R.id.profile_avatar);
-        profileAvatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(i, RESULT_LOAD_IMAGE);
-            }
-        });
+
         mTitleView = (TextView) findViewById(R.id.title);
         mListBackgroundView = findViewById(R.id.list_background);
         ObservableListView listView = (ObservableListView) findViewById(R.id.list);
@@ -151,6 +145,8 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
             //TODO: show add friend fab, hide the rest
             fabAddFriend.setVisibility(View.VISIBLE);
         }
+        profileAvatar.setImageBitmap(person.getAvatar() == null ? BitmapFactory.decodeResource(getResources(),
+                R.drawable.no_avatar) : Utils.decodeBase64StringToBitmap(person.getAvatar()));
         setFriendAdapter(listView, person);
 
 

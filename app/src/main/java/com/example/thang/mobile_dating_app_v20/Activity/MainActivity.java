@@ -2,6 +2,7 @@ package com.example.thang.mobile_dating_app_v20.Activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.AdapterView;
 
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
+import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.Fragments.Setting;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -49,16 +51,18 @@ public class MainActivity extends ActionBarActivity {
         Person person = dbHelper.getCurrentUser();
         String email;
         String fullname;
+        String avatar;
         email = person.getEmail();
         fullname = person.getFullName();
-
+        avatar = person.getAvatar();
         AccountHeader.Result headerResult = new AccountHeader()
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.blueboken)
                 .addProfiles(new ProfileDrawerItem().
                         withName(fullname).
                         withEmail(email).
-                        withIcon(getResources().getDrawable(R.drawable.avatar)))
+                        withIcon(person.getAvatar() == null? BitmapFactory.decodeResource(getResources(),
+                                R.drawable.no_avatar) : Utils.decodeBase64StringToBitmap(person.getAvatar())))
 //                .withOnAccountHeaderSelectionViewClickListener(new AccountHeader.OnAccountHeaderSelectionViewClickListener() {
 //                    @Override
 //                    public boolean onClick(View view, IProfile iProfile) {

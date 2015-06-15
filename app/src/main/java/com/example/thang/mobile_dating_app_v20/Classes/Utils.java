@@ -11,7 +11,9 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.util.Base64;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -24,7 +26,7 @@ public class Utils {
     public Utils() {
     }
 
-    public Bitmap resizeBitmap(Bitmap bitmap){
+    public static Bitmap resizeBitmap(Bitmap bitmap){
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
         float scaleWidth = ((float) 200) / width;
@@ -36,10 +38,10 @@ public class Utils {
         return resizedBitmap;
     }
 
-    public Bitmap getCircleBitmap(Bitmap bitmap) {
+    public static Bitmap getCircleBitmap(Bitmap bitmap) {
         bitmap = resizeBitmap(bitmap);
         final Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-                bitmap.getHeight(), Bitmap.Config.RGB_565);
+                bitmap.getHeight(), Bitmap.Config.ARGB_8888); //RGB_565
         final Canvas canvas = new Canvas(output);
 
         final int color = Color.RED;
@@ -59,5 +61,17 @@ public class Utils {
         bitmap.recycle();
 
         return Bitmap.createScaledBitmap(output, 120, 120, false);
+    }
+
+    public static String encodeBitmapToBase64String(Bitmap bitmap){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        return new String(Base64.encode(byteArray, 1));
+    }
+
+    public static Bitmap decodeBase64StringToBitmap(String base64){
+        byte[] byteArray = Base64.decode(base64,1);
+        return BitmapFactory.decodeByteArray(byteArray , 0, byteArray.length);
     }
 }

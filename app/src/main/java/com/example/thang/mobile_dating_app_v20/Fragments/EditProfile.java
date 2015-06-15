@@ -3,12 +3,14 @@ package com.example.thang.mobile_dating_app_v20.Fragments;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,7 @@ import com.rengwuxian.materialedittext.validation.RegexpValidator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,9 +85,6 @@ public class EditProfile extends Fragment {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(currentPerson.getFacebookId() != null){
-                    Toast.makeText(getActivity(),"Pleaser edit for your reference account !",Toast.LENGTH_SHORT).show();
-                }
                 Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(i, 200);
             }
@@ -126,6 +126,8 @@ public class EditProfile extends Fragment {
             address.setText(currentPerson.getAddress());
             if(currentPerson.getPhone() == null) currentPerson.setPhone("");
             phone.setText(currentPerson.getPhone());
+            profile.setImageBitmap(currentPerson.getAvatar() == null ? BitmapFactory.decodeResource(getResources(),
+                    R.drawable.no_avatar) : Utils.decodeBase64StringToBitmap(currentPerson.getAvatar()));
         }
     }
 
@@ -209,8 +211,11 @@ public class EditProfile extends Fragment {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
-            Utils u = new Utils();
-            profile.setImageBitmap(u.resizeBitmap(BitmapFactory.decodeFile(picturePath)));
+            Bitmap avatar = (Utils.resizeBitmap(BitmapFactory.decodeFile(picturePath)));
+            profile.setImageBitmap(avatar);
+
+            //Convert avatar to Base64 for transfer to service
+            currentPerson.setAvatar(Utils.encodeBitmapToBase64String(avatar));
         }
     }
 }
