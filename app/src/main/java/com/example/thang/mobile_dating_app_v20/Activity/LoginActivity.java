@@ -58,9 +58,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -371,7 +373,17 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                 person.setGender("Female");
             }
             person.setEmail(Plus.AccountApi.getAccountName(gac));
-            person.setAvatar(p.getImage().getUrl());
+            URLConnection conn = null;
+            try {
+                conn = new URL(p.getImage().getUrl()).openConnection();
+                conn.connect();
+                InputStream is = conn.getInputStream();
+                BufferedInputStream bis = new BufferedInputStream(is, 8192);
+                Bitmap bm = Utils.resizeBitmap(BitmapFactory.decodeStream(bis));
+                person.setAvatar(Utils.encodeBitmapToBase64String(bm));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             List<List<Person>> data = new ArrayList<List<Person>>();
             List<Person> currentPerson = new ArrayList<>();
             List<Person> friends = new ArrayList<>();

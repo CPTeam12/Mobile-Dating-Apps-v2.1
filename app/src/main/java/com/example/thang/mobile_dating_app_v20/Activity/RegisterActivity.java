@@ -2,7 +2,11 @@ package com.example.thang.mobile_dating_app_v20.Activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.method.CharacterPickerDialog;
@@ -23,21 +27,30 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
+import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rengwuxian.materialedittext.validation.RegexpValidator;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -111,12 +124,15 @@ public class RegisterActivity extends ActionBarActivity {
                     }
                     if(flag == null) person.setPassword(password.getText().toString());
                     person.setFacebookId(facebookLogin);
-                    List<Person> persons = new ArrayList<Person>();
-                    persons.add(person);
-                    for(int i = 0; i< friends.size(); i++){
-                        persons.add(friends.get(i));
+                    List<Person> currentUser = new ArrayList<Person>();
+                    List<Person> friendUser = new ArrayList<Person>();
+                    currentUser.add(person);
+                    friendUser.add(person);
+                    for(Person p : friends){
+                        friendUser.add(p);
                     }
-                    new registerNew().execute(persons);
+                    new registerNew().execute(currentUser);
+                    new registerNew().execute(friendUser);
                 }
             }
         });
@@ -132,7 +148,11 @@ public class RegisterActivity extends ActionBarActivity {
         if(bundle!=null){
             Gson gson = new Gson();
             Person person = gson.fromJson(bundle.getString("currentUser"),Person.class);
-            friends = gson.fromJson(bundle.getString("friends"),ArrayList.class);
+
+            //get friend list from LoginActivity
+            Type listType = new TypeToken<ArrayList<Person>>() {}.getType();
+            friends = gson.fromJson(bundle.getString("friends"),listType);
+
             flag = bundle.getString("flag");
             if(flag!=null){
                 password.setVisibility(View.GONE);
@@ -153,7 +173,8 @@ public class RegisterActivity extends ActionBarActivity {
     }
 
     private class registerNew extends AsyncTask<List<Person>, Integer, String> {
-
+        Person localUser;
+        DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
         @Override
         protected void onPreExecute() {
             ConnectionTool connectionTool = new ConnectionTool(RegisterActivity.this);
@@ -176,19 +197,26 @@ public class RegisterActivity extends ActionBarActivity {
 
         @Override
         protected String doInBackground(List<Person>... persons) {
+            localUser = dbHelper.getCurrentUser();
             List<Person> p = persons[0];
             String response;
-            for (Person person: p){
+            for(Person person : p){
                 if(person.getFacebookId() != null){
-                    String url = "https://http://graph.facebook.com/"+ person.getFacebookId()+"/picture?type=large&redirect=false";
+                    String url = "http://graph.facebook.com/"+ person.getFacebookId()+"/picture?type=large&redirect=false";
                     try {
                         HttpClient httpclient = new DefaultHttpClient();
-                        HttpPost httppost = new HttpPost(url);
+                        HttpGet httppost = new HttpGet(url);
                         HttpResponse responce = httpclient.execute(httppost);
                         HttpEntity httpEntity = responce.getEntity();
                         response = EntityUtils.toString(httpEntity);
                         JSONObject jobj = new JSONObject(response).getJSONObject("data");
-                        person.setAvatar(jobj.getString("url"));
+                        String imageURL = jobj.getString("url").replace("\\u003d","=").replace("\\u0026", "&");
+                        URLConnection conn = new URL(imageURL).openConnection();
+                        conn.connect();
+                        InputStream is = conn.getInputStream();
+                        BufferedInputStream bis = new BufferedInputStream(is, 8192);
+                        Bitmap bm = Utils.resizeBitmap(BitmapFactory.decodeStream(bis));
+                        person.setAvatar(Utils.encodeBitmapToBase64String(bm));
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
@@ -211,17 +239,19 @@ public class RegisterActivity extends ActionBarActivity {
                 //start parsing jsonResponse
                 JSONObject jsonObject = new JSONObject(result);
                 List<Person> personList = ConnectionTool.fromJSON(jsonObject);
-                if(personList != null){
+                if(personList != null && localUser.getEmail() == null){
 
                     //insert current user into database
-                    DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
                     dbHelper.insertPerson(personList.get(0), dbHelper.USER_FLAG_CURRENT);
 
-                    //move to main activity
+                }
+                else if(personList != null && localUser.getEmail() != null){
+                    for (int i = 0; i< personList.size();i++){
+                        dbHelper.insertPerson(personList.get(i), dbHelper.USER_FLAG_FRIENDS);
+                    }
                     Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                     startActivity(intent);
-                }
-                else {
+                } else {
                     Toast.makeText(getApplicationContext(),getApplicationContext().getResources().getString(R.string.register_duplicate_email),
                             Toast.LENGTH_SHORT).show();
                     email.setText("");
