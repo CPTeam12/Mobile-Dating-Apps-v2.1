@@ -27,8 +27,8 @@ public class Utils {
     public Bitmap resizeBitmap(Bitmap bitmap){
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
-        float scaleWidth = ((float) 400) / width;
-        float scaleHeight = ((float) 400) / height;
+        float scaleWidth = ((float) 200) / width;
+        float scaleHeight = ((float) 200) / height;
         Matrix matrix = new Matrix();
         matrix.postScale(scaleWidth, scaleHeight);
         Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, false);

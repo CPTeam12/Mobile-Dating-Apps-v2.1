@@ -82,6 +82,9 @@ public class EditProfile extends Fragment {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(currentPerson.getFacebookId() != null){
+                    Toast.makeText(getActivity(),"Pleaser edit for your reference account !",Toast.LENGTH_SHORT).show();
+                }
                 Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(i, 200);
             }
@@ -120,6 +123,9 @@ public class EditProfile extends Fragment {
                 male.setChecked(false);
                 female.setChecked(true);
             }
+            address.setText(currentPerson.getAddress());
+            if(currentPerson.getPhone() == null) currentPerson.setPhone("");
+            phone.setText(currentPerson.getPhone());
         }
     }
 
@@ -204,7 +210,7 @@ public class EditProfile extends Fragment {
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
             Utils u = new Utils();
-            profile.setImageBitmap(u.getCircleBitmap(BitmapFactory.decodeFile(picturePath)));
+            profile.setImageBitmap(u.resizeBitmap(BitmapFactory.decodeFile(picturePath)));
         }
     }
 }
