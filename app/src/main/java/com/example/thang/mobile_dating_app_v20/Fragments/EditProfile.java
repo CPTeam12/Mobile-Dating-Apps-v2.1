@@ -213,7 +213,6 @@ public class EditProfile extends Fragment {
             cursor.close();
             Bitmap avatar = (Utils.resizeBitmap(BitmapFactory.decodeFile(picturePath)));
             profile.setImageBitmap(avatar);
-
             //Convert avatar to Base64 for transfer to service
             currentPerson.setAvatar(Utils.encodeBitmapToBase64String(avatar));
         }

@@ -34,7 +34,6 @@ public class Utils {
         Matrix matrix = new Matrix();
         matrix.postScale(scaleWidth, scaleHeight);
         Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, false);
-
         return resizedBitmap;
     }
 

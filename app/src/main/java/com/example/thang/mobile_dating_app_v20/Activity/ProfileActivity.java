@@ -149,7 +149,6 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
                 R.drawable.no_avatar) : Utils.decodeBase64StringToBitmap(person.getAvatar()));
         setFriendAdapter(listView, person);
 
-
         //animation for menu fab
         final View subLayer = findViewById(R.id.sub_layer);
         subLayer.setVisibility(View.GONE);

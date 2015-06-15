@@ -96,7 +96,6 @@ public class MainActivity extends ActionBarActivity {
                         new SecondaryDrawerItem().withName(R.string.nav_setting).withIcon(GoogleMaterial.Icon.gmd_settings).withIdentifier(5)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id, IDrawerItem drawerItem) {
                         if (drawerItem != null) {
