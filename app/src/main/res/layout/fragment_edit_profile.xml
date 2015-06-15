@@ -17,6 +17,14 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:paddingTop="20dp">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/edit_profile_avatar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="40dp"
+            android:src="@drawable/avatar" />
+
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/edit_fullname"
             android:layout_width="match_parent"
