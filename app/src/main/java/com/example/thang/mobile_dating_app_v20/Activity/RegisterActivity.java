@@ -28,6 +28,12 @@ import com.google.gson.Gson;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rengwuxian.materialedittext.validation.RegexpValidator;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,6 +45,7 @@ import java.util.List;
 
 public class RegisterActivity extends ActionBarActivity {
     private static final String URL_REGISTER = "http://datingappservice2.groundctrl.nl/datingapp/Service/register";
+    private static final String URL_INITIAL_FB = "http://datingappservice2.groundctrl.nl/datingapp/Service/registerfacebook";
     private MaterialDialog.Builder dialogBuilder;
     private MaterialDialog materialDialog;
 
@@ -52,7 +59,9 @@ public class RegisterActivity extends ActionBarActivity {
     Button accept, back;
     MultiAutoCompleteTextView hobby;
     CheckBox cb_male,cb_female;
-    double facebookLogin = 0;
+    String facebookLogin = "";
+    List<Person> friends = new ArrayList<Person>();
+    String flag;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +90,6 @@ public class RegisterActivity extends ActionBarActivity {
                 if(validateLogin()){
                     Person person = new Person();
                     person.setEmail(email.getText().toString());
-                    person.setPassword(password.getText().toString());
                     person.setFullName(fullname.getText().toString());
                     person.setAge(Calendar.getInstance().get(Calendar.YEAR) - Integer.parseInt(birthyear.getText().toString()));
                     person.setHobbies(hobby.getText().toString());
@@ -101,17 +109,21 @@ public class RegisterActivity extends ActionBarActivity {
                     } else {
                         person.setGender("Female");
                     }
+                    if(flag == null) person.setPassword(password.getText().toString());
                     person.setFacebookId(facebookLogin);
                     List<Person> persons = new ArrayList<Person>();
                     persons.add(person);
-                    new getInformationFriend().execute(persons);
+                    for(int i = 0; i< friends.size(); i++){
+                        persons.add(friends.get(i));
+                    }
+                    new registerNew().execute(persons);
                 }
             }
         });
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                trimCache(getApplicationContext());
+//                trimCache(getApplicationContext());
                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
@@ -119,8 +131,14 @@ public class RegisterActivity extends ActionBarActivity {
         Bundle bundle = getIntent().getExtras();
         if(bundle!=null){
             Gson gson = new Gson();
-            Person person = gson.fromJson(bundle.getString("json"),Person.class);
-            if(person.getFacebookId() != 0) facebookLogin = person.getFacebookId();
+            Person person = gson.fromJson(bundle.getString("currentUser"),Person.class);
+            friends = gson.fromJson(bundle.getString("friends"),ArrayList.class);
+            flag = bundle.getString("flag");
+            if(flag!=null){
+                password.setVisibility(View.GONE);
+                confirm_password.setVisibility(View.GONE);
+            }
+            if(person.getFacebookId() != null) facebookLogin = person.getFacebookId();
             email.setText(person.getEmail());
             fullname.setText(person.getFullName());
             String gender = person.getGender();
@@ -134,7 +152,7 @@ public class RegisterActivity extends ActionBarActivity {
         }
     }
 
-    private class getInformationFriend extends AsyncTask<List<Person>, Integer, String> {
+    private class registerNew extends AsyncTask<List<Person>, Integer, String> {
 
         @Override
         protected void onPreExecute() {
@@ -159,6 +177,26 @@ public class RegisterActivity extends ActionBarActivity {
         @Override
         protected String doInBackground(List<Person>... persons) {
             List<Person> p = persons[0];
+            String response;
+            for (Person person: p){
+                if(person.getFacebookId() != null){
+                    String url = "https://http://graph.facebook.com/"+ person.getFacebookId()+"/picture?type=large&redirect=false";
+                    try {
+                        HttpClient httpclient = new DefaultHttpClient();
+                        HttpPost httppost = new HttpPost(url);
+                        HttpResponse responce = httpclient.execute(httppost);
+                        HttpEntity httpEntity = responce.getEntity();
+                        response = EntityUtils.toString(httpEntity);
+                        JSONObject jobj = new JSONObject(response).getJSONObject("data");
+                        person.setAvatar(jobj.getString("url"));
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+            if(p.size() > 1){
+                return ConnectionTool.makePostRequest(URL_INITIAL_FB,p);
+            }
             return ConnectionTool.makePostRequest(URL_REGISTER, p);
         }
 
@@ -221,21 +259,21 @@ public class RegisterActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static void trimCache(Context context) {
-        File dir = context.getCacheDir();
-        if(dir!= null && dir.isDirectory()){
-            File[] children = dir.listFiles();
-            if (children == null) {
-                // Either dir does not exist or is not a directory
-            } else {
-                File temp;
-                for (int i = 0; i < children.length; i++) {
-                    temp = children[i];
-                    temp.delete();
-                }
-            }
-        }
-    }
+//    public static void trimCache(Context context) {
+//        File dir = context.getCacheDir();
+//        if(dir!= null && dir.isDirectory()){
+//            File[] children = dir.listFiles();
+//            if (children == null) {
+//                // Either dir does not exist or is not a directory
+//            } else {
+//                File temp;
+//                for (int i = 0; i < children.length; i++) {
+//                    temp = children[i];
+//                    temp.delete();
+//                }
+//            }
+//        }
+//    }
 
 
 
@@ -257,8 +295,7 @@ public class RegisterActivity extends ActionBarActivity {
         if(Integer.parseInt(datingage.getText().toString()) < 18){
             datingage.setError(getResources().getText(R.string.error_dating_age));
         }
+        if(flag != null) return (a && d && e && f);
         return (a && b && c && d && e && f && g);
     }
-
-
 }

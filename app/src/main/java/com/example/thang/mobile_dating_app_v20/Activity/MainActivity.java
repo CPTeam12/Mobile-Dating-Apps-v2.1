@@ -3,6 +3,8 @@ package com.example.thang.mobile_dating_app_v20.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -51,10 +53,8 @@ public class MainActivity extends ActionBarActivity {
         Person person = dbHelper.getCurrentUser();
         String email;
         String fullname;
-        String avatar;
         email = person.getEmail();
         fullname = person.getFullName();
-        avatar = person.getAvatar();
         AccountHeader.Result headerResult = new AccountHeader()
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.blueboken)

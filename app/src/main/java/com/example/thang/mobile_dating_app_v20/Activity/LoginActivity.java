@@ -25,6 +25,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
+import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -37,6 +38,9 @@ import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.plus.Plus;
 import com.google.gson.Gson;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -44,6 +48,12 @@ import com.rengwuxian.materialedittext.validation.RegexpValidator;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -84,19 +94,19 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                 materialDialog = dialogBuilder.build();
                 materialDialog.show();
             }
+            final List<Person> friends = new ArrayList<Person>();
             GraphRequest request = GraphRequest.newMyFriendsRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONArrayCallback() {
                 @Override
                 public void onCompleted(JSONArray jsonArray, GraphResponse graphResponse) {
-                    List<Person> persons = new ArrayList<Person>();
+
                     try {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject j = jsonArray.getJSONObject(i);
                             Person p = new Person();
-                            p.setFacebookId(Double.parseDouble(j.getString("id")));
+                            p.setFacebookId(j.getString("id"));
                             p.setFullName(j.getString("name"));
-                            persons.add(p);
+                            friends.add(p);
                         }
-                        new getInformationFriend().execute(persons);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -112,8 +122,13 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                         person.setEmail(jsonObject.getString("email"));
                         person.setFullName(jsonObject.getString("name"));
                         person.setGender(jsonObject.getString("gender"));
-                        person.setFacebookId(Double.parseDouble(jsonObject.getString("id")));
-                        new checkExistedAccount().execute(person);
+                        person.setFacebookId(jsonObject.getString("id"));
+                        List<Person> currentPerson = new ArrayList<Person>();
+                        currentPerson.add(person);
+                        List<List<Person>> data = new ArrayList<List<Person>>();
+                        data.add(currentPerson);
+                        data.add(friends);
+                        new checkExistedAccount().execute(data);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -127,7 +142,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
 
         @Override
         public void onCancel() {
-            Toast.makeText(getApplicationContext(), "Cancel", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_connection), Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -297,42 +312,15 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
     }
 
 //    KhuongMH
-    private class getInformationFriend extends AsyncTask<List<Person>, Integer, String>{
 
+    private class checkExistedAccount extends AsyncTask<List<List<Person>>, Integer, String> {
+        List<Person> currentUser;
+        List<Person> friends;
         @Override
-        protected String doInBackground(List<Person>... persons) {
-            List<Person> p = persons[0];
-            return ConnectionTool.makePostRequest(URL_CHECK_FB,p);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            JSONObject jsonObject = null;
-            try {
-
-                jsonObject = new JSONObject(result);
-                List<Person> personList = ConnectionTool.fromJSON(jsonObject);
-                if(personList != null){
-                    DBHelper helper = new DBHelper(getApplicationContext());
-                    for(Person person : personList){
-                        helper.insertPerson(person,DBHelper.USER_FLAG_FRIENDS);
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private class checkExistedAccount extends AsyncTask<Person, Integer, String> {
-        Person person;
-
-        @Override
-        protected String doInBackground(Person... params) {
-            person = params[0];
-            List<Person> persons = new ArrayList<>();
-            persons.add(person);
-            return ConnectionTool.makePostRequest(URL_CHECK_FB,persons);
+        protected String doInBackground(List<List<Person>>... params) {
+            currentUser = params[0].get(0);
+            friends = params[0].get(1);
+            return ConnectionTool.makePostRequest(URL_CHECK_FB,currentUser);
         }
 
         @Override
@@ -348,8 +336,11 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                 if (personList == null) {
                     Bundle bundle = new Bundle();
                     Gson gson = new Gson();
-                    String json = gson.toJson(person);
-                    bundle.putString("json", json);
+                    String jsonCurrentUser = gson.toJson(currentUser.get(0));
+                    String jsonFriends = gson.toJson(friends);
+                    bundle.putString("currentUser", jsonCurrentUser);
+                    bundle.putString("friends", jsonFriends);
+                    bundle.putString("flag","1");
                     Intent intent = new Intent(LoginActivity.this,RegisterActivity.class);
                     intent.putExtras(bundle);
                     startActivity(intent);
@@ -381,7 +372,13 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
             }
             person.setEmail(Plus.AccountApi.getAccountName(gac));
             person.setAvatar(p.getImage().getUrl());
-            new checkExistedAccount().execute(person);
+            List<List<Person>> data = new ArrayList<List<Person>>();
+            List<Person> currentPerson = new ArrayList<>();
+            List<Person> friends = new ArrayList<>();
+            currentPerson.add(person);
+            data.add(currentPerson);
+            data.add(friends);
+            new checkExistedAccount().execute(data);
         }
     }
 
@@ -456,5 +453,4 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
             }
         }
     }
-
 }
