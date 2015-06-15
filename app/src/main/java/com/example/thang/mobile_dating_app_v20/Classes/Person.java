@@ -26,7 +26,7 @@ public class Person implements Serializable {
     private String hobbies;
 
     //facebook
-    private double facebookId;
+    private String facebookId;
 
     //Position
     private double longitude;
@@ -40,7 +40,6 @@ public class Person implements Serializable {
     private int datingAge;
 
     public Person() {
-
     }
 
     public Person(double latitude, double longitude) {
@@ -49,13 +48,11 @@ public class Person implements Serializable {
     }
 
 
-    public double getFacebookId() {
+    public String getFacebookId() {
         return facebookId;
     }
 
-    public void setFacebookId(double facebookId) {
-        this.facebookId = facebookId;
-    }
+    public void setFacebookId(String facebookId) { this.facebookId = facebookId; }
 
     public String getPassword() {
         return password;
