@@ -3,11 +3,17 @@ package com.example.thang.mobile_dating_app_v20.Activity;
 import android.annotation.TargetApi;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.provider.MediaStore;
 import android.transition.Explode;
 import android.transition.Fade;
 import android.view.LayoutInflater;
@@ -19,11 +25,13 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
+import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.Fragments.Chat;
 import com.example.thang.mobile_dating_app_v20.Fragments.EditProfile;
 import com.example.thang.mobile_dating_app_v20.R;
@@ -52,6 +60,7 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
     private int mFlexibleSpaceShowFabOffset;
     private int mFlexibleSpaceImageHeight;
     private CircleImageView profileAvatar;
+    final static int RESULT_LOAD_IMAGE = 200;
 //    private int mFabMargin;
 //    private boolean mFabIsShown;
 
@@ -80,6 +89,13 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         mImageView = findViewById(R.id.image);
         mOverlayView = findViewById(R.id.overlay);
         profileAvatar = (CircleImageView) findViewById(R.id.profile_avatar);
+        profileAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i, RESULT_LOAD_IMAGE);
+            }
+        });
         mTitleView = (TextView) findViewById(R.id.title);
         mListBackgroundView = findViewById(R.id.list_background);
         ObservableListView listView = (ObservableListView) findViewById(R.id.list);
@@ -252,5 +268,4 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
             ViewHelper.setPivotX(mTitleView, 0);
         }
     }
-
 }
