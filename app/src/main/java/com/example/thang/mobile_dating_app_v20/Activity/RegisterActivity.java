@@ -317,6 +317,7 @@ public class RegisterActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(String result) {
             try {
+
                 //close loading dialog
                 if (materialDialog != null) {
                     materialDialog.dismiss();
