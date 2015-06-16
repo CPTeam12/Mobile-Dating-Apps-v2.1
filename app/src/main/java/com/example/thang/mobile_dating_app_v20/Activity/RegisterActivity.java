@@ -321,7 +321,6 @@ public class RegisterActivity extends ActionBarActivity {
                 if (materialDialog != null) {
                     materialDialog.dismiss();
                 }
-
                 //start parsing jsonResponse
                 JSONObject jsonObject = new JSONObject(result);
                 List<Person> personList = ConnectionTool.fromJSON(jsonObject);
