@@ -102,7 +102,6 @@ public class ConnectionTool implements Serializable {
                     person.setDatingMen(Boolean.getBoolean(jsonObject2.getString("datingMen")));
                     person.setDatingWomen(Boolean.getBoolean(jsonObject2.getString("datingWomen")));
                     person.setDatingAge(Integer.parseInt(jsonObject2.getString("datingAge")));
-
                     persons.add(person);
                 }
             } else {

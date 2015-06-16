@@ -12,6 +12,7 @@ import java.util.List;
  * Created by Thang on 5/31/2015.
  */
 public class Person implements Serializable {
+
     //Profile
     //private String username;
     private String password;
