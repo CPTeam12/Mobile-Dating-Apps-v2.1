@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -29,6 +30,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.Classes.Utils;
@@ -44,6 +47,12 @@ import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.google.gson.Gson;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -63,6 +72,11 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
     final static int RESULT_LOAD_IMAGE = 200;
 //    private int mFabMargin;
 //    private boolean mFabIsShown;
+
+    private MaterialDialog.Builder dialogBuilder;
+    private MaterialDialog materialDialog;
+    Person person = new Person();
+    private String URL_FIND = "http://datingappservice2.groundctrl.nl/datingapp/Service/getbyemail?email=";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +132,6 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         fabProfileEditor.setVisibility(View.GONE);
 
         //get current user profile
-        Person person = new Person();
         Bundle bundle = getIntent().getExtras();
         String flag = bundle.getString("ProfileOf");
         DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
@@ -136,15 +149,24 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
                     ft.commit();
                 }
             });
-        } else if (flag.equals(DBHelper.USER_FLAG_FRIENDS)) {
-            person = dbHelper.getPersonByEmail(bundle.getString("username"));
-            //TODO: show add close friend/ block, hide the rest
-            fabFriendEditor.setVisibility(View.VISIBLE);
         } else {
-            person = dbHelper.getPersonByEmail(bundle.getString("username"));
-            //TODO: show add friend fab, hide the rest
-            fabAddFriend.setVisibility(View.VISIBLE);
+            person = dbHelper.getPersonByEmail(bundle.getString("email"));
+            //if person != null mean this is local friend
+            if(person != null){
+                fabFriendEditor.setVisibility(View.VISIBLE);
+            }else{
+                //unknown friend, get from service
+                fabAddFriend.setVisibility(View.VISIBLE);
+                try {
+                    new getProfileTask().execute(URL_FIND + bundle.getString("email")).get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
         }
+
         profileAvatar.setImageBitmap(person.getAvatar() == null ? BitmapFactory.decodeResource(getResources(),
                 R.drawable.no_avatar) : Utils.decodeBase64StringToBitmap(person.getAvatar()));
         setFriendAdapter(listView, person);
@@ -261,6 +283,53 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
             ViewHelper.setPivotX(mTitleView, findViewById(android.R.id.content).getWidth());
         } else {
             ViewHelper.setPivotX(mTitleView, 0);
+        }
+    }
+
+    private class getProfileTask extends AsyncTask<String, Integer, String> {
+        @Override
+        protected void onPreExecute() {
+            ConnectionTool connectionTool = new ConnectionTool(ProfileActivity.this);
+            if (connectionTool.isNetworkAvailable()) {
+                dialogBuilder = new MaterialDialog.Builder(ProfileActivity.this)
+                        .cancelable(false)
+                        .content(R.string.progress_dialog)
+                        .progress(true, 0);
+                materialDialog = dialogBuilder.build();
+                materialDialog.show();
+
+            } else {
+                new MaterialDialog.Builder(ProfileActivity.this)
+                        .title(R.string.error_connection_title)
+                        .content(R.string.error_connection)
+                        .titleColorRes(R.color.md_red_400)
+                        .show();
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            //return ConnectionTool.readJSONFeed(params[0]);
+            return ConnectionTool.makeGetRequest(params[0]);
+            //return ConnectionTool.makePostRequest(params[0],new Person("a","asd","asd@asd.com",22,"Female"));
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                //close loading dialog
+                if (materialDialog != null) {
+                    materialDialog.dismiss();
+                }
+                //start parsing jsonResponse
+                JSONObject jsonObject = new JSONObject(result);
+                List<Person> personList = ConnectionTool.fromJSON(jsonObject);
+                if (personList != null) {
+                    person = personList.get(0);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

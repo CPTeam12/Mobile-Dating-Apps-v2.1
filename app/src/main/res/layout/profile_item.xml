@@ -9,12 +9,21 @@
     android:orientation="horizontal"
     android:weightSum="1">
 
-    <ImageView
+    <com.example.thang.mobile_dating_app_v20.Views.SquareImageView
         android:id="@+id/profile_icon"
         android:layout_width="50dp"
         android:layout_height="match_parent"
+        android:scaleType="centerCrop"
         android:layout_marginLeft="16dp"
-        android:src="@drawable/ic_people_black" />
+        android:transitionName="image"
+        android:src="@drawable/no_avatar" />
+
+    <!--<ImageView-->
+        <!--android:id="@+id/profile_icon"-->
+        <!--android:layout_width="50dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_marginLeft="16dp"-->
+        <!--android:src="@drawable/ic_people_black" />-->
 
     <LinearLayout
         android:layout_width="match_parent"

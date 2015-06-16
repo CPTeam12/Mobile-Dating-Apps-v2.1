@@ -29,7 +29,7 @@
             android:layout_marginRight="16dp"
             fab:fab_colorNormal="@color/AccentColor"
             fab:fab_colorPressed="#F44336"
-            fab:fab_icon="@drawable/ic_action_addfriends" />
+            fab:fab_icon="@drawable/abc_ic_search_api_mtrl_alpha" />
 
     </RelativeLayout>
     <ProgressBar

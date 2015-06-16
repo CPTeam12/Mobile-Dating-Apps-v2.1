@@ -120,4 +120,5 @@
     <string name="profile_hobbies">Hobbies</string>
     <string name="search_hint">Search by name</string>
     <string name="title_activity_search">SearchActivity</string>
+    <string name="search_no_result">No search result have been found.</string>
 </resources>

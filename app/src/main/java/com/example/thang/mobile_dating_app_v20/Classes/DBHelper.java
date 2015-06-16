@@ -114,7 +114,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         res.close();
-
+        db.close();
         return persons;
     }
 
@@ -137,6 +137,8 @@ public class DBHelper extends SQLiteOpenHelper {
             person.setHobbies(res.getString(res.getColumnIndex(USER_COL_HOBBIES)));
         }
         res.close();
+        db.close();
+
 
         return person;
     }
@@ -161,7 +163,7 @@ public class DBHelper extends SQLiteOpenHelper {
             person.setHobbies(res.getString(res.getColumnIndex(USER_COL_HOBBIES)));
         }
         res.close();
-
+        db.close();
         return person;
     }
 

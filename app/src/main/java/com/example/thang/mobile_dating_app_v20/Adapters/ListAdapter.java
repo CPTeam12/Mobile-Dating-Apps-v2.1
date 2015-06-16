@@ -2,6 +2,7 @@ package com.example.thang.mobile_dating_app_v20.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import com.example.thang.mobile_dating_app_v20.Activity.ProfileActivity;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
+import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.R;
 
 import java.util.List;
@@ -52,9 +54,9 @@ public class ListAdapter extends BaseAdapter {
         ViewHolder holder;
         final Person person = persons.get(position);
 
-        if(convertView == null){
+        if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(context);
-            convertView = inflater.inflate(R.layout.friend_item,parent,false);
+            convertView = inflater.inflate(R.layout.friend_item, parent, false);
 
             holder = new ViewHolder();
             holder.avatar = (CircleImageView) convertView.findViewById(R.id.avatar);
@@ -63,37 +65,26 @@ public class ListAdapter extends BaseAdapter {
 
             convertView.setTag(holder);
 
-        }else {
+        } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
         holder.txtName.setText(person.getFullName());
         holder.chatIcon.setImageResource(R.drawable.ic_stat_chat);
-        holder.avatar.setImageResource(R.drawable.avatar);
+        holder.avatar.setImageBitmap(person.getAvatar() == null ? BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.no_avatar) : Utils.decodeBase64StringToBitmap(person.getAvatar()));
 
         holder.chatIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Clicked chat icon", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Chat conversation goes here", Toast.LENGTH_SHORT).show();
             }
         });
 
-        holder.avatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle dataBundle = new Bundle();
-                dataBundle.putString("ProfileOf", DBHelper.USER_FLAG_FRIENDS);
-                dataBundle.putString("username", person.getEmail());
-                Intent intent1 = new Intent(context,ProfileActivity.class);
-                intent1.putExtras(dataBundle);
-                context.startActivity(intent1);
-
-            }
-        });
         return convertView;
     }
 
-    private class ViewHolder{
+    private class ViewHolder {
         public CircleImageView avatar;
         public TextView txtName;
         public ImageView chatIcon;

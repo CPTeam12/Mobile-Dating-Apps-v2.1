@@ -250,11 +250,11 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
     public void checkLogin() {
         String urlParams = "email=" + email.getText().toString().trim() +
                 "&password=" + password.getText().toString().trim();
-        new DownloadTextTask().execute(URL_AUTH + urlParams);
+        new loginTask().execute(URL_AUTH + urlParams);
         //new DownloadTextTask().execute(URL_CHECK_FB);
     }
 
-    private class DownloadTextTask extends AsyncTask<String, Integer, String> {
+    private class loginTask extends AsyncTask<String, Integer, String> {
         @Override
         protected void onPreExecute() {
             ConnectionTool connectionTool = new ConnectionTool(LoginActivity.this);
