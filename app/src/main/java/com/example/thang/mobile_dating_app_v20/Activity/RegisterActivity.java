@@ -47,6 +47,7 @@ import org.json.JSONObject;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URL;
@@ -136,7 +137,7 @@ public class RegisterActivity extends ActionBarActivity {
                     new registerNew().execute(currentUser);
 
                     //set relationship
-                    new registerNew().execute(friendUser);
+                    new setRelationshipFriends().execute(friendUser);
                 }
             }
         });
@@ -176,8 +177,7 @@ public class RegisterActivity extends ActionBarActivity {
         }
     }
 
-    private class registerNew extends AsyncTask<List<Person>, Integer, String> {
-        Person localUser;
+    private class registerNew extends AsyncTask<List<Person>, Integer, String> implements Serializable{
         DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
         @Override
         protected void onPreExecute() {
@@ -201,21 +201,16 @@ public class RegisterActivity extends ActionBarActivity {
 
         @Override
         protected String doInBackground(List<Person>... persons) {
-            localUser = dbHelper.getCurrentUser();
             List<Person> p = persons[0];
             String response;
             for(Person person : p){
 
                 //get image facebook for each person
                 if(person.getFacebookId() != null){
-                    String url = "http://graph.facebook.com/"+ person.getFacebookId()+"/picture?type=large&redirect=false";
                     try {
-                        HttpClient httpclient = new DefaultHttpClient();
-                        HttpGet httppost = new HttpGet(url);
-                        HttpResponse responce = httpclient.execute(httppost);
-                        HttpEntity httpEntity = responce.getEntity();
-                        response = EntityUtils.toString(httpEntity);
-                        JSONObject jobj = new JSONObject(response).getJSONObject("data");
+                        String url = "http://graph.facebook.com/"+ person.getFacebookId()+"/picture?type=large&redirect=false";
+                        String rp = ConnectionTool.makeGetRequest(url);
+                        JSONObject jobj = new JSONObject(rp).getJSONObject("data");
                         String imageURL = jobj.getString("url").replace("\\u003d","=").replace("\\u0026", "&");
                         URLConnection conn = new URL(imageURL).openConnection();
                         conn.connect();
@@ -223,6 +218,7 @@ public class RegisterActivity extends ActionBarActivity {
                         BufferedInputStream bis = new BufferedInputStream(is, 8192);
                         Bitmap bm = Utils.resizeBitmap(BitmapFactory.decodeStream(bis));
                         person.setAvatar(Utils.encodeBitmapToBase64String(bm));
+
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
@@ -247,13 +243,89 @@ public class RegisterActivity extends ActionBarActivity {
                 //start parsing jsonResponse
                 JSONObject jsonObject = new JSONObject(result);
                 List<Person> personList = ConnectionTool.fromJSON(jsonObject);
-                if(personList != null && localUser.getEmail() == null){
+                if(personList != null){
 
                     //insert current user into database
                     dbHelper.insertPerson(personList.get(0), dbHelper.USER_FLAG_CURRENT);
 
                 }
-                else if(personList != null && localUser.getEmail() != null){
+                else {
+                    Toast.makeText(getApplicationContext(),getApplicationContext().getResources().getString(R.string.register_duplicate_email),
+                            Toast.LENGTH_SHORT).show();
+                    email.setText("");
+                    password.setText("");
+                    confirm_password.setText("");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+
+    private class setRelationshipFriends extends AsyncTask<List<Person>, Integer, String> implements Serializable{
+        DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
+        @Override
+        protected void onPreExecute() {
+            ConnectionTool connectionTool = new ConnectionTool(RegisterActivity.this);
+            if (connectionTool.isNetworkAvailable()) {
+                dialogBuilder = new MaterialDialog.Builder(RegisterActivity.this)
+                        .cancelable(false)
+                        .content(R.string.progress_dialog)
+                        .progress(true, 0);
+                materialDialog = dialogBuilder.build();
+                materialDialog.show();
+
+            } else {
+                new MaterialDialog.Builder(RegisterActivity.this)
+                        .title(R.string.error_connection_title)
+                        .content(R.string.error_connection)
+                        .titleColorRes(R.color.md_red_400)
+                        .show();
+            }
+        }
+
+        @Override
+        protected String doInBackground(List<Person>... persons) {
+            List<Person> p = persons[0];
+            String response;
+            for(Person person : p){
+
+                //get image facebook for each person
+                if(person.getFacebookId() != null){
+                    try {
+                        String url = "http://graph.facebook.com/"+ person.getFacebookId()+"/picture?type=large&redirect=false";
+                        String rp = ConnectionTool.makeGetRequest(url);
+                        JSONObject jobj = new JSONObject(rp).getJSONObject("data");
+                        String imageURL = jobj.getString("url").replace("\\u003d","=").replace("\\u0026", "&");
+                        URLConnection conn = new URL(imageURL).openConnection();
+                        conn.connect();
+                        InputStream is = conn.getInputStream();
+                        BufferedInputStream bis = new BufferedInputStream(is, 8192);
+                        Bitmap bm = Utils.resizeBitmap(BitmapFactory.decodeStream(bis));
+                        person.setAvatar(Utils.encodeBitmapToBase64String(bm));
+
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+            return ConnectionTool.makePostRequest(URL_INITIAL_FB,p);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                //close loading dialog
+                if (materialDialog != null) {
+                    materialDialog.dismiss();
+                }
+
+                //start parsing jsonResponse
+                JSONObject jsonObject = new JSONObject(result);
+                List<Person> personList = ConnectionTool.fromJSON(jsonObject);
+                if(personList != null){
 
                     //insert friend
                     for (int i = 0; i< personList.size();i++){
@@ -263,12 +335,6 @@ public class RegisterActivity extends ActionBarActivity {
                     //move to MainActivity
                     Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                     startActivity(intent);
-                } else {
-                    Toast.makeText(getApplicationContext(),getApplicationContext().getResources().getString(R.string.register_duplicate_email),
-                            Toast.LENGTH_SHORT).show();
-                    email.setText("");
-                    password.setText("");
-                    confirm_password.setText("");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
