@@ -80,7 +80,6 @@ public class ListAdapter extends BaseAdapter {
                 Toast.makeText(context, "Chat conversation goes here", Toast.LENGTH_SHORT).show();
             }
         });
-
         return convertView;
     }
 

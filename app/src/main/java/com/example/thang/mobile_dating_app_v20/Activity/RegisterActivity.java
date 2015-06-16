@@ -72,10 +72,11 @@ public class RegisterActivity extends ActionBarActivity {
     RadioButton rb_male, rb_female;
     Button accept, back;
     MultiAutoCompleteTextView hobby;
-    CheckBox cb_male,cb_female;
+    CheckBox cb_male, cb_female;
     String facebookLogin = "";
     List<Person> friends = new ArrayList<Person>();
     String flag;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,51 +94,89 @@ public class RegisterActivity extends ActionBarActivity {
         cb_male = (CheckBox) findViewById(R.id.register_male_cb);
         cb_female = (CheckBox) findViewById(R.id.register_female_cb);
         String[] hobbies = getResources().getStringArray(R.array.register_hobbies);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.simple_dropdown_item,hobbies);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.simple_dropdown_item, hobbies);
         hobby.setAdapter(adapter);
         hobby.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 
         accept = (Button) findViewById(R.id.register_accept);
+
+        //get bundle to check if user login via - facebook or not
+        //bundle != null: login via facebook 1st
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            Gson gson = new Gson();
+            Person person = gson.fromJson(bundle.getString("currentUser"), Person.class);
+
+            //get friend list from LoginActivity
+            Type listType = new TypeToken<ArrayList<Person>>() {
+            }.getType();
+            friends = gson.fromJson(bundle.getString("friends"), listType);
+
+            flag = bundle.getString("flag");
+            if (flag != null) {
+                password.setVisibility(View.GONE);
+                confirm_password.setVisibility(View.GONE);
+            }
+            if (person.getFacebookId() != null) facebookLogin = person.getFacebookId();
+            email.setText(person.getEmail());
+            fullname.setText(person.getFullName());
+            String gender = person.getGender();
+            if (gender.equalsIgnoreCase("Male")) {
+                rb_male.setChecked(true);
+                rb_female.setChecked(false);
+            } else {
+                rb_male.setChecked(false);
+                rb_female.setChecked(true);
+            }
+        }
+
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(validateLogin()){
+                if (validateLogin()) {
                     Person person = new Person();
                     person.setEmail(email.getText().toString());
                     person.setFullName(fullname.getText().toString());
                     person.setAge(Calendar.getInstance().get(Calendar.YEAR) - Integer.parseInt(birthyear.getText().toString()));
                     person.setHobbies(hobby.getText().toString());
                     person.setDatingAge(Integer.parseInt(datingage.getText().toString()));
-                    if(cb_male.isChecked()){
+                    if (cb_male.isChecked()) {
                         person.setDatingMen(true);
                     } else {
                         person.setDatingMen(false);
                     }
-                    if(cb_female.isChecked()){
+                    if (cb_female.isChecked()) {
                         person.setDatingWomen(true);
                     } else {
                         person.setDatingWomen(false);
                     }
-                    if(rb_male.isChecked()){
+                    if (rb_male.isChecked()) {
                         person.setGender("Male");
                     } else {
                         person.setGender("Female");
                     }
-                    if(flag == null) person.setPassword(password.getText().toString());
+
+
+
+                    if (flag == null) person.setPassword(password.getText().toString());
                     person.setFacebookId(facebookLogin);
                     List<Person> currentUser = new ArrayList<Person>();
                     List<Person> friendUser = new ArrayList<Person>();
                     currentUser.add(person);
                     friendUser.add(person);
-                    for(Person p : friends){
+                    for (Person p : friends) {
                         friendUser.add(p);
                     }
 
                     //register
                     new registerNew().execute(currentUser);
 
-                    //set relationship
-                    new setRelationshipFriends().execute(friendUser);
+                    //only check relationship if user login via facebook the first time
+                    if (flag != null) {
+                        //set relationship
+                        new setRelationshipFriends().execute(friendUser);
+                    }
+
                 }
             }
         });
@@ -149,36 +188,12 @@ public class RegisterActivity extends ActionBarActivity {
                 startActivity(intent);
             }
         });
-        Bundle bundle = getIntent().getExtras();
-        if(bundle!=null){
-            Gson gson = new Gson();
-            Person person = gson.fromJson(bundle.getString("currentUser"),Person.class);
 
-            //get friend list from LoginActivity
-            Type listType = new TypeToken<ArrayList<Person>>() {}.getType();
-            friends = gson.fromJson(bundle.getString("friends"),listType);
-
-            flag = bundle.getString("flag");
-            if(flag!=null){
-                password.setVisibility(View.GONE);
-                confirm_password.setVisibility(View.GONE);
-            }
-            if(person.getFacebookId() != null) facebookLogin = person.getFacebookId();
-            email.setText(person.getEmail());
-            fullname.setText(person.getFullName());
-            String gender = person.getGender();
-            if(gender.equalsIgnoreCase("Male")){
-                rb_male.setChecked(true);
-                rb_female.setChecked(false);
-            } else {
-                rb_male.setChecked(false);
-                rb_female.setChecked(true);
-            }
-        }
     }
 
-    private class registerNew extends AsyncTask<List<Person>, Integer, String> implements Serializable{
+    private class registerNew extends AsyncTask<List<Person>, Integer, String> implements Serializable {
         DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
+
         @Override
         protected void onPreExecute() {
             ConnectionTool connectionTool = new ConnectionTool(RegisterActivity.this);
@@ -203,15 +218,15 @@ public class RegisterActivity extends ActionBarActivity {
         protected String doInBackground(List<Person>... persons) {
             List<Person> p = persons[0];
             String response;
-            for(Person person : p){
+            for (Person person : p) {
 
                 //get image facebook for each person
-                if(person.getFacebookId() != null){
+                if (person.getFacebookId() != null) {
                     try {
-                        String url = "http://graph.facebook.com/"+ person.getFacebookId()+"/picture?type=large&redirect=false";
+                        String url = "http://graph.facebook.com/" + person.getFacebookId() + "/picture?type=large&redirect=false";
                         String rp = ConnectionTool.makeGetRequest(url);
                         JSONObject jobj = new JSONObject(rp).getJSONObject("data");
-                        String imageURL = jobj.getString("url").replace("\\u003d","=").replace("\\u0026", "&");
+                        String imageURL = jobj.getString("url").replace("\\u003d", "=").replace("\\u0026", "&");
                         URLConnection conn = new URL(imageURL).openConnection();
                         conn.connect();
                         InputStream is = conn.getInputStream();
@@ -226,8 +241,8 @@ public class RegisterActivity extends ActionBarActivity {
             }
 
             // checking register new account or set relationship for user's friends
-            if(p.size() > 1){
-                return ConnectionTool.makePostRequest(URL_INITIAL_FB,p);
+            if (p.size() > 1) {
+                return ConnectionTool.makePostRequest(URL_INITIAL_FB, p);
             }
             return ConnectionTool.makePostRequest(URL_REGISTER, p);
         }
@@ -243,14 +258,15 @@ public class RegisterActivity extends ActionBarActivity {
                 //start parsing jsonResponse
                 JSONObject jsonObject = new JSONObject(result);
                 List<Person> personList = ConnectionTool.fromJSON(jsonObject);
-                if(personList != null){
-
+                if (personList != null) {
                     //insert current user into database
                     dbHelper.insertPerson(personList.get(0), dbHelper.USER_FLAG_CURRENT);
-
-                }
-                else {
-                    Toast.makeText(getApplicationContext(),getApplicationContext().getResources().getString(R.string.register_duplicate_email),
+                    //move to MainActivity
+                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.register_duplicate_email),
                             Toast.LENGTH_SHORT).show();
                     email.setText("");
                     password.setText("");
@@ -264,77 +280,65 @@ public class RegisterActivity extends ActionBarActivity {
     }
 
 
-    private class setRelationshipFriends extends AsyncTask<List<Person>, Integer, String> implements Serializable{
+    private class setRelationshipFriends extends AsyncTask<List<Person>, Integer, String> implements Serializable {
         DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
+
         @Override
         protected void onPreExecute() {
-            ConnectionTool connectionTool = new ConnectionTool(RegisterActivity.this);
-            if (connectionTool.isNetworkAvailable()) {
-                dialogBuilder = new MaterialDialog.Builder(RegisterActivity.this)
-                        .cancelable(false)
-                        .content(R.string.progress_dialog)
-                        .progress(true, 0);
-                materialDialog = dialogBuilder.build();
-                materialDialog.show();
-
-            } else {
-                new MaterialDialog.Builder(RegisterActivity.this)
-                        .title(R.string.error_connection_title)
-                        .content(R.string.error_connection)
-                        .titleColorRes(R.color.md_red_400)
-                        .show();
-            }
+//            ConnectionTool connectionTool = new ConnectionTool(RegisterActivity.this);
+//            if (connectionTool.isNetworkAvailable()) {
+//                dialogBuilder = new MaterialDialog.Builder(RegisterActivity.this)
+//                        .cancelable(false)
+//                        .content(R.string.progress_dialog)
+//                        .progress(true, 0);
+//                materialDialog = dialogBuilder.build();
+//                materialDialog.show();
+//            } else {
+//                new MaterialDialog.Builder(RegisterActivity.this)
+//                        .title(R.string.error_connection_title)
+//                        .content(R.string.error_connection)
+//                        .titleColorRes(R.color.md_red_400)
+//                        .show();
+//            }
         }
 
         @Override
         protected String doInBackground(List<Person>... persons) {
             List<Person> p = persons[0];
             String response;
-            for(Person person : p){
-
+            for (Person person : p) {
                 //get image facebook for each person
-                if(person.getFacebookId() != null){
+                if (person.getFacebookId() != null) {
                     try {
-                        String url = "http://graph.facebook.com/"+ person.getFacebookId()+"/picture?type=large&redirect=false";
+                        String url = "http://graph.facebook.com/" + person.getFacebookId() + "/picture?type=large&redirect=false";
                         String rp = ConnectionTool.makeGetRequest(url);
                         JSONObject jobj = new JSONObject(rp).getJSONObject("data");
-                        String imageURL = jobj.getString("url").replace("\\u003d","=").replace("\\u0026", "&");
+                        String imageURL = jobj.getString("url").replace("\\u003d", "=").replace("\\u0026", "&");
                         URLConnection conn = new URL(imageURL).openConnection();
                         conn.connect();
                         InputStream is = conn.getInputStream();
                         BufferedInputStream bis = new BufferedInputStream(is, 8192);
                         Bitmap bm = Utils.resizeBitmap(BitmapFactory.decodeStream(bis));
                         person.setAvatar(Utils.encodeBitmapToBase64String(bm));
-
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
                 }
             }
-            return ConnectionTool.makePostRequest(URL_INITIAL_FB,p);
+            return ConnectionTool.makePostRequest(URL_INITIAL_FB, p);
         }
 
         @Override
         protected void onPostExecute(String result) {
             try {
-                //close loading dialog
-                if (materialDialog != null) {
-                    materialDialog.dismiss();
-                }
-
                 //start parsing jsonResponse
                 JSONObject jsonObject = new JSONObject(result);
                 List<Person> personList = ConnectionTool.fromJSON(jsonObject);
-                if(personList != null){
-
+                if (personList != null) {
                     //insert friend
-                    for (int i = 0; i< personList.size();i++){
+                    for (int i = 0; i < personList.size(); i++) {
                         dbHelper.insertPerson(personList.get(i), dbHelper.USER_FLAG_FRIENDS);
                     }
-
-                    //move to MainActivity
-                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                    startActivity(intent);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -342,7 +346,6 @@ public class RegisterActivity extends ActionBarActivity {
 
         }
     }
-
 
 
     @Override
@@ -384,7 +387,6 @@ public class RegisterActivity extends ActionBarActivity {
 //    }
 
 
-
     private boolean validateLogin() {
         //username.validate("^(?=\\s*\\S).*$","Username cannot empty.");
         String error = getResources().getString(R.string.error_field_required);
@@ -397,13 +399,13 @@ public class RegisterActivity extends ActionBarActivity {
         boolean e = birthyear.validateWith(new RegexpValidator(getResources().getString(R.string.error_invalid_year), "^(\\d{4})([\\.|,]\\d{1,2})?$"));
         boolean f = datingage.validateWith(new RegexpValidator(getResources().getString(R.string.error_invalid_age), "^(\\d{2})([\\.|,]\\d{1,2})?$"));
         boolean g = password.getText().toString().equals(confirm_password.getText().toString());
-        if(!password.getText().toString().equals(confirm_password.getText().toString())){
+        if (!password.getText().toString().equals(confirm_password.getText().toString())) {
             confirm_password.setError(getResources().getText(R.string.error_password));
         }
-        if(Integer.parseInt(datingage.getText().toString()) < 18){
+        if (Integer.parseInt(datingage.getText().toString()) < 18) {
             datingage.setError(getResources().getText(R.string.error_dating_age));
         }
-        if(flag != null) return (a && d && e && f);
+        if (flag != null) return (a && d && e && f);
         return (a && b && c && d && e && f && g);
     }
 }
