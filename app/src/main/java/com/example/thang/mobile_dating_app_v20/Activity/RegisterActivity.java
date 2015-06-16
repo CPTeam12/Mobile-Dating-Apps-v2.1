@@ -397,13 +397,14 @@ public class RegisterActivity extends ActionBarActivity {
         boolean e = birthyear.validateWith(new RegexpValidator(getResources().getString(R.string.error_invalid_year), "^(\\d{4})([\\.|,]\\d{1,2})?$"));
         boolean f = datingage.validateWith(new RegexpValidator(getResources().getString(R.string.error_invalid_age), "^(\\d{2})([\\.|,]\\d{1,2})?$"));
         boolean g = password.getText().toString().equals(confirm_password.getText().toString());
+        boolean h = !hobby.getText().toString().equals("");
         if(!password.getText().toString().equals(confirm_password.getText().toString())){
             confirm_password.setError(getResources().getText(R.string.error_password));
         }
         if(Integer.parseInt(datingage.getText().toString()) < 18){
             datingage.setError(getResources().getText(R.string.error_dating_age));
         }
-        if(flag != null) return (a && d && e && f);
-        return (a && b && c && d && e && f && g);
+        if(flag != null) return (a && d && e && f && h);
+        return (a && b && c && d && e && f && g && h);
     }
 }
