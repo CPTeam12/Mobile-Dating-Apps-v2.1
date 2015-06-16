@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.thang.mobile_dating_app_v20.Activity.MainActivity;
+import com.example.thang.mobile_dating_app_v20.Activity.ProfileActivity;
 import com.example.thang.mobile_dating_app_v20.Activity.SearchActivity;
 import com.example.thang.mobile_dating_app_v20.Activity.SettingActivity;
 import com.example.thang.mobile_dating_app_v20.Adapters.ListAdapter;
@@ -42,7 +43,6 @@ public class Tab2 extends Fragment {
     private ListView mList;
     private ListAdapter mAdapter;
 
-    private Context context;
     private ProgressBar spiner;
     private TextView empty;
     //dialog
@@ -86,6 +86,7 @@ public class Tab2 extends Fragment {
 
         DBHelper dbHelper = DBHelper.getInstance(getActivity());
         List<Person> personsList = dbHelper.getAllFriends();
+        //TODO: handle get data when user had no friends
         if (personsList.isEmpty()) {
             //get JSON list friend from webservice and insert into SQLite
             String urlParams = "email=" + dbHelper.getCurrentUser().getEmail();
@@ -100,17 +101,25 @@ public class Tab2 extends Fragment {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Person person = (Person) mList.getItemAtPosition(position);
-                    getActivity().setTitle("Chat");
-                    final FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.addToBackStack(null);
-                    ft.hide(Tab2.this);
-                    Fragment chat = new Chat();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("friend", person.getEmail());
-                    chat.setArguments(bundle);
-                    ft.add(R.id.mainFragment, chat, "Chat");
-                    ft.setBreadCrumbTitle("Chat");
-                    ft.commit();
+                    Bundle dataBundle = new Bundle();
+                    dataBundle.putString("ProfileOf", DBHelper.USER_FLAG_FRIENDS);
+                    dataBundle.putString("email", person.getEmail());
+                    Intent intent1 = new Intent(getActivity(),ProfileActivity.class);
+                    intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent1.putExtras(dataBundle);
+                    getActivity().startActivity(intent1);
+                    //Chat of Khuong
+//                    getActivity().setTitle("Chat");
+//                    final FragmentTransaction ft = getFragmentManager().beginTransaction();
+//                    ft.addToBackStack(null);
+//                    ft.hide(Tab2.this);
+//                    Fragment chat = new Chat();
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("friend", person.getEmail());
+//                    chat.setArguments(bundle);
+//                    ft.add(R.id.mainFragment, chat, "Chat");
+//                    ft.setBreadCrumbTitle("Chat");
+//                    ft.commit();
                 }
             });
         }

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.thang.mobile_dating_app_v20.R;
+import com.example.thang.mobile_dating_app_v20.Views.SquareImageView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,7 +52,7 @@ public class ProfileAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.profile_item, parent, false);
 
             holder = new ViewHolder();
-            holder.profileIcon = (ImageView) convertView.findViewById(R.id.profile_icon);
+            holder.profileIcon = (SquareImageView) convertView.findViewById(R.id.profile_icon);
             holder.profileText = (TextView) convertView.findViewById(R.id.profile_text);
             holder.profileHeaderText = (TextView) convertView.findViewById(R.id.profile_header_text);
 
@@ -98,7 +99,7 @@ public class ProfileAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
-        public ImageView profileIcon;
+        public SquareImageView profileIcon;
         public TextView profileText;
         public TextView profileHeaderText;
     }

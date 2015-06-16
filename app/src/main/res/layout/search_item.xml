@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="@color/white"
+    android:padding="8dp">
+
+    <com.example.thang.mobile_dating_app_v20.Views.SquareImageView
+        android:id="@+id/avatar"
+        android:layout_width="57dp"
+        android:layout_height="fill_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/no_avatar"
+        android:transitionName="image" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/search_name"
+        android:layout_width="fill_parent"
+        android:layout_height="57dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:paddingLeft="8dp"
         android:text="Medium Text"
-        android:id="@+id/search_name" />
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
 </LinearLayout>
