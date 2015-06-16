@@ -92,6 +92,7 @@ public class ConnectionTool implements Serializable {
                     person.setEmail(jsonObject2.getString("email"));
                     person.setPhone(jsonObject2.getString("phone"));
                     person.setAddress(jsonObject2.getString("address"));
+                    person.setAvatar(jsonObject2.getString("avatar"));
 
                     person.setLastKnown(Integer.parseInt(jsonObject2.getString("lastKnown")));
                     person.setLatitude(Double.parseDouble(jsonObject2.getString("latitude")));
@@ -115,6 +116,7 @@ public class ConnectionTool implements Serializable {
                     person.setEmail(jsonObject1.getString("email"));
                     person.setPhone(jsonObject1.getString("phone"));
                     person.setAddress(jsonObject1.getString("address"));
+                    person.setAvatar(jsonObject1.getString("avatar"));
 
                     person.setLastKnown(Integer.parseInt(jsonObject1.getString("lastKnown")));
                     person.setLatitude(Double.parseDouble(jsonObject1.getString("latitude")));
@@ -141,7 +143,6 @@ public class ConnectionTool implements Serializable {
 
         Gson gson = new Gson();
         data = gson.toJson(persons);
-
         try {
             //connect
             urlConnection = (HttpURLConnection)(new URL(url).openConnection());
