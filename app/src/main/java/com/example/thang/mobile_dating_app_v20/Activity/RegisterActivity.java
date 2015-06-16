@@ -225,7 +225,7 @@ public class RegisterActivity extends ActionBarActivity {
                     }
                 }
             }
-            
+
 
             // checking register new account or set relationship for user's friends
             if(p.size() > 1){
