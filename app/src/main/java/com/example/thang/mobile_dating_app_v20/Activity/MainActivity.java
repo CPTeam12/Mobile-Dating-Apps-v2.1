@@ -3,6 +3,7 @@ package com.example.thang.mobile_dating_app_v20.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
@@ -61,21 +63,17 @@ public class MainActivity extends ActionBarActivity {
                 .addProfiles(new ProfileDrawerItem().
                         withName(fullname).
                         withEmail(email).
-                        withIcon(person.getAvatar() == null? BitmapFactory.decodeResource(getResources(),
-                                R.drawable.no_avatar) : Utils.decodeBase64StringToBitmap(person.getAvatar())))
+                        withIcon(person.getAvatar() == null? getResources().getDrawable(R.drawable.no_avatar)
+                                 : new BitmapDrawable(Utils.decodeBase64StringToBitmap(person.getAvatar())))
+                )
 //                .withOnAccountHeaderSelectionViewClickListener(new AccountHeader.OnAccountHeaderSelectionViewClickListener() {
 //                    @Override
 //                    public boolean onClick(View view, IProfile iProfile) {
-//                        result.closeDrawer();
-//                        Bundle dataBundle = new Bundle();
-//                        dataBundle.putString("ProfileOf", DBHelper.USER_FLAG_CURRENT);
-//                        Intent intent1 = new Intent(getApplicationContext(), ProfileActivity.class);
-//                        intent1.putExtras(dataBundle);
-//                        startActivity(intent1);
-//
+//                        Toast.makeText(getApplicationContext(),"Hello",Toast.LENGTH_SHORT).show();
 //                        return true;
 //                    }
 //                })
+
                 .build();
 
         result = new Drawer()
