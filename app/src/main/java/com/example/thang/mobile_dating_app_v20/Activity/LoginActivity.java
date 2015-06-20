@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -11,6 +14,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -63,13 +67,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class LoginActivity extends ActionBarActivity implements GoogleApiClient.OnConnectionFailedListener, ConnectionCallbacks {
-    private static final String URL_AUTH = "http://datingappservice2.groundctrl.nl/datingapp/Service/auth?";
-    private static final String URL_CHECK_FB = "http://datingappservice2.groundctrl.nl/datingapp/Service/facebook";
+    private static final String URL_AUTH = "http://datingappservice.jelastic.skali.net/datingapp/Service/auth?";
+    private static final String URL_CHECK_FB = "http://datingappservice.jelastic.skali.net/datingapp/Service/facebook";
 
     private TextView loginError;
     private MaterialEditText email;
@@ -88,7 +94,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
     private FacebookCallback<LoginResult> callback = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
-            if(dialogBuilder == null){
+            if (dialogBuilder == null) {
                 dialogBuilder = new MaterialDialog.Builder(LoginActivity.this)
                         .cancelable(false)
                         .content(R.string.progress_dialog)
@@ -157,6 +163,24 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //initial view
+//        PackageInfo info;
+//        try {
+//            info = getPackageManager().getPackageInfo("com.example.thang.mobile_dating_app_v20", PackageManager.GET_SIGNATURES);
+//            for (Signature signature : info.signatures) {
+//                MessageDigest md;
+//                md = MessageDigest.getInstance("SHA");
+//                md.update(signature.toByteArray());
+//                String something = new String(Base64.encode(md.digest(), 0));
+//                //String something = new String(Base64.encodeBytes(md.digest()));
+//                Log.e("hash key", something);
+//            }
+//        } catch (PackageManager.NameNotFoundException e1) {
+//            Log.e("name not found", e1.toString());
+//        } catch (NoSuchAlgorithmException e) {
+//            Log.e("no such an algorithm", e.toString());
+//        } catch (Exception e) {
+//            Log.e("exception", e.toString());
+//        }
         //---KhuongMH----
         //facebook
         FacebookSdk.sdkInitialize(getApplicationContext());
@@ -187,7 +211,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         //check whether this user have already logged in or not
         DBHelper dbHelper = new DBHelper(getApplicationContext());
         Person person = dbHelper.getCurrentUser();
-        if (person.getEmail()==null) {
+        if (person.getEmail() == null) {
             loginError = (TextView) findViewById(R.id.login_error);
             email = (MaterialEditText) findViewById(R.id.login_email);
             password = (MaterialEditText) findViewById(R.id.password);
@@ -280,7 +304,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         protected String doInBackground(String... params) {
             int i = 0;
             //return ConnectionTool.readJSONFeed(params[0]);
-            return  ConnectionTool.makeGetRequest(params[0]);
+            return ConnectionTool.makeGetRequest(params[0]);
             //return ConnectionTool.makePostRequest(params[0],new Person("a","asd","asd@asd.com",22,"Female"));
         }
 
@@ -303,7 +327,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.error_invalid_login),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_invalid_login), Toast.LENGTH_SHORT).show();
 //                    loginError.setText(getResources().getString(R.string.error_invalid_login));
 //                    loginError.setVisibility(View.VISIBLE);
                     password.setText("");
@@ -319,11 +343,12 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
     private class checkExistedAccount extends AsyncTask<List<List<Person>>, Integer, String> {
         List<Person> currentUser;
         List<Person> friends;
+
         @Override
         protected String doInBackground(List<List<Person>>... params) {
             currentUser = params[0].get(0);
             friends = params[0].get(1);
-            return ConnectionTool.makePostRequest(URL_CHECK_FB,currentUser);
+            return ConnectionTool.makePostRequest(URL_CHECK_FB, currentUser);
         }
 
         @Override
@@ -343,12 +368,11 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                     String jsonFriends = gson.toJson(friends);
                     bundle.putString("currentUser", jsonCurrentUser);
                     bundle.putString("friends", jsonFriends);
-                    bundle.putString("flag","1");
-                    Intent intent = new Intent(LoginActivity.this,RegisterActivity.class);
+                    bundle.putString("flag", "1");
+                    Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                     intent.putExtras(bundle);
                     startActivity(intent);
-                }
-                else {
+                } else {
                     DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
                     dbHelper.insertPerson(personList.get(0), dbHelper.USER_FLAG_CURRENT);
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -433,6 +457,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
 
     private class LoadProfileImage extends AsyncTask {
         ImageView downloadedImage;
+
         public LoadProfileImage(ImageView image) {
             downloadedImage = image;
         }

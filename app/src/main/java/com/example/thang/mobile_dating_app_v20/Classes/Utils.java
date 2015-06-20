@@ -1,6 +1,5 @@
 package com.example.thang.mobile_dating_app_v20.Classes;
 
-import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,8 +13,6 @@ import android.graphics.RectF;
 import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 /**
  * Created by Thang on 5/28/2015.
@@ -29,12 +26,16 @@ public class Utils {
     public static Bitmap resizeBitmap(Bitmap bitmap){
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
+        Bitmap result;
         float scaleWidth = ((float) 200) / width;
         float scaleHeight = ((float) 200) / height;
         Matrix matrix = new Matrix();
-        matrix.postScale(scaleWidth, scaleHeight);
-        Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, false);
-        return resizedBitmap;
+        if (width > height){
+            result = Bitmap.createBitmap(bitmap,width/2 - height/2,0,height,height,matrix,false);
+        }else{
+            result = Bitmap.createBitmap(bitmap,0,height/2 - width/2,width,width,matrix,false);
+        }
+        return result;
     }
 
     public static Bitmap getCircleBitmap(Bitmap bitmap) {
@@ -64,7 +65,7 @@ public class Utils {
 
     public static String encodeBitmapToBase64String(Bitmap bitmap){
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 30, stream);
         byte[] byteArray = stream.toByteArray();
         return new String(Base64.encode(byteArray, 1));
     }

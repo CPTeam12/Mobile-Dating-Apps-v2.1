@@ -89,7 +89,16 @@ public class DBHelper extends SQLiteOpenHelper {
                 + USER_FLAG + " = '" + USER_FLAG_CURRENT + "'";
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL(query);
+        db.close();
         insertPerson(person, USER_FLAG_CURRENT);
+    }
+
+    public void deleteAllFriend(){
+        String query = "DELETE FROM " + USER_TABLE_NAME + " WHERE "
+                + USER_FLAG + " = '" + USER_FLAG_FRIENDS + "'";
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(query);
+        db.close();
     }
 
     public List<Person> getAllFriends() {

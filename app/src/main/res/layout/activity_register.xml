@@ -1,20 +1,22 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     tools:context="com.example.thang.mobile_dating_app_v20.Activity.RegisterActivity">
 
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingLeft="20dp"
             android:paddingRight="20dp">
+
             <ImageView
                 android:layout_width="80dp"
                 android:layout_height="100dp"
@@ -27,10 +29,10 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_email"
                 app:met_baseColor="@color/primary_text"
+                app:met_errorColor="#ffdd4c3a"
                 app:met_floatingLabel="highlight"
                 app:met_primaryColor="@color/primary_text"
-                app:met_errorColor="#ffdd4c3a"
-                app:met_textColorHint="@color/primary_text"/>
+                app:met_textColorHint="@color/primary_text" />
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/register_password"
@@ -39,10 +41,10 @@
                 android:hint="@string/prompt_password"
                 android:inputType="textPassword"
                 app:met_baseColor="@color/primary_text"
+                app:met_errorColor="#ffdd4c3a"
                 app:met_floatingLabel="highlight"
                 app:met_primaryColor="@color/primary_text"
-                app:met_errorColor="#ffdd4c3a"
-                app:met_textColorHint="@color/primary_text"/>
+                app:met_textColorHint="@color/primary_text" />
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/register_confirm_password"
@@ -51,10 +53,10 @@
                 android:hint="@string/prompt_confirm_password"
                 android:inputType="textPassword"
                 app:met_baseColor="@color/primary_text"
+                app:met_errorColor="#ffdd4c3a"
                 app:met_floatingLabel="highlight"
                 app:met_primaryColor="@color/primary_text"
-                app:met_errorColor="#ffdd4c3a"
-                app:met_textColorHint="@color/primary_text"/>
+                app:met_textColorHint="@color/primary_text" />
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/register_fullname"
@@ -62,10 +64,10 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_fullname"
                 app:met_baseColor="@color/primary_text"
+                app:met_errorColor="#ffdd4c3a"
                 app:met_floatingLabel="highlight"
                 app:met_primaryColor="@color/primary_text"
-                app:met_errorColor="#ffdd4c3a"
-                app:met_textColorHint="@color/primary_text"/>
+                app:met_textColorHint="@color/primary_text" />
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/register_birthyear"
@@ -74,110 +76,113 @@
                 android:hint="@string/prompt_yearbirth"
                 android:inputType="date"
                 app:met_baseColor="@color/primary_text"
+                app:met_errorColor="#ffdd4c3a"
                 app:met_floatingLabel="highlight"
                 app:met_primaryColor="@color/primary_text"
-                app:met_errorColor="#ffdd4c3a"
-                app:met_textColorHint="@color/primary_text"/>
+                app:met_textColorHint="@color/primary_text" />
 
             <com.rengwuxian.materialedittext.MaterialMultiAutoCompleteTextView
+                android:id="@+id/register_hobby"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/register_hobby"
-                android:hint="@string/register_hobby"
                 android:completionThreshold="1"
+                android:hint="@string/register_hobby"
                 app:met_baseColor="@color/primary_text"
+                app:met_errorColor="#ffdd4c3a"
                 app:met_floatingLabel="highlight"
                 app:met_primaryColor="@color/primary_text"
-                app:met_errorColor="#ffdd4c3a"
-                app:met_textColorHint="@color/primary_text"/>
+                app:met_textColorHint="@color/primary_text" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/register_gender"
-                    android:textColor="@color/primary_text"
+                    android:layout_marginLeft="2dp"
                     android:layout_marginTop="15dp"
-                    android:layout_marginLeft="2dp"/>
+                    android:text="@string/register_gender"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/primary_text" />
+
                 <RadioGroup
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_marginTop="10dp"
-                    android:weightSum="1"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:weightSum="1">
 
                     <RadioButton
                         android:id="@+id/register_male_rb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
-                        android:checked="true"
                         android:layout_marginLeft="20dp"
-                        android:textSize="16dp"
+                        android:buttonTint="@color/md_blue_800"
+                        android:checked="true"
                         android:text="@string/setting_dating_men"
                         android:textColor="@color/primary_text"
-                        android:buttonTint="@color/md_blue_800"/>
+                        android:textSize="16dp" />
+
                     <RadioButton
                         android:id="@+id/register_female_rb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
-                        android:checked="false"
                         android:layout_marginLeft="20dp"
-                        android:textSize="16dp"
+                        android:buttonTint="@color/md_blue_800"
+                        android:checked="false"
                         android:text="@string/setting_dating_women"
                         android:textColor="@color/primary_text"
-                        android:buttonTint="@color/md_blue_800"/>
+                        android:textSize="16dp" />
                 </RadioGroup>
             </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/register_buddy"
-                android:textColor="@color/primary_text"
                 android:layout_marginBottom="10dp"
-                android:layout_marginLeft="2dp"/>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:text="@string/register_buddy"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/register_gender"
-                android:textColor="@color/primary_text"
-                android:layout_marginTop="1dp"
-                android:layout_marginLeft="2dp"/>
+                android:textColor="@color/primary_text" />
 
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/register_male_cb"
-                android:layout_marginLeft="20dp"
-                android:textSize="16dp"
-                android:text="@string/setting_dating_men"
-                android:textColor="@color/primary_text"
-                android:buttonTint="@color/md_blue_800"/>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
 
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/register_female_cb"
-                android:layout_marginLeft="20dp"
-                android:textSize="16dp"
-                android:text="@string/setting_dating_women"
-                android:textColor="@color/primary_text"
-                android:buttonTint="@color/md_blue_800"/>
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="1dp"
+                    android:text="@string/register_gender"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/primary_text" />
+
+                <CheckBox
+                    android:id="@+id/register_male_cb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:buttonTint="@color/md_blue_800"
+                    android:text="@string/setting_dating_men"
+                    android:textColor="@color/primary_text"
+                    android:textSize="16dp" />
+
+                <CheckBox
+                    android:id="@+id/register_female_cb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:buttonTint="@color/md_blue_800"
+                    android:text="@string/setting_dating_women"
+                    android:textColor="@color/primary_text"
+                    android:textSize="16dp" />
+            </LinearLayout>
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/register_datingage"
@@ -187,42 +192,42 @@
                 android:text="18"
                 app:met_baseColor="@color/primary_text"
                 app:met_floatingLabel="highlight"
-                app:met_primaryColor="@color/primary_text"
+                app:met_maxCharacters="2"
                 app:met_minCharacters="2"
-                app:met_maxCharacters="2"/>
+                app:met_primaryColor="@color/primary_text" />
 
             <TextView
+                android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/register_policy"
-                android:textColor="@color/primary_text"
-                android:id="@+id/textView2"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="2dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="2dp"/>
+                android:text="@string/register_policy"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/primary_text" />
 
             <Button
+                android:id="@+id/register_accept"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="14dp"
                 android:background="#ce2aa7d6"
-                android:textColor="@color/md_white_1000"
-                android:textStyle="bold"
                 android:text="@string/register_reg"
-                android:id="@+id/register_accept"
-                android:layout_gravity="center_horizontal" />
+                android:textColor="@color/md_white_1000"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/register_back_login"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="16dp"
                 android:background="@android:color/transparent"
-                android:textColor="@color/primary_text"
-                android:textAllCaps="false"
                 android:text="@string/register_back_login"
-                style="?android:attr/borderlessButtonStyle"/>
+                android:textAllCaps="false"
+                android:textColor="@color/primary_text" />
         </LinearLayout>
     </ScrollView>
 

@@ -1,21 +1,35 @@
 package com.example.thang.mobile_dating_app_v20.Fragments;
 
+import android.app.Activity;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.example.thang.mobile_dating_app_v20.Activity.MainActivity;
 import com.example.thang.mobile_dating_app_v20.Cards.CardFriendRecommendation;
 import com.example.thang.mobile_dating_app_v20.Cards.CardFriendRequest;
 import com.example.thang.mobile_dating_app_v20.Cards.MyCardSection;
 import com.example.thang.mobile_dating_app_v20.Cards.SectionAdapter;
+import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
+import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
+import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
@@ -26,62 +40,158 @@ import it.gmariotti.cardslib.library.view.CardListView;
  */
 public class Tab1 extends Fragment {
 
-    private List<Person> persons = new ArrayList<>();
+    private List<Person> personsRequest = new ArrayList<>();
+    private List<Person> personsRecommendation = new ArrayList<>();
+    private ArrayList<Card> cards = new ArrayList<Card>();
     private int numColumns = 2;
+    private String URL_GET_FRIEND_REQUEST = MainActivity.URL_CLOUD + "/Service/getfriendrequest?email=";
+    private String URL_GET_FRIEND_RECOMMENDATION = MainActivity.URL_CLOUD + "/Service/recommendation?email=";
+    private MaterialDialog.Builder dialogBuilder;
+    private MaterialDialog materialDialog;
+    private ProgressBar spinner;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_1, container, false);
-
+        spinner = (ProgressBar) v.findViewById(R.id.spin_loader);
+        spinner.setVisibility(View.GONE);
+        //cards.clear();
+        String email = DBHelper.getInstance(getActivity()).getCurrentUser().getEmail();
+        ConnectionTool connectionTool = new ConnectionTool(getActivity());
+        if (connectionTool.isNetworkAvailable()) {
+            new getFriendRequest().execute(URL_GET_FRIEND_REQUEST + email);
+            new getFriendRecommendation().execute(URL_GET_FRIEND_RECOMMENDATION + email);
+        } else {
+            new MaterialDialog.Builder(getActivity())
+                    .title(R.string.error_connection_title)
+                    .content(R.string.error_connection)
+                    .titleColorRes(R.color.md_red_400)
+                    .show();
+        }
         return v;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        initCards();
-    }
 
     private void initCards() {
 
-        //Init an array of Cards
-        ArrayList<Card> cards = new ArrayList<Card>();
-        for (int i = 0; i < 3; i++) {
-            CardFriendRequest card = new CardFriendRequest(this.getActivity());
-            card.setTitle("Person name " + i);
-            card.setSecondaryTitle("Description...");
-//            card.setImgSource(R.drawable.avatar);
-//            card.setCount(i);
-            if (i == 5 || i == 6){
-                card.setResourceIdThumbnail(R.drawable.avatar);
-            }
-            card.init();
-            cards.add(card);
-        }
-        for (int i = 0; i<10; i++){
-            CardFriendRecommendation card = new CardFriendRecommendation(getActivity());
-            card.setTitle("Recommendation " + i);
-            card.setSecondaryTitle("Description...");
-            card.init();
-            cards.add(card);
-        }
-
+        //define card adapter
         CardArrayAdapter mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
         //define card section
         List<MyCardSection> sections = new ArrayList<>();
-        sections.add(new MyCardSection(0,getResources().getString(R.string.card_section_request)));
-        sections.add(new MyCardSection(3,getResources().getString(R.string.card_section_recommend)));
-
+        if (personsRequest != null) {
+            if (personsRequest.size() >= 1)
+                sections.add(new MyCardSection(0, getResources().getString(R.string.card_section_request)));
+        }
+        if (personsRecommendation != null) {
+            if (personsRecommendation.size() >= 1 && personsRequest != null) {
+                sections.add(new MyCardSection(personsRequest.size(), getResources().getString(R.string.card_section_recommend)));
+            } else if (personsRecommendation.size() >= 1) {
+                sections.add(new MyCardSection(0, getResources().getString(R.string.card_section_recommend)));
+            }
+        }
         MyCardSection[] myCardSections = new MyCardSection[sections.size()];
 
         //define section adapter
-        SectionAdapter sectionAdapter =  new SectionAdapter(getActivity(), mCardArrayAdapter);
+        SectionAdapter sectionAdapter = new SectionAdapter(getActivity(), mCardArrayAdapter);
         sectionAdapter.setCardSections(sections.toArray(myCardSections));
 
         CardListView listView = (CardListView) getActivity().findViewById(R.id.myList);
         if (listView != null) {
-            listView.setExternalAdapter(sectionAdapter,mCardArrayAdapter);
+            listView.setExternalAdapter(sectionAdapter, mCardArrayAdapter);
+        }
+    }
+
+
+    private class getFriendRequest extends AsyncTask<String, Integer, String> {
+        @Override
+        protected void onPreExecute() {
+            spinner.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            return ConnectionTool.makeGetRequest(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            spinner.setVisibility(View.GONE);
+
+            //start parsing jsonResponse
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = new JSONObject(result);
+                personsRequest = ConnectionTool.fromJSON(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            if (personsRequest != null) {
+                //initial cardview
+                for (Person item : personsRequest) {
+                    CardFriendRequest card = new CardFriendRequest(getActivity());
+                    String description = item.getGender() + ", " + item.getAge() +
+                            " " + getActivity().getResources().getString(R.string.friend_year_old);
+                    card.init(item.getFullName(), description);
+                    card.setEmail(item.getEmail());
+                    card.setContext(getActivity());
+                    if (item.getAvatar().isEmpty()) {
+                        card.setBitMap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.no_avatar));
+                    } else {
+                        card.setBitMap(Utils.decodeBase64StringToBitmap(item.getAvatar()));
+                    }
+                    cards.add(card);
+                }
+                initCards();
+            } else {
+                //Toast.makeText(getActivity(), getResources().getString(R.string.error_invalid_login), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private class getFriendRecommendation extends AsyncTask<String, Integer, String> {
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            return ConnectionTool.makeGetRequest(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+            //start parsing jsonResponse
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = new JSONObject(result);
+                personsRecommendation = ConnectionTool.fromJSON(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if (personsRecommendation != null) {
+                for (Person item : personsRecommendation) {
+                    CardFriendRecommendation card = new CardFriendRecommendation(getActivity());
+                    String description = item.getGender() + ", " + item.getAge() + " years old";
+                    card.setContext(getActivity());
+                    card.setTitle(item.getFullName());
+                    card.setSecondaryTitle(description);
+                    card.setFullName(item.getFullName());
+                    card.setEmail(item.getEmail());
+                    card.init(item.getFullName(), description);
+                    if (item.getAvatar().isEmpty()) {
+                        card.setBitMap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.no_avatar));
+                    } else {
+                        card.setBitMap(Utils.decodeBase64StringToBitmap(item.getAvatar()));
+                    }
+                    cards.add(card);
+                }
+                initCards();
+            } else {
+                //Toast.makeText(getActivity(), getResources().getString(R.string.loading_error), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

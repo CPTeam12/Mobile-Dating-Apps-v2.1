@@ -79,7 +79,7 @@ public class ProfileAdapter extends BaseAdapter {
                 holder.profileHeaderText.setText(R.string.register_gender);
                 break;
             case "ADDRESS":
-                holder.profileIcon.setImageResource(R.drawable.profile_location);
+                holder.profileIcon.setImageResource(R.drawable.profile_address);
                 holder.profileText.setText(profile.get(PROFILE_CASE[position]));
                 holder.profileHeaderText.setText(R.string.profile_address);
                 break;
@@ -89,7 +89,7 @@ public class ProfileAdapter extends BaseAdapter {
                 holder.profileHeaderText.setText(R.string.profile_phone);
                 break;
             case "HOBBIES":
-                holder.profileIcon.setImageResource(R.drawable.ic_account_black);
+                holder.profileIcon.setImageResource(R.drawable.profile_hobbies);
                 holder.profileText.setText(profile.get(PROFILE_CASE[position]));
                 holder.profileHeaderText.setText(R.string.profile_hobbies);
                 break;

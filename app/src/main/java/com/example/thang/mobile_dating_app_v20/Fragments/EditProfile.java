@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +26,6 @@ import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.R;
-import com.rengwuxian.materialedittext.MaterialAutoCompleteTextView;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rengwuxian.materialedittext.MaterialMultiAutoCompleteTextView;
 import com.rengwuxian.materialedittext.validation.RegexpValidator;
@@ -35,7 +33,6 @@ import com.rengwuxian.materialedittext.validation.RegexpValidator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +42,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * A simple {@link Fragment} subclass.
  */
 public class EditProfile extends Fragment {
-    private static final String URL_UPDATE = "http://datingappservice2.groundctrl.nl/datingapp/Service/updateprofile";
+    private static final String URL_UPDATE = MainActivity.URL_CLOUD + "/Service/updateprofile";
     private MaterialDialog.Builder dialogBuilder;
     private MaterialDialog materialDialog;
     MaterialEditText fullname,password,confirm_password,age,phone,address;
@@ -101,11 +98,11 @@ public class EditProfile extends Fragment {
                     if(!password.getText().toString().isEmpty()) currentPerson.setPassword(password.getText().toString());
                     if(!phone.getText().toString().isEmpty()) currentPerson.setPhone(phone.getText().toString());
                     if(!address.getText().toString().isEmpty()) currentPerson.setAddress(address.getText().toString());
-                    if(male.isChecked()) currentPerson.setGender("male");
-                    if(female.isChecked()) currentPerson.setGender("female");
+                    if(male.isChecked()) currentPerson.setGender("Male");
+                    if(female.isChecked()) currentPerson.setGender("Female");
                     List<Person> persons = new ArrayList<Person>();
                     persons.add(currentPerson);
-                    new getInformationFriend().execute(persons);
+                    new updateProfileTask().execute(persons);
             }
             }
         });
@@ -126,7 +123,7 @@ public class EditProfile extends Fragment {
             address.setText(currentPerson.getAddress());
             if(currentPerson.getPhone() == null) currentPerson.setPhone("");
             phone.setText(currentPerson.getPhone());
-            profile.setImageBitmap(currentPerson.getAvatar() == null ? BitmapFactory.decodeResource(getResources(),
+            profile.setImageBitmap(currentPerson.getAvatar().isEmpty() ? BitmapFactory.decodeResource(getResources(),
                     R.drawable.no_avatar) : Utils.decodeBase64StringToBitmap(currentPerson.getAvatar()));
         }
     }
@@ -143,20 +140,12 @@ public class EditProfile extends Fragment {
         return (a && b && c && d);
     }
 
-    private class getInformationFriend extends AsyncTask<List<Person>, Integer, String> {
+    private class updateProfileTask extends AsyncTask<List<Person>, Integer, String> {
 
         @Override
         protected void onPreExecute() {
             ConnectionTool connectionTool = new ConnectionTool(getActivity());
-            if (connectionTool.isNetworkAvailable()) {
-                dialogBuilder = new MaterialDialog.Builder(getActivity())
-                        .cancelable(false)
-                        .content(R.string.progress_dialog)
-                        .progress(true, 0);
-                materialDialog = dialogBuilder.build();
-                materialDialog.show();
-
-            } else {
+            if (!connectionTool.isNetworkAvailable()) {
                 new MaterialDialog.Builder(getActivity())
                         .title(R.string.error_connection_title)
                         .content(R.string.error_connection)
@@ -217,4 +206,5 @@ public class EditProfile extends Fragment {
             currentPerson.setAvatar(Utils.encodeBitmapToBase64String(avatar));
         }
     }
+
 }

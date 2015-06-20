@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context=".LoginActivity">
@@ -39,44 +38,43 @@
                     android:orientation="vertical"
                     android:weightSum="1">
 
-                    <com.facebook.login.widget.LoginButton
-                        xmlns:facebook="http://schemas.android.com/apk/res-auto"
+                    <com.facebook.login.widget.LoginButton xmlns:facebook="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/facebook_sign_in"
                         android:layout_width="fill_parent"
                         android:layout_height="40dp"
                         android:layout_centerHorizontal="true"
                         android:layout_gravity="center_horizontal"
-                        android:scaleType="centerInside"
                         android:drawableLeft="@drawable/facebook_login"
                         android:drawablePadding="2dp"
+                        android:scaleType="centerInside"
                         facebook:login_text="@string/action_sign_in_facebook"
-                        facebook:logout_text="@string/action_sign_out_facebook"/>
+                        facebook:logout_text="@string/action_sign_out_facebook" />
 
                     <Button
                         android:id="@+id/goolge_sign_in"
                         android:layout_width="fill_parent"
                         android:layout_height="40dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
                         android:background="#ffdd4c3a"
                         android:drawableLeft="@drawable/google_login"
                         android:drawablePadding="2dp"
                         android:text="@string/action_sign_in_google"
-                        android:textColor="#ffffff"
-                        android:textSize="15.5dp"
                         android:textAllCaps="false"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp" />
-
+                        android:textColor="#ffffff"
+                        android:textSize="15.5dp" />
 
                     <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/login_email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/prompt_email"
+                        android:inputType="text"
                         app:met_baseColor="@color/primary_text"
+                        app:met_errorColor="#ffdd4c3a"
                         app:met_floatingLabel="highlight"
                         app:met_primaryColor="@color/primary_text"
-                        app:met_errorColor="#ffdd4c3a"
-                        app:met_textColorHint="@color/primary_text"/>
+                        app:met_textColorHint="@color/primary_text" />
 
 
                     <com.rengwuxian.materialedittext.MaterialEditText
@@ -86,10 +84,11 @@
                         android:hint="@string/prompt_password"
                         android:inputType="textPassword"
                         app:met_baseColor="@color/primary_text"
+                        app:met_errorColor="#ffdd4c3a"
                         app:met_floatingLabel="highlight"
                         app:met_primaryColor="@color/primary_text"
-                        app:met_errorColor="#ffdd4c3a"
-                        app:met_textColorHint="@color/primary_text"/>
+                        app:met_textColorHint="@color/primary_text" />
+
                     <TextView
                         android:id="@+id/login_error"
                         android:layout_width="fill_parent"
@@ -109,20 +108,20 @@
                         android:text="@string/action_sign_in"
                         android:textColor="#ffffff"
                         android:textStyle="bold" />
+
                     <Button
                         android:id="@+id/register_button"
+                        style="?android:attr/borderlessButtonStyle"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_marginTop="16dp"
                         android:background="@android:color/transparent"
-                        android:textColor="@color/primary_text"
-                        android:textAllCaps="false"
                         android:text="@string/action_register"
-                        style="?android:attr/borderlessButtonStyle"/>
+                        android:textAllCaps="false"
+                        android:textColor="@color/primary_text" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
     </FrameLayout>
-
 </LinearLayout>
 

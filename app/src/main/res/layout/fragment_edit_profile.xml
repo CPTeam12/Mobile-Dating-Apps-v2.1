@@ -9,160 +9,166 @@
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingTop="20dp">
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/edit_profile_avatar"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginLeft="100dp"
-            android:layout_marginTop="40dp"/>
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/edit_fullname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/prompt_fullname"
-            app:met_baseColor="@color/primary_text"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/primary_text"
-            app:met_errorColor="#ffdd4c3a"
-            app:met_textColorHint="@color/primary_text"
-            android:layout_marginLeft="2dp"/>
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/edit_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/prompt_password"
-            android:inputType="textPassword"
-            app:met_baseColor="@color/primary_text"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/primary_text"
-            app:met_errorColor="#ffdd4c3a"
-            app:met_textColorHint="@color/primary_text"
-            android:layout_marginLeft="2dp"/>
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/edit_confirm_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/prompt_confirm_password"
-            android:inputType="textPassword"
-            app:met_baseColor="@color/primary_text"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/primary_text"
-            app:met_errorColor="#ffdd4c3a"
-            app:met_textColorHint="@color/primary_text"
-            android:layout_marginLeft="2dp"/>
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/edit_age"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/edit_age"
-            app:met_baseColor="@color/primary_text"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/primary_text"
-            app:met_minCharacters="2"
-            app:met_maxCharacters="2"
-            android:layout_marginLeft="2dp"/>
+        android:layout_height="fill_parent"
+        android:isScrollContainer="true">
 
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/register_gender"
-                android:textColor="@color/primary_text"
-                android:layout_marginTop="15dp"
-                android:layout_marginLeft="2dp"/>
-            <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="20dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/edit_profile_avatar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginLeft="100dp"
+                android:layout_marginTop="40dp" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edit_fullname"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:weightSum="1"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:hint="@string/prompt_fullname"
+                app:met_baseColor="@color/primary_text"
+                app:met_errorColor="#ffdd4c3a"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/primary_text"
+                app:met_textColorHint="@color/primary_text" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edit_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:hint="@string/prompt_password"
+                android:inputType="textPassword"
+                app:met_baseColor="@color/primary_text"
+                app:met_errorColor="#ffdd4c3a"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/primary_text"
+                app:met_textColorHint="@color/primary_text" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edit_confirm_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:hint="@string/prompt_confirm_password"
+                android:inputType="textPassword"
+                app:met_baseColor="@color/primary_text"
+                app:met_errorColor="#ffdd4c3a"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/primary_text"
+                app:met_textColorHint="@color/primary_text" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edit_age"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:hint="@string/edit_age"
+                app:met_baseColor="@color/primary_text"
+                app:met_floatingLabel="highlight"
+                app:met_maxCharacters="2"
+                app:met_minCharacters="2"
+                app:met_primaryColor="@color/primary_text" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
                 android:orientation="horizontal">
 
-                <RadioButton
-                    android:id="@+id/edit_male_rb"
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:checked="true"
-                    android:layout_marginLeft="20dp"
-                    android:textSize="16dp"
-                    android:text="@string/setting_dating_men"
-                    android:textColor="@color/primary_text"
-                    android:buttonTint="@color/md_blue_800"/>
-                <RadioButton
-                    android:id="@+id/edit_female_rb"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:checked="false"
-                    android:layout_marginLeft="20dp"
-                    android:textSize="16dp"
-                    android:text="@string/setting_dating_women"
-                    android:textColor="@color/primary_text"
-                    android:buttonTint="@color/md_blue_800"/>
-            </RadioGroup>
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="15dp"
+                    android:text="@string/register_gender"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/primary_text" />
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <RadioButton
+                        android:id="@+id/edit_male_rb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="20dp"
+                        android:buttonTint="@color/md_blue_800"
+                        android:checked="true"
+                        android:text="@string/setting_dating_men"
+                        android:textColor="@color/primary_text"
+                        android:textSize="16dp" />
+
+                    <RadioButton
+                        android:id="@+id/edit_female_rb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="20dp"
+                        android:buttonTint="@color/md_blue_800"
+                        android:checked="false"
+                        android:text="@string/setting_dating_women"
+                        android:textColor="@color/primary_text"
+                        android:textSize="16dp" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <com.rengwuxian.materialedittext.MaterialMultiAutoCompleteTextView
+                android:id="@+id/edit_hobby"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:completionThreshold="1"
+                android:hint="@string/register_hobby"
+                app:met_baseColor="@color/primary_text"
+                app:met_errorColor="#ffdd4c3a"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/primary_text"
+                app:met_textColorHint="@color/primary_text" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edit_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:hint="@string/edit_phone"
+                app:met_baseColor="@color/primary_text"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/primary_text"
+                app:met_textColorHint="@color/primary_text" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edit_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:hint="@string/edit_address"
+                app:met_baseColor="@color/primary_text"
+                app:met_errorColor="#ffdd4c3a"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/primary_text"
+                app:met_textColorHint="@color/primary_text" />
+
+            <Button
+                android:id="@+id/edit_accept"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:background="#ce2aa7d6"
+                android:text="@string/edit_agree"
+                android:textColor="@color/md_white_1000"
+                android:textStyle="bold" />
         </LinearLayout>
-
-        <com.rengwuxian.materialedittext.MaterialMultiAutoCompleteTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/edit_hobby"
-            android:hint="@string/register_hobby"
-            android:completionThreshold="1"
-            app:met_baseColor="@color/primary_text"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/primary_text"
-            app:met_errorColor="#ffdd4c3a"
-            app:met_textColorHint="@color/primary_text"/>
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/edit_phone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/edit_phone"
-            app:met_baseColor="@color/primary_text"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/primary_text"
-            app:met_textColorHint="@color/primary_text"
-            android:layout_marginLeft="2dp"/>
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/edit_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/edit_address"
-            app:met_baseColor="@color/primary_text"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/primary_text"
-            app:met_errorColor="#ffdd4c3a"
-            app:met_textColorHint="@color/primary_text"
-            android:layout_marginLeft="2dp"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="16dp"
-            android:background="#ce2aa7d6"
-            android:textColor="@color/md_white_1000"
-            android:textStyle="bold"
-            android:text="@string/edit_agree"
-            android:id="@+id/edit_accept"
-            android:layout_gravity="center_horizontal" />
-    </LinearLayout>
     </ScrollView>
 </FrameLayout>

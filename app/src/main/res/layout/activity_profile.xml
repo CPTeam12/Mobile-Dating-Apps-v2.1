@@ -11,33 +11,26 @@
         android:id="@+id/profileFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        >
+        android:layout_alignParentBottom="true">
 
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
+
             <ImageView
-                android:id="@+id/image"
+                android:id="@+id/profile_avatar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/flexible_space_image_height"
                 android:scaleType="centerCrop"
                 android:src="@drawable/blueboken" />
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_avatar"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_marginLeft="100dp"
-                android:layout_marginTop="40dp" />
-
 
             <View
                 android:id="@+id/overlay"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/flexible_space_image_height"
                 android:background="?attr/colorPrimary" />
+
 
             <View
                 android:id="@+id/list_background"
@@ -50,6 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -58,7 +52,6 @@
                 android:paddingLeft="16dp"
                 android:paddingStart="16dp">
 
-
                 <TextView
                     android:id="@+id/title"
                     android:layout_width="match_parent"
@@ -66,9 +59,10 @@
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:maxLines="1"
-                    android:minHeight="?attr/actionBarSize"
+                    android:text="asd"
+                    android:minHeight="30dp"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp" />
+                    android:textSize="25sp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -112,14 +106,14 @@
                     fab:fab_title="Block" />
 
                 <com.getbase.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/fab_closefriend"
+                    android:id="@+id/fab_unfriend"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:fab_icon="@drawable/ic_star_white"
+                    app:fab_icon="@drawable/ic_action_unfriend"
                     fab:fab_colorNormal="@color/md_blue_900"
                     fab:fab_colorPressed="@color/md_blue_800"
                     fab:fab_size="mini"
-                    fab:fab_title="Close friend" />
+                    fab:fab_title="@string/fab_unfriend" />
 
             </com.getbase.floatingactionbutton.FloatingActionsMenu>
 

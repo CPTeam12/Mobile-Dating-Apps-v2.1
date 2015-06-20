@@ -12,8 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.thang.mobile_dating_app_v20.Activity.ProfileActivity;
-import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.R;
@@ -71,7 +69,7 @@ public class ListAdapter extends BaseAdapter {
 
         holder.txtName.setText(person.getFullName());
         holder.chatIcon.setImageResource(R.drawable.ic_stat_chat);
-        holder.avatar.setImageBitmap(person.getAvatar() == null ? BitmapFactory.decodeResource(context.getResources(),
+        holder.avatar.setImageBitmap(person.getAvatar().isEmpty() ? BitmapFactory.decodeResource(context.getResources(),
                 R.drawable.no_avatar) : Utils.decodeBase64StringToBitmap(person.getAvatar()));
 
         holder.chatIcon.setOnClickListener(new View.OnClickListener() {

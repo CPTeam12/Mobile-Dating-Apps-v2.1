@@ -4,19 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
-
-        <ListView
-            android:id="@+id/friendlist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:divider="@color/md_white_1000"
-            android:drawSelectorOnTop="true" />
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            <ListView
+                android:id="@+id/friendlist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:divider="@color/md_white_1000"
+                android:drawSelectorOnTop="true" />
+        </android.support.v4.widget.SwipeRefreshLayout>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_search"
@@ -32,12 +37,6 @@
             fab:fab_icon="@drawable/abc_ic_search_api_mtrl_alpha" />
 
     </RelativeLayout>
-    <ProgressBar
-        android:id="@+id/spin_loader"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
 
     <TextView
         android:layout_width="wrap_content"

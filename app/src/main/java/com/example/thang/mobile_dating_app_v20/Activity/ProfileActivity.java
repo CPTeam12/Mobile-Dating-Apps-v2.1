@@ -3,29 +3,18 @@ package com.example.thang.mobile_dating_app_v20.Activity;
 import android.annotation.TargetApi;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.provider.MediaStore;
 import android.transition.Explode;
 import android.transition.Fade;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AbsListView;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +24,6 @@ import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.Classes.Utils;
-import com.example.thang.mobile_dating_app_v20.Fragments.Chat;
 import com.example.thang.mobile_dating_app_v20.Fragments.EditProfile;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -44,9 +32,7 @@ import com.github.ksoichiro.android.observablescrollview.ObservableListView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
-import com.google.gson.Gson;
 import com.nineoldandroids.view.ViewHelper;
-import com.nineoldandroids.view.ViewPropertyAnimator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,29 +46,28 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.3f;
 
-    private View mImageView;
+    private ImageView mImageView;
     private View mOverlayView;
     private View mListBackgroundView;
     private TextView mTitleView;
-    //    private View mFab;
+
     private int mActionBarSize;
     private int mFlexibleSpaceShowFabOffset;
     private int mFlexibleSpaceImageHeight;
-    private CircleImageView profileAvatar;
     final static int RESULT_LOAD_IMAGE = 200;
-//    private int mFabMargin;
-//    private boolean mFabIsShown;
 
     private MaterialDialog.Builder dialogBuilder;
     private MaterialDialog materialDialog;
+    ObservableListView listView;
     Person person = new Person();
-    private String URL_FIND = "http://datingappservice2.groundctrl.nl/datingapp/Service/getbyemail?email=";
+    private String URL_FIND = MainActivity.URL_CLOUD + "/Service/getbyemail?email=";
+    private String URL_FRIEND_REQUEST = MainActivity.URL_CLOUD + "/Service/makefriendrequest?";
+    private String URL_UNFRIEND = MainActivity.URL_CLOUD + "/Service/deleterelationship?";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
 
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
@@ -100,13 +85,12 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
         mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
         mActionBarSize = getActionBarSize();
-        mImageView = findViewById(R.id.image);
+        mImageView = (ImageView)findViewById(R.id.profile_avatar);
         mOverlayView = findViewById(R.id.overlay);
-        profileAvatar = (CircleImageView) findViewById(R.id.profile_avatar);
 
         mTitleView = (TextView) findViewById(R.id.title);
         mListBackgroundView = findViewById(R.id.list_background);
-        ObservableListView listView = (ObservableListView) findViewById(R.id.list);
+        listView = (ObservableListView) findViewById(R.id.list);
         listView.setScrollViewCallbacks(this);
 
         // Set padding view for ListView. This is the flexible space.
@@ -124,7 +108,7 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         FloatingActionButton fabProfileEditor = (FloatingActionButton) findViewById(R.id.fab_editor);
         FloatingActionsMenu fabFriendEditor = (FloatingActionsMenu) findViewById(R.id.multiple_actions_down);
         FloatingActionButton fabBlockFriend = (FloatingActionButton) findViewById(R.id.fab_blockfriend);
-        FloatingActionButton fabCloseFriend = (FloatingActionButton) findViewById(R.id.fab_closefriend);
+        FloatingActionButton fabUnFriend = (FloatingActionButton) findViewById(R.id.fab_unfriend);
 
         //gone as default
         fabAddFriend.setVisibility(View.GONE);
@@ -149,28 +133,52 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
                     ft.commit();
                 }
             });
+            //updated
+            mImageView.setImageBitmap(person.getAvatar().isEmpty() ? BitmapFactory.decodeResource(getResources(),
+                    R.drawable.no_avatar) : Utils.decodeBase64StringToBitmap(person.getAvatar()));
+            setFriendAdapter(listView, person);
+            mTitleView.setText(person.getFullName());
         } else {
             person = dbHelper.getPersonByEmail(bundle.getString("email"));
             //if person != null mean this is local friend
-            if(person != null){
+            if (person.getEmail() != null) {
+                //updated
                 fabFriendEditor.setVisibility(View.VISIBLE);
-            }else{
+                fabUnFriend.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String param = "from=" + DBHelper.getInstance(getApplicationContext()).getCurrentUser().getEmail() + "&to=" + person.getEmail();
+                        new unfriendTask().execute(URL_UNFRIEND + param);
+                        Toast.makeText(getApplicationContext(),param,Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            } else {
                 //unknown friend, get from service
                 fabAddFriend.setVisibility(View.VISIBLE);
-                try {
-                    new getProfileTask().execute(URL_FIND + bundle.getString("email")).get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
+                //send friend request onclick listener
+                fabAddFriend.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String userEmail = DBHelper.getInstance(getApplicationContext()).getCurrentUser().getEmail();
+                        String friendEmail = person.getEmail();
+                        String param = URL_FRIEND_REQUEST + "from=" + userEmail + "&to=" + friendEmail;
+                        new makeFriendRequestTask().execute(param);
+
+                    }
+                });
+            }
+
+            //get profile from service
+            try {
+                //wait getProfileTask finish after show profile
+                new getProfileTask().execute(URL_FIND + bundle.getString("email")).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
             }
         }
-
-        profileAvatar.setImageBitmap(person.getAvatar() == null ? BitmapFactory.decodeResource(getResources(),
-                R.drawable.no_avatar) : Utils.decodeBase64StringToBitmap(person.getAvatar()));
-        setFriendAdapter(listView, person);
-
         //animation for menu fab
         final View subLayer = findViewById(R.id.sub_layer);
         subLayer.setVisibility(View.GONE);
@@ -201,9 +209,8 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         });
 
         fabMenu.setOnFloatingActionsMenuUpdateListener(listener);
-        mTitleView.setText(person.getFullName());
-        setTitle(null);
 
+        setTitle(null);
     }
 
     @Override
@@ -245,7 +252,6 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         int minOverlayTransitionY = mActionBarSize - mOverlayView.getHeight();
         ViewHelper.setTranslationY(mOverlayView, ScrollUtils.getFloat(-scrollY, minOverlayTransitionY, 0));
         ViewHelper.setTranslationY(mImageView, ScrollUtils.getFloat(-scrollY / 2, minOverlayTransitionY, 0));
-        ViewHelper.setTranslationY(profileAvatar, ScrollUtils.getFloat(-scrollY / 2, minOverlayTransitionY, 0));
 
         // Translate list background
         ViewHelper.setTranslationY(mListBackgroundView, Math.max(0, -scrollY + mFlexibleSpaceImageHeight));
@@ -290,15 +296,7 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         @Override
         protected void onPreExecute() {
             ConnectionTool connectionTool = new ConnectionTool(ProfileActivity.this);
-            if (connectionTool.isNetworkAvailable()) {
-                dialogBuilder = new MaterialDialog.Builder(ProfileActivity.this)
-                        .cancelable(false)
-                        .content(R.string.progress_dialog)
-                        .progress(true, 0);
-                materialDialog = dialogBuilder.build();
-                materialDialog.show();
-
-            } else {
+            if (!connectionTool.isNetworkAvailable()) {
                 new MaterialDialog.Builder(ProfileActivity.this)
                         .title(R.string.error_connection_title)
                         .content(R.string.error_connection)
@@ -309,9 +307,7 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
 
         @Override
         protected String doInBackground(String... params) {
-            //return ConnectionTool.readJSONFeed(params[0]);
             return ConnectionTool.makeGetRequest(params[0]);
-            //return ConnectionTool.makePostRequest(params[0],new Person("a","asd","asd@asd.com",22,"Female"));
         }
 
         @Override
@@ -327,9 +323,69 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
                 if (personList != null) {
                     person = personList.get(0);
                 }
+                mImageView.setImageBitmap(person.getAvatar().isEmpty() ? BitmapFactory.decodeResource(getResources(),
+                        R.drawable.no_avatar) : Utils.decodeBase64StringToBitmap(person.getAvatar()));
+                setFriendAdapter(listView, person);
+                mTitleView.setText(person.getFullName());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     }
+
+    private class makeFriendRequestTask extends AsyncTask<String, Integer, String> {
+        @Override
+        protected void onPreExecute() {
+            ConnectionTool connectionTool = new ConnectionTool(ProfileActivity.this);
+            if (connectionTool.isNetworkAvailable()) {
+
+            } else {
+                new MaterialDialog.Builder(ProfileActivity.this)
+                        .title(R.string.error_connection_title)
+                        .content(R.string.error_connection)
+                        .titleColorRes(R.color.md_red_400)
+                        .show();
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            return ConnectionTool.makeGetRequest(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.profile_friend_request) + " " + person.getFullName(),
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class unfriendTask extends AsyncTask<String, Integer, String> {
+        @Override
+        protected void onPreExecute() {
+
+            ConnectionTool connectionTool = new ConnectionTool(getApplicationContext());
+            if (!connectionTool.isNetworkAvailable()) {
+                new MaterialDialog.Builder(getApplicationContext())
+                        .title(R.string.error_connection_title)
+                        .content(R.string.error_connection)
+                        .titleColorRes(R.color.md_red_400)
+                        .show();
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            return ConnectionTool.makeGetRequest(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            //start parsing jsonResponse
+            if (result.isEmpty()) {
+                Toast.makeText(getApplicationContext(), getString(R.string.loading_error), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 }

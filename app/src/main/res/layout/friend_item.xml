@@ -5,7 +5,6 @@
     android:layout_height="65dp"
     android:background="#ffffff"
     android:descendantFocusability="blocksDescendants"
-    android:gravity="left|center"
     android:orientation="horizontal"
     android:weightSum="1">
 

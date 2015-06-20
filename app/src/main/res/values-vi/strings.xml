@@ -83,4 +83,12 @@
     <string name="profile_hobbies">Sở thích</string>
     <string name="search_hint">Tìm kiếm theo tên</string>
     <string name="search_no_result">Không tìm thấy kết quả nào</string>
+    <string name="profile_friend_request">Yêu cầu kết bạn đã được gởi tới </string>
+    <string name="friend_accepted">Kết bạn thành công</string>
+    <string name="loading_error">Lỗi tải dữ liệu</string>
+    <string name="hello_blank_fragment"></string>
+    <string name="friend_request">Đã gửi yêu cầu kết bạn</string>
+    <string name="friend_deny_request">Đã hủy yêu cầu kết bạn</string>
+    <string name="friend_year_old"> tuổi</string>
+    <string name="fab_unfriend">Hủy kết bạn</string>
 </resources>

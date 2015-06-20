@@ -1,12 +1,16 @@
 package com.example.thang.mobile_dating_app_v20.Activity;
 
+import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.transition.Explode;
+import android.transition.Fade;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +22,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.thang.mobile_dating_app_v20.Adapters.ListAdapter;
 import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
+import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.R;
 
@@ -35,7 +40,8 @@ public class SearchActivity extends ActionBarActivity {
     private SearchView searchView = null;
     private MaterialDialog.Builder dialogBuilder;
     private MaterialDialog materialDialog;
-    private String URL_SEARCH = "http://datingappservice2.groundctrl.nl/datingapp/Service/searchfriend?fullname=";
+    private String URL_SEARCH =  MainActivity.URL_CLOUD + "/Service/searchfriend?";
+    private String URL_FRIEND_REQUEST = MainActivity.URL_CLOUD +  "/Service/makefriendrequest?";
     private ListView mList;
     private ListAdapter mAdapter;
     private TextView searchResult;
@@ -44,6 +50,7 @@ public class SearchActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -83,10 +90,14 @@ public class SearchActivity extends ActionBarActivity {
                 if (!query.trim().isEmpty()) {
                     try {
                         String temp = URLEncoder.encode(query.trim(), "utf-8");
-                        new searchTask().execute(URL_SEARCH + temp);
+                        DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
+                        new searchTask().execute(URL_SEARCH +"fullname=" + temp+"&email=" + dbHelper.getCurrentUser().getEmail());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                }else{
+                    mList.setVisibility(View.GONE);
+                    searchResult.setVisibility(View.VISIBLE);
                 }
                 return true;
             }
@@ -135,14 +146,7 @@ public class SearchActivity extends ActionBarActivity {
         @Override
         protected void onPreExecute() {
             ConnectionTool connectionTool = new ConnectionTool(SearchActivity.this);
-            if (connectionTool.isNetworkAvailable()) {
-//                dialogBuilder = new MaterialDialog.Builder(SearchActivity.this)
-//                        .cancelable(false)
-//                        .content(R.string.progress_dialog)
-//                        .progress(true, 0);
-//                materialDialog = dialogBuilder.build();
-//                materialDialog.show();
-            } else {
+            if (!connectionTool.isNetworkAvailable()) {
                 new MaterialDialog.Builder(SearchActivity.this)
                         .title(R.string.error_connection_title)
                         .content(R.string.error_connection)
@@ -153,9 +157,7 @@ public class SearchActivity extends ActionBarActivity {
 
         @Override
         protected String doInBackground(String... params) {
-            //return ConnectionTool.readJSONFeed(params[0]);
             return ConnectionTool.makeGetRequest(params[0]);
-            //return ConnectionTool.makePostRequest(params[0],new Person("a","asd","asd@asd.com",22,"Female"));
         }
 
         @Override
@@ -175,11 +177,12 @@ public class SearchActivity extends ActionBarActivity {
                 } else {
                     mList.setVisibility(View.GONE);
                     searchResult.setVisibility(View.VISIBLE);
-                    //Toast.makeText(getApplicationContext(),"fail",Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     }
+
+
 }

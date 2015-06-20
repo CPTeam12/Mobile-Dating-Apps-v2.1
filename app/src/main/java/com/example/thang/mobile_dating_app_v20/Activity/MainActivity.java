@@ -1,15 +1,20 @@
 package com.example.thang.mobile_dating_app_v20.Activity;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.TransitionInflater;
 import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +39,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 
 public class MainActivity extends ActionBarActivity {
+    public static final String URL_CLOUD = "http://datingappservice.jelastic.skali.net/datingapp";
     private static String PACKAGE_NAME = "com.example.thang.mobile_dating_app_v20.Fragments.";
     private int currentItem = -1;
     public Drawer.Result result = null;
@@ -63,7 +69,7 @@ public class MainActivity extends ActionBarActivity {
                 .addProfiles(new ProfileDrawerItem().
                         withName(fullname).
                         withEmail(email).
-                        withIcon(person.getAvatar() == null? getResources().getDrawable(R.drawable.no_avatar)
+                        withIcon(person.getAvatar().isEmpty() ? getResources().getDrawable(R.drawable.no_avatar)
                                  : new BitmapDrawable(Utils.decodeBase64StringToBitmap(person.getAvatar())))
                 )
 //                .withOnAccountHeaderSelectionViewClickListener(new AccountHeader.OnAccountHeaderSelectionViewClickListener() {
@@ -182,4 +188,6 @@ public class MainActivity extends ActionBarActivity {
                 .replace(R.id.mainFragment, Fragment.instantiate(MainActivity.this, PACKAGE_NAME + fragment))
                 .commit();
     }
+
+
 }

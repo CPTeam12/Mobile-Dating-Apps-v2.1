@@ -2,43 +2,73 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:weightSum="1">
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/card_avatar"
+        android:layout_width="83dp"
+        android:layout_height="83dp"
+        android:src="@drawable/no_avatar" />
+
+    <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="fill_parent">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:layout_marginLeft="16dp">
 
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/carddemo_myapps_main_inner_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Medium Text"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/carddemo_myapps_main_inner_secondaryTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Small Text"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="right">
+
+                <Button
+                    android:id="@+id/friend_request"
+                    android:layout_width="wrap_content"
+                    android:layout_height="29dp"
+                    android:background="@drawable/friend_accept_button"
+                    android:text="@string/add_friend"
+                    android:textColor="@color/md_white_1000" />
+
+            </LinearLayout>
+        </LinearLayout>
         <TextView
-            android:id="@+id/carddemo_myapps_main_inner_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Medium Text"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:id="@+id/friend_requested"
+            android:visibility="gone"
+            android:text="@string/friend_request"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:textSize="18sp"
+            android:textColor="@color/md_blue_800"
+            android:gravity="bottom|center_horizontal"
+            android:layout_marginLeft="16dp" />
 
-        <TextView
-            android:id="@+id/carddemo_myapps_main_inner_secondaryTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-    </LinearLayout>
+    </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="right">
 
-        <Button
-            android:id="@+id/accept"
-            android:layout_width="wrap_content"
-            android:layout_height="29dp"
-            android:background="@drawable/friend_accept_button"
-            android:text="@string/add_friend"
-            android:textColor="@color/md_white_1000" />
-
-    </LinearLayout>
 
 </LinearLayout>
