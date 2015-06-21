@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,25 +40,77 @@ import it.gmariotti.cardslib.library.view.CardListView;
 /**
  * Created by Thang on 5/15/2015.
  */
-public class Tab1 extends Fragment {
+public class Tab1 extends Fragment implements OnRefreshListener {
 
     private List<Person> personsRequest = new ArrayList<>();
     private List<Person> personsRecommendation = new ArrayList<>();
     private ArrayList<Card> cards = new ArrayList<Card>();
-    private int numColumns = 2;
     private String URL_GET_FRIEND_REQUEST = MainActivity.URL_CLOUD + "/Service/getfriendrequest?email=";
     private String URL_GET_FRIEND_RECOMMENDATION = MainActivity.URL_CLOUD + "/Service/recommendation?email=";
-    private MaterialDialog.Builder dialogBuilder;
-    private MaterialDialog materialDialog;
-    private ProgressBar spinner;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_1, container, false);
-        spinner = (ProgressBar) v.findViewById(R.id.spin_loader);
-        spinner.setVisibility(View.GONE);
-        //cards.clear();
+        swipeRefreshLayout = (SwipeRefreshLayout ) v.findViewById(R.id.swipe_refresh_layout);
+
+        //pull down to refresh
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+                String email = DBHelper.getInstance(getActivity()).getCurrentUser().getEmail();
+                ConnectionTool connectionTool = new ConnectionTool(getActivity());
+                if (connectionTool.isNetworkAvailable()) {
+                    new getFriendRequest().execute(URL_GET_FRIEND_REQUEST + email);
+                    new getFriendRecommendation().execute(URL_GET_FRIEND_RECOMMENDATION + email);
+                } else {
+                    new MaterialDialog.Builder(getActivity())
+                            .title(R.string.error_connection_title)
+                            .content(R.string.error_connection)
+                            .titleColorRes(R.color.md_red_400)
+                            .show();
+                }
+            }
+        });
+
+        return v;
+    }
+
+
+    private void initCards() {
+        //define card adapter
+        CardArrayAdapter mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
+        //define card section
+        List<MyCardSection> sections = new ArrayList<>();
+        if (personsRequest != null) {
+            if (personsRequest.size() > 0)
+                sections.add(new MyCardSection(0, getResources().getString(R.string.card_section_request)));
+        }
+        if (personsRecommendation != null) {
+            if (personsRecommendation.size() > 0 && personsRequest != null) {
+                sections.add(new MyCardSection(personsRequest.size(), getResources().getString(R.string.card_section_recommend)));
+            } else if (personsRecommendation.size() > 0) {
+                sections.add(new MyCardSection(0, getResources().getString(R.string.card_section_recommend)));
+            }
+        }
+        MyCardSection[] myCardSections = new MyCardSection[sections.size()];
+
+        //define section adapter
+        SectionAdapter sectionAdapter = new SectionAdapter(getActivity(), mCardArrayAdapter);
+        sectionAdapter.setCardSections(sections.toArray(myCardSections));
+
+        CardListView listView = (CardListView) getActivity().findViewById(R.id.myList);
+        //if (listView != null) {
+            listView.setExternalAdapter(sectionAdapter, mCardArrayAdapter);
+        //}
+    }
+
+    @Override
+    public void onRefresh() {
+        cards.clear();
         String email = DBHelper.getInstance(getActivity()).getCurrentUser().getEmail();
         ConnectionTool connectionTool = new ConnectionTool(getActivity());
         if (connectionTool.isNetworkAvailable()) {
@@ -69,44 +123,12 @@ public class Tab1 extends Fragment {
                     .titleColorRes(R.color.md_red_400)
                     .show();
         }
-        return v;
-    }
-
-
-    private void initCards() {
-
-        //define card adapter
-        CardArrayAdapter mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
-        //define card section
-        List<MyCardSection> sections = new ArrayList<>();
-        if (personsRequest != null) {
-            if (personsRequest.size() >= 1)
-                sections.add(new MyCardSection(0, getResources().getString(R.string.card_section_request)));
-        }
-        if (personsRecommendation != null) {
-            if (personsRecommendation.size() >= 1 && personsRequest != null) {
-                sections.add(new MyCardSection(personsRequest.size(), getResources().getString(R.string.card_section_recommend)));
-            } else if (personsRecommendation.size() >= 1) {
-                sections.add(new MyCardSection(0, getResources().getString(R.string.card_section_recommend)));
-            }
-        }
-        MyCardSection[] myCardSections = new MyCardSection[sections.size()];
-
-        //define section adapter
-        SectionAdapter sectionAdapter = new SectionAdapter(getActivity(), mCardArrayAdapter);
-        sectionAdapter.setCardSections(sections.toArray(myCardSections));
-
-        CardListView listView = (CardListView) getActivity().findViewById(R.id.myList);
-        if (listView != null) {
-            listView.setExternalAdapter(sectionAdapter, mCardArrayAdapter);
-        }
     }
 
 
     private class getFriendRequest extends AsyncTask<String, Integer, String> {
         @Override
         protected void onPreExecute() {
-            spinner.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -116,8 +138,7 @@ public class Tab1 extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
-            spinner.setVisibility(View.GONE);
-
+            swipeRefreshLayout.setRefreshing(false);
             //start parsing jsonResponse
             JSONObject jsonObject = null;
             try {
@@ -145,6 +166,7 @@ public class Tab1 extends Fragment {
                 }
                 initCards();
             } else {
+                initCards();
                 //Toast.makeText(getActivity(), getResources().getString(R.string.error_invalid_login), Toast.LENGTH_SHORT).show();
             }
         }
@@ -190,7 +212,7 @@ public class Tab1 extends Fragment {
                 }
                 initCards();
             } else {
-                //Toast.makeText(getActivity(), getResources().getString(R.string.loading_error), Toast.LENGTH_SHORT).show();
+                initCards();
             }
         }
     }

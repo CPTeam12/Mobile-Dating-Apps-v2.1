@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tab1"
     xmlns:card="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/tab1"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <it.gmariotti.cardslib.library.view.CardListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/myList"
-        card:list_card_layout_resourceID="@layout/card_custom_list_layout" />
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-    <ProgressBar
-        android:id="@+id/spin_loader"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+        <it.gmariotti.cardslib.library.view.CardListView
+            android:id="@+id/myList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            card:list_card_layout_resourceID="@layout/card_custom_list_layout" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

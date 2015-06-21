@@ -39,14 +39,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Created by Thang on 5/15/2015.
  */
-public class Tab2 extends Fragment implements OnRefreshListener{
+public class Tab2 extends Fragment implements OnRefreshListener {
     private ListView mList;
     private ListAdapter mAdapter;
     private TextView empty;
     private SwipeRefreshLayout swipeRefreshLayout;
-    //dialog
-    private MaterialDialog.Builder dialogBuilder;
-    private MaterialDialog materialDialog;
     //Http request
     private static final String HTTP_URL = MainActivity.URL_CLOUD + "/Service/getfriend?";
 
@@ -61,7 +58,7 @@ public class Tab2 extends Fragment implements OnRefreshListener{
         View v = inflater.inflate(R.layout.tab_2, container, false);
         mList = (ListView) v.findViewById(R.id.friendlist);
         empty = (TextView) v.findViewById(R.id.no_friend_item);
-        swipeRefreshLayout = (SwipeRefreshLayout ) v.findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         //hide textview
         empty.setVisibility(View.GONE);
         empty.setText("You have no friend");
@@ -72,9 +69,6 @@ public class Tab2 extends Fragment implements OnRefreshListener{
             public void onClick(View v) {
                 Intent intent2 = new Intent(getActivity(), SearchActivity.class);
                 startActivity(intent2);
-//                Intent i = new Intent(getActivity(), SearchActivity.class);
-//                ActivityOptions transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(getActivity());
-//                getActivity().startActivity(i, transitionActivityOptions.toBundle());
             }
         });
         //pull down to refresh
@@ -179,6 +173,7 @@ public class Tab2 extends Fragment implements OnRefreshListener{
     private class getFriendTask extends AsyncTask<String, Integer, String> {
         @Override
         protected void onPreExecute() {
+
         }
 
         @Override
@@ -190,41 +185,44 @@ public class Tab2 extends Fragment implements OnRefreshListener{
         @Override
         protected void onPostExecute(String result) {
             swipeRefreshLayout.setRefreshing(false);
-                //start parsing jsonResponse
-                List<Person> persons = new ArrayList<>();
-                JSONObject jsonObject = null;
-                try {
-                    jsonObject = new JSONObject(result);
-                    persons = ConnectionTool.fromJSON(jsonObject);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            //start parsing jsonResponse
+            List<Person> persons = new ArrayList<>();
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = new JSONObject(result);
+                persons = ConnectionTool.fromJSON(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if (persons != null) {
+                if (empty.getVisibility() == View.VISIBLE)
+                    empty.setVisibility(View.GONE);
+
+                //insert user's friends into database
+                DBHelper dbHelper = DBHelper.getInstance(getActivity());
+                //delete db before insert new
+                dbHelper.deleteAllFriend();
+                for (Person person : persons) {
+                    dbHelper.insertPerson(person, DBHelper.USER_FLAG_FRIENDS);
                 }
-                if (persons != null) {
-                    //insert user's friends into database
-                    DBHelper dbHelper = DBHelper.getInstance(getActivity());
-                    //delete db before insert new
-                    dbHelper.deleteAllFriend();
-                    for (Person person : persons) {
-                        dbHelper.insertPerson(person, DBHelper.USER_FLAG_FRIENDS);
-                    }
 
-                    mAdapter = new ListAdapter(persons, getActivity());
-                    mList.setAdapter(mAdapter);
-                    if (mList != null) {
-                        mList.setClickable(true);
-                    }
-                    mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Person person = (Person) mList.getItemAtPosition(position);
-                            Bundle dataBundle = new Bundle();
-                            dataBundle.putString("ProfileOf", DBHelper.USER_FLAG_FRIENDS);
-                            dataBundle.putString("email", person.getEmail());
+                mAdapter = new ListAdapter(persons, getActivity());
+                mList.setAdapter(mAdapter);
+                if (mList != null) {
+                    mList.setClickable(true);
+                }
+                mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Person person = (Person) mList.getItemAtPosition(position);
+                        Bundle dataBundle = new Bundle();
+                        dataBundle.putString("ProfileOf", DBHelper.USER_FLAG_FRIENDS);
+                        dataBundle.putString("email", person.getEmail());
 
-                            Intent intent1 = new Intent(getActivity(), ProfileActivity.class);
-                            intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent1.putExtras(dataBundle);
-                            getActivity().startActivity(intent1);
+                        Intent intent1 = new Intent(getActivity(), ProfileActivity.class);
+                        intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent1.putExtras(dataBundle);
+                        getActivity().startActivity(intent1);
 
 //                            getActivity().setTitle("Chat");
 //                            final FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -239,13 +237,15 @@ public class Tab2 extends Fragment implements OnRefreshListener{
 //                            ft.add(R.id.mainFragment, chat, "Chat");
 //                            ft.setBreadCrumbTitle("Chat");
 //                            ft.commit();
-                        }
-                    });
-                } else {
-                    //if not show show no item textview
-                    empty.setVisibility(View.VISIBLE);
-                }
-
+                    }
+                });
+            } else {
+                //if not show show no item textview
+                mAdapter = new ListAdapter(persons, getActivity());
+                mList.setAdapter(mAdapter);
+                if (empty.getVisibility() == View.GONE)
+                empty.setVisibility(View.VISIBLE);
+            }
 
 
         }

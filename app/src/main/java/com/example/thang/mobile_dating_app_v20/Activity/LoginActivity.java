@@ -265,9 +265,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
     private boolean validateLogin() {
         //username.validate("^(?=\\s*\\S).*$","Username cannot empty.");
         String error = getResources().getString(R.string.error_field_required);
-        //boolean a = email.validateWith(new RegexpValidator(error, "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$"));
-        boolean a = email.validateWith(new RegexpValidator(error, "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"));
+        boolean a = email.validateWith(new RegexpValidator(error, "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$"));
         boolean b = password.validateWith(new RegexpValidator(error, "^(?=\\s*\\S).*$"));
         return (a && b);
     }
@@ -275,29 +273,27 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
     public void checkLogin() {
         String urlParams = "email=" + email.getText().toString().trim() +
                 "&password=" + password.getText().toString().trim();
-        new loginTask().execute(URL_AUTH + urlParams);
-        //new DownloadTextTask().execute(URL_CHECK_FB);
+        ConnectionTool connectionTool = new ConnectionTool(this);
+        if (connectionTool.isNetworkAvailable()) {
+            new loginTask().execute(URL_AUTH + urlParams);
+        } else {
+            new MaterialDialog.Builder(this)
+                    .title(R.string.error_connection_title)
+                    .content(R.string.error_connection)
+                    .titleColorRes(R.color.md_red_400)
+                    .show();
+        }
     }
 
     private class loginTask extends AsyncTask<String, Integer, String> {
         @Override
         protected void onPreExecute() {
-            ConnectionTool connectionTool = new ConnectionTool(LoginActivity.this);
-            if (connectionTool.isNetworkAvailable()) {
-                dialogBuilder = new MaterialDialog.Builder(LoginActivity.this)
-                        .cancelable(false)
-                        .content(R.string.progress_dialog)
-                        .progress(true, 0);
-                materialDialog = dialogBuilder.build();
-                materialDialog.show();
-
-            } else {
-                new MaterialDialog.Builder(LoginActivity.this)
-                        .title(R.string.error_connection_title)
-                        .content(R.string.error_connection)
-                        .titleColorRes(R.color.md_red_400)
-                        .show();
-            }
+            dialogBuilder = new MaterialDialog.Builder(LoginActivity.this)
+                    .cancelable(false)
+                    .content(R.string.progress_dialog)
+                    .progress(true, 0);
+            materialDialog = dialogBuilder.build();
+            materialDialog.show();
         }
 
         @Override
