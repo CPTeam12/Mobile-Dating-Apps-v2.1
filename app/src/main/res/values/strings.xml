@@ -128,4 +128,6 @@
     <string name="friend_deny_request">Friend request are dismissed</string>
     <string name="friend_year_old">years old</string>
     <string name="fab_unfriend">Unfriend</string>
+    <!-- GCM-->
+    <string name="gcm_SenderId">74495258469</string>
 </resources>

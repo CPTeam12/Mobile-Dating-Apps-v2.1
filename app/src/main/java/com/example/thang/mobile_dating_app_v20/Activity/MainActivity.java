@@ -16,6 +16,7 @@ import android.transition.Explode;
 import android.transition.Fade;
 import android.transition.TransitionInflater;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +27,10 @@ import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.Fragments.Setting;
+import com.example.thang.mobile_dating_app_v20.Notification.RegistrationIntentService;
 import com.example.thang.mobile_dating_app_v20.R;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
@@ -39,6 +43,9 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 
 public class MainActivity extends ActionBarActivity {
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private static final String TAG = "MainActivity";
+
     public static final String URL_CLOUD = "http://datingappservice.jelastic.skali.net/datingapp";
     private static String PACKAGE_NAME = "com.example.thang.mobile_dating_app_v20.Fragments.";
     private int currentItem = -1;
@@ -72,14 +79,6 @@ public class MainActivity extends ActionBarActivity {
                         withIcon(person.getAvatar().isEmpty() ? getResources().getDrawable(R.drawable.no_avatar)
                                  : new BitmapDrawable(Utils.decodeBase64StringToBitmap(person.getAvatar())))
                 )
-//                .withOnAccountHeaderSelectionViewClickListener(new AccountHeader.OnAccountHeaderSelectionViewClickListener() {
-//                    @Override
-//                    public boolean onClick(View view, IProfile iProfile) {
-//                        Toast.makeText(getApplicationContext(),"Hello",Toast.LENGTH_SHORT).show();
-//                        return true;
-//                    }
-//                })
-
                 .build();
 
         result = new Drawer()
@@ -137,6 +136,11 @@ public class MainActivity extends ActionBarActivity {
             result.setSelectionByIdentifier(1);
         }
 
+        if (checkPlayServices()) {
+            // Start IntentService to register this application with GCM.
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
 
     }
 
@@ -189,5 +193,18 @@ public class MainActivity extends ActionBarActivity {
                 .commit();
     }
 
-
+    private boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
+                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Log.i(TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
 }
