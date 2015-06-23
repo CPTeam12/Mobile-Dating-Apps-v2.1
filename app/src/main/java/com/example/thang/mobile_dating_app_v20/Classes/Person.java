@@ -40,6 +40,9 @@ public class Person implements Serializable {
     private String datingProfile;
     private int datingAge;
 
+    //notification
+    private String registrationID;
+
     public Person() {
     }
 
@@ -181,6 +184,14 @@ public class Person implements Serializable {
 
     public void setDatingAge(int datingAge) {
         this.datingAge = datingAge;
+    }
+
+    public String getRegistrationID() {
+        return registrationID;
+    }
+
+    public void setRegistrationID(String registrationID) {
+        this.registrationID = registrationID;
     }
 
     @Override

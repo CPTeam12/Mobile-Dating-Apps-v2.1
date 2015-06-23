@@ -74,8 +74,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class LoginActivity extends ActionBarActivity implements GoogleApiClient.OnConnectionFailedListener, ConnectionCallbacks {
-    private static final String URL_AUTH = "http://datingappservice.jelastic.skali.net/datingapp/Service/auth?";
-    private static final String URL_CHECK_FB = "http://datingappservice.jelastic.skali.net/datingapp/Service/facebook";
+    private static final String URL_AUTH = MainActivity.URL_CLOUD + "/Service/auth?";
+    private static final String URL_CHECK_FB = MainActivity.URL_CLOUD + "/Service/facebook";
 
     private TextView loginError;
     private MaterialEditText email;
@@ -298,10 +298,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
 
         @Override
         protected String doInBackground(String... params) {
-            int i = 0;
-            //return ConnectionTool.readJSONFeed(params[0]);
             return ConnectionTool.makeGetRequest(params[0]);
-            //return ConnectionTool.makePostRequest(params[0],new Person("a","asd","asd@asd.com",22,"Female"));
         }
 
         @Override

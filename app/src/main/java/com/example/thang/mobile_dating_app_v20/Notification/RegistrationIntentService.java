@@ -19,21 +19,32 @@ package com.example.thang.mobile_dating_app_v20.Notification;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.example.thang.mobile_dating_app_v20.Activity.MainActivity;
+import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
+import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
+import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.List;
 
 public class RegistrationIntentService extends IntentService {
 
     private static final String TAG = "RegIntentService";
     private static final String[] TOPICS = {"global"};
+    private static final String URL_REGISTRATIONID = MainActivity.URL_CLOUD + "/Service/registrationNotify?";
 
     public RegistrationIntentService() {
         super(TAG);
@@ -90,6 +101,11 @@ public class RegistrationIntentService extends IntentService {
      */
     private void sendRegistrationToServer(String token) {
         // Add custom implementation, as needed.
+        //if (DBHelper.getInstance(getApplicationContext()).getCurrentUser().getRegistrationID().isEmpty()){
+            String param =URL_REGISTRATIONID + "email=" + DBHelper.getInstance(getApplicationContext()).getCurrentUser().getEmail() +
+                    "&regisid=" + token;
+            new sendRegistrationToServerTask().execute(param);
+        //}
     }
 
     /**
@@ -107,4 +123,30 @@ public class RegistrationIntentService extends IntentService {
     }
     // [END subscribe_topics]
 
+    private class sendRegistrationToServerTask extends AsyncTask<String, Integer, String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+            return ConnectionTool.makeGetRequest(strings[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+//            try {
+//                //start parsing jsonResponse
+//                JSONObject jsonObject = new JSONObject(result);
+//                List<Person> personList = ConnectionTool.fromJSON(jsonObject);
+//                if (personList != null) {
+//                    //insert current user into database
+//                    DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
+//                    dbHelper.insertRegisID(personList.get(0));
+//                    Log.i(null,dbHelper.getCurrentUser().getRegistrationID());
+//                } else {
+//
+//                }
+//            }catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+        }
+    }
 }

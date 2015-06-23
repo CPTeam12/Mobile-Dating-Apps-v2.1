@@ -59,6 +59,7 @@ public class Tab2 extends Fragment implements OnRefreshListener {
         mList = (ListView) v.findViewById(R.id.friendlist);
         empty = (TextView) v.findViewById(R.id.no_friend_item);
         swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.AccentColor);
         //hide textview
         empty.setVisibility(View.GONE);
         empty.setText("You have no friend");
