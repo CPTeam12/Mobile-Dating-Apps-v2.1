@@ -97,11 +97,9 @@ public class DBHelper extends SQLiteOpenHelper {
         insertPerson(person, USER_FLAG_CURRENT);
     }
 
-    public void insertRegisID(Person person){
-        String query = "SELECT * FROM " + USER_TABLE_NAME +
-                "SET " + USER_COL_REGISID + " = " + person.getRegistrationID() +
-                " WHERE " +USER_COL_EMAIL + " = " + person.getEmail();
-
+    public void deletePerson(String email){
+        String query = "DELETE FROM " + USER_TABLE_NAME +
+                " WHERE " +USER_COL_EMAIL + " = '" + email + "'";
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL(query);
         db.close();

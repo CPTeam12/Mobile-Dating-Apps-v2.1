@@ -34,7 +34,7 @@ public class MapTracker extends Service implements LocationListener{
 
     public MapTracker(Context context){
         this.context = context;
-        getLocation();
+        this.location = getLocation();
     }
 
     public Location getLocation(){

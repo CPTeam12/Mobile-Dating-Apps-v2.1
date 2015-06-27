@@ -1,6 +1,7 @@
 package com.example.thang.mobile_dating_app_v20.Adapters;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.support.v7.graphics.Palette;
 import android.view.Display;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import com.balysv.materialripple.MaterialRippleLayout;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
+import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.squareup.picasso.Picasso;
 
@@ -78,10 +80,8 @@ public class GribAdapter extends BaseAdapter {
 
         holder.name.setText(person.getFullName());
         holder.avatar.startAnimation(animation);
-        holder.avatar.setImageDrawable(context.getResources().getDrawable(R.drawable.avatar));
-
-
-
+        holder.avatar.setImageBitmap(person.getAvatar().isEmpty() ? BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.no_avatar) : Utils.decodeBase64StringToBitmap(person.getAvatar()));
         return convertView;
     }
 

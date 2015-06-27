@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,7 +24,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
+import com.example.thang.mobile_dating_app_v20.Classes.MapTracker;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.Fragments.Setting;
@@ -47,6 +51,7 @@ public class MainActivity extends ActionBarActivity {
     private static final String TAG = "MainActivity";
 
     public static final String URL_CLOUD = "http://datingappservice.jelastic.skali.net/datingapp";
+    private static final String URL_UPDATE_LOCATION = URL_CLOUD + "/Service/updatelocation?";
     private static String PACKAGE_NAME = "com.example.thang.mobile_dating_app_v20.Fragments.";
     private int currentItem = -1;
     public Drawer.Result result = null;
@@ -74,10 +79,10 @@ public class MainActivity extends ActionBarActivity {
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.blueboken)
                 .addProfiles(new ProfileDrawerItem().
-                        withName(fullname).
-                        withEmail(email).
-                        withIcon(person.getAvatar().isEmpty() ? getResources().getDrawable(R.drawable.no_avatar)
-                                 : new BitmapDrawable(Utils.decodeBase64StringToBitmap(person.getAvatar())))
+                                withName(fullname).
+                                withEmail(email).
+                                withIcon(person.getAvatar().isEmpty() ? getResources().getDrawable(R.drawable.no_avatar)
+                                        : new BitmapDrawable(Utils.decodeBase64StringToBitmap(person.getAvatar())))
                 )
                 .build();
 
@@ -135,13 +140,31 @@ public class MainActivity extends ActionBarActivity {
             currentItem = -1;
             result.setSelectionByIdentifier(1);
         }
-
+        //check for GCM
         if (checkPlayServices()) {
             // Start IntentService to register this application with GCM.
             Intent intent = new Intent(this, RegistrationIntentService.class);
             startService(intent);
         }
-
+        //update current location
+        MapTracker tracker = new MapTracker(this);
+        if (tracker.canGetLocation()) {
+            double longtitude = tracker.getLongitude();
+            double latitude = tracker.getLatitude();
+            String url = URL_UPDATE_LOCATION + "email=" + DBHelper.getInstance(this).getCurrentUser().getEmail()
+                    + "&longtitude=" + longtitude + "&latitude=" + latitude;
+            //Toast.makeText(this,url,Toast.LENGTH_LONG).show();
+            ConnectionTool connectionTool = new ConnectionTool(getApplicationContext());
+            if (connectionTool.isNetworkAvailable()) {
+                new updateLocationTask().execute(url);
+            } else {
+                new MaterialDialog.Builder(this)
+                        .title(R.string.error_connection_title)
+                        .content(R.string.error_connection)
+                        .titleColorRes(R.color.md_red_400)
+                        .show();
+            }
+        }
     }
 
     @Override
@@ -206,5 +229,23 @@ public class MainActivity extends ActionBarActivity {
             return false;
         }
         return true;
+    }
+
+    private class updateLocationTask extends AsyncTask<String, Integer, String> {
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            return ConnectionTool.makeGetRequest(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.isEmpty()) {
+                Toast.makeText(getApplicationContext(), getString(R.string.loading_error), Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

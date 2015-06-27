@@ -129,5 +129,10 @@
     <string name="friend_year_old">years old</string>
     <string name="fab_unfriend">Unfriend</string>
     <!-- GCM-->
-    <string name="gcm_SenderId">74495258469</string>
+    <string name="gcm_SenderId" translatable="false">74495258469</string>
+    <string name="dialog_unfriend_title">Confirmation</string>
+    <string name="dialog_unfriend_positive">Yes</string>
+    <string name="dialog_unfriend_negative">No</string>
+    <string name="dialog_unfriend_content">Do you want to delete relationship?</string>
+    <string name="dialog_unfriended">Deleted</string>
 </resources>

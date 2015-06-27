@@ -4,25 +4,32 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/tab_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/tab_title"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:paddingLeft="8dp"
         android:paddingTop="4dp"
-        android:text="@string/tab1_title" />
+        android:text="@string/tab1_title"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <GridView
-        android:id="@+id/gridView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:numColumns="auto_fit"
-        android:padding="4dp"
-        android:layout_below="@+id/tab_title" />
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <GridView
+            android:id="@+id/gridView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/tab_title"
+            android:numColumns="auto_fit"
+            android:padding="4dp" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 
 </RelativeLayout>

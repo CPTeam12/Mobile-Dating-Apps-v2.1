@@ -5,15 +5,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
-import com.example.thang.mobile_dating_app_v20.Adapters.ListAdapter;
+import com.example.thang.mobile_dating_app_v20.Activity.MainActivity;
 import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.MapTracker;
@@ -30,16 +28,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +45,8 @@ public class Map extends Fragment {
     SupportMapFragment mf;
     MapTracker tracker;
     List<Person> persons = new ArrayList<Person>();
+    private static final int DISTANCE = 1000; //in meter
+    private String URL_NEARBY_PERSON = MainActivity.URL_CLOUD + "/Service/getnearby?";
     private ProgressBar spiner;
     @Nullable
     @Override
@@ -59,31 +55,67 @@ public class Map extends Fragment {
         mf = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.googlemap);
         map = mf.getMap();
         map.setMyLocationEnabled(true);
-        tracker = new MapTracker(getActivity().getBaseContext());
+        tracker = new MapTracker(getActivity());
         if(tracker.canGetLocation()) {
             double latitude = tracker.getLatitude();
             double longitude = tracker.getLongitude();
+            //Toast.makeText(getActivity(), " " + longitude + latitude,Toast.LENGTH_LONG).show();
             LatLng latLng = new LatLng(latitude, longitude);
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8));
             map.animateCamera(CameraUpdateFactory.zoomTo(18));
 
-            persons.add(new Person(10.85391688,106.62529707));
-            persons.add(new Person(10.852526,106.62918091));
-            persons.add(new Person(10.8494492,106.63203478));
-            persons.add(new Person(10.85756262,106.62731409));
-            persons.add(new Person(10.85206237,106.62647724));
-            for(Person person : persons){
+            String url = URL_NEARBY_PERSON + "email="+ DBHelper.getInstance(getActivity()).getCurrentUser().getEmail()
+                    + "&longtitude=" + longitude + "&latitude=" +latitude;
+            new getNearbyPersonTask().execute(url);
 
-                new DownloadJSONTask().execute(person);
-            }
+//            persons.add(new Person(12.687632, 108.053871, "abc"));
+//            persons.add(new Person(12.688773, 108.054847, "def"));
+//            persons.add(new Person(12.685669, 108.056049, "ghi"));
+//            persons.add(new Person(10.85756262, 106.62731409, " "));
+//            persons.add(new Person(10.85206237, 106.62647724, " "));
+//            for(Person person : persons){
+//                new calculateDistantTask().execute(person);
+//            }
+
         } else {
             tracker.showSettingsAlert();
         }
         return v;
     }
 
-    private class DownloadJSONTask extends AsyncTask<Person, Void, JSONObject> {
-        private Person ppl;
+    private class getNearbyPersonTask extends AsyncTask<String, Integer, String> {
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            return ConnectionTool.makeGetRequest(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (!result.isEmpty()) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    persons = ConnectionTool.fromJSON(jsonObject);
+                    if (persons != null){
+                        for(Person person : persons){
+                            new calculateDistantTask().execute(person);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }else{
+                Toast.makeText(getActivity(), getString(R.string.loading_error), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private class calculateDistantTask extends AsyncTask<Person, Void, JSONObject> {
+        private Person person;
         Utils u = new Utils();
         @Override
         protected void onPreExecute() {
@@ -92,8 +124,8 @@ public class Map extends Fragment {
         @Override
         protected JSONObject doInBackground(Person... params) {
             String response;
-            ppl = params[0];
-            String to = ppl.getLatitude() + "," + ppl.getLongitude();
+            person = params[0];
+            String to = person.getLatitude() + "," + person.getLongitude();
             String from = tracker.getLatitude() + "," + tracker.getLongitude();
             String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+ from + "&destinations=" + to + "&key=AIzaSyBrMkSinF3VVL3z_E5if1G_jU8cdLDBsKU";
             try {
@@ -113,19 +145,19 @@ public class Map extends Fragment {
         protected void onPostExecute(JSONObject result)
         {
             super.onPostExecute(result);
-            //spiner.setVisibility(View.GONE);
             if(result != null)
             {
                 try
                 {
                     JSONObject jobj = result.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0).getJSONObject("distance");
                     int distance = jobj.getInt("value");
-                    if(distance < 1000){
+                    if(distance <= DISTANCE){
                         MarkerOptions options = new MarkerOptions()
-                                .position(new LatLng(ppl.getLatitude(),ppl.getLongitude()))
-                                .title("I'm Here")
+                                .position(new LatLng(person.getLatitude(), person.getLongitude()))
+                                .title(person.getFullName())
                                 .icon(BitmapDescriptorFactory
-                                        .fromBitmap(u.getCircleBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.avatar)))).anchor(0.5f, 1);
+                                        .fromBitmap(u.getCircleBitmap(person.getAvatar().isEmpty() ? BitmapFactory.decodeResource(getResources(),
+                                                R.drawable.no_avatar) : Utils.decodeBase64StringToBitmap(person.getAvatar())))).anchor(0.5f, 1);
 
                         map.addMarker(options);
                     }

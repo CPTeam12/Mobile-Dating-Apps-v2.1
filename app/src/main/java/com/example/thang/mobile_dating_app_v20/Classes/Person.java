@@ -46,11 +46,11 @@ public class Person implements Serializable {
     public Person() {
     }
 
-    public Person(double latitude, double longitude) {
+    public Person(double latitude, double longitude, String fullName) {
         this.longitude = longitude;
         this.latitude = latitude;
+        this.fullName = fullName;
     }
-
 
     public String getFacebookId() {
         return facebookId;

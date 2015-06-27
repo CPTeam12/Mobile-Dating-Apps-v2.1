@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.transition.Explode;
 import android.transition.Fade;
 import android.view.Menu;
@@ -64,28 +65,39 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
     private String URL_FRIEND_REQUEST = MainActivity.URL_CLOUD + "/Service/makefriendrequest?";
     private String URL_UNFRIEND = MainActivity.URL_CLOUD + "/Service/deleterelationship?";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //setup animation
-            Explode explode = new Explode();
-            explode.setDuration(2000);
-            getWindow().setEnterTransition(explode);
-
-            Fade fade = new Fade();
-            fade.setDuration(2000);
-            getWindow().setReturnTransition(fade);
-        }
+//        if (Build.VERSION.SDK_INT >= 21) {
+//            getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+//                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//            //setup animation
+//            Explode explode = new Explode();
+//            explode.setDuration(2000);
+//            getWindow().setEnterTransition(explode);
+//
+//            Fade fade = new Fade();
+//            fade.setDuration(2000);
+//            getWindow().setReturnTransition(fade);
+//        }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.profile_tool_bar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
         mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
         mActionBarSize = getActionBarSize();
-        mImageView = (ImageView)findViewById(R.id.profile_avatar);
+        mImageView = (ImageView) findViewById(R.id.profile_avatar);
         mOverlayView = findViewById(R.id.overlay);
 
         mTitleView = (TextView) findViewById(R.id.title);
@@ -140,16 +152,37 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
             mTitleView.setText(person.getFullName());
         } else {
             person = dbHelper.getPersonByEmail(bundle.getString("email"));
+            //setup diaglog
+            final MaterialDialog unfriendDialog = new MaterialDialog.Builder(this)
+                    .title(R.string.dialog_unfriend_title)
+                    .content(R.string.dialog_unfriend_content)
+                    .positiveText(R.string.dialog_unfriend_positive)
+                    .negativeText(R.string.dialog_unfriend_negative)
+                    .autoDismiss(false)
+                    .callback(new MaterialDialog.ButtonCallback() {
+                        @Override
+                        public void onPositive(MaterialDialog dialog) {
+                            //delete friend in SQLite
+                            DBHelper.getInstance(getApplicationContext()).deletePerson(person.getEmail());
+                            String param = "from=" + DBHelper.getInstance(getApplicationContext()).getCurrentUser().getEmail() + "&to=" + person.getEmail();
+                            new unfriendTask().execute(URL_UNFRIEND + param);
+                            dialog.dismiss();
+                            onBackPressed();
+                            Toast.makeText(getApplicationContext(), R.string.dialog_unfriended, Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void onNegative(MaterialDialog dialog) {
+                            dialog.dismiss();
+                        }
+                    }).build();
             //if person != null mean this is local friend
             if (person.getEmail() != null) {
-                //updated
                 fabFriendEditor.setVisibility(View.VISIBLE);
                 fabUnFriend.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String param = "from=" + DBHelper.getInstance(getApplicationContext()).getCurrentUser().getEmail() + "&to=" + person.getEmail();
-                        new unfriendTask().execute(URL_UNFRIEND + param);
-                        Toast.makeText(getApplicationContext(),param,Toast.LENGTH_LONG).show();
+                        unfriendDialog.show();
                     }
                 });
 
@@ -381,7 +414,6 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
 
         @Override
         protected void onPostExecute(String result) {
-            //start parsing jsonResponse
             if (result.isEmpty()) {
                 Toast.makeText(getApplicationContext(), getString(R.string.loading_error), Toast.LENGTH_SHORT).show();
             }

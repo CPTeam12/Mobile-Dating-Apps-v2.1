@@ -91,4 +91,9 @@
     <string name="friend_deny_request">Đã hủy yêu cầu kết bạn</string>
     <string name="friend_year_old"> tuổi</string>
     <string name="fab_unfriend">Hủy kết bạn</string>
+    <string name="dialog_unfriend_title">Xác nhận</string>
+    <string name="dialog_unfriend_positive">Xóa</string>
+    <string name="dialog_unfriend_negative">Hủy</string>
+    <string name="dialog_unfriend_content">Bạn có muốn hủy kết bạn với người này?</string>
+    <string name="dialog_unfriended">Đã xóa</string>
 </resources>
