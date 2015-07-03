@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.thang.mobile_dating_app_v20.Activity.ChatActivity;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.R;
@@ -77,7 +78,13 @@ public class ListAdapter extends BaseAdapter {
         holder.chatIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Chat conversation goes here", Toast.LENGTH_SHORT).show();
+                //move to chat activity
+                Bundle bundle = new Bundle();
+                bundle.putString("FullName", person.getFullName());
+                Intent intent = new Intent(context, ChatActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
             }
         });
         return convertView;

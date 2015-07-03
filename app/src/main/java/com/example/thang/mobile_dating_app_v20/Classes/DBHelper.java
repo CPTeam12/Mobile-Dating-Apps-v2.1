@@ -75,6 +75,21 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public void deleteData(){
+        String query = "DELETE FROM " + USER_TABLE_NAME;
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(query);
+        db.close();
+    }
+
+    public void deleteCurrentUser(){
+        String query = "DELETE FROM " + USER_TABLE_NAME + " WHERE "
+                + USER_FLAG + " = '" + USER_FLAG_CURRENT + "'";
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(query);
+        db.close();
+    }
+
     public void insertPerson(Person person, String flag) {
 
         SQLiteDatabase db = this.getWritableDatabase();

@@ -21,6 +21,7 @@ import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.Classes.Utils;
+import com.example.thang.mobile_dating_app_v20.Notification.RegistrationIntentService;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -55,6 +56,7 @@ import java.util.List;
 public class LoginActivity extends ActionBarActivity implements GoogleApiClient.OnConnectionFailedListener, ConnectionCallbacks {
     private static final String URL_AUTH = MainActivity.URL_CLOUD + "/Service/auth?";
     private static final String URL_CHECK_FB = MainActivity.URL_CLOUD + "/Service/facebook";
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     private TextView loginError;
     private MaterialEditText email;
@@ -282,17 +284,17 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                 JSONObject jsonObject = new JSONObject(result);
                 List<Person> personList = ConnectionTool.fromJSON(jsonObject);
                 if (personList != null) {
+
                     //insert current user into database
                     DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
                     dbHelper.insertPerson(personList.get(0), dbHelper.USER_FLAG_CURRENT);
 
                     //move to main activity
+                    finish();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                 } else {
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_invalid_login), Toast.LENGTH_SHORT).show();
-//                    loginError.setText(getResources().getString(R.string.error_invalid_login));
-//                    loginError.setVisibility(View.VISIBLE);
                     password.setText("");
                 }
             } catch (JSONException e) {

@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.example.thang.mobile_dating_app_v20.Activity.ChatActivity;
 import com.example.thang.mobile_dating_app_v20.Activity.MainActivity;
 import com.example.thang.mobile_dating_app_v20.Activity.ProfileActivity;
 import com.example.thang.mobile_dating_app_v20.Activity.SearchActivity;
@@ -225,20 +226,6 @@ public class Tab2 extends Fragment implements OnRefreshListener {
                         intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent1.putExtras(dataBundle);
                         getActivity().startActivity(intent1);
-
-//                            getActivity().setTitle("Chat");
-//                            final FragmentTransaction ft = getFragmentManager().beginTransaction();
-//                            ft.addToBackStack(null);
-//                            ft.hide(Tab2.this);
-//                            Fragment chat = new Chat();
-//                            Bundle bundle = new Bundle();
-//                            Gson gson = new Gson();
-//                            String json = gson.toJson(person);
-//                            bundle.putString("json", json);
-//                            chat.setArguments(bundle);
-//                            ft.add(R.id.mainFragment, chat, "Chat");
-//                            ft.setBreadCrumbTitle("Chat");
-//                            ft.commit();
                     }
                 });
             } else {

@@ -138,4 +138,8 @@
     <string name="no_person_nearby">No person is nearby you.</string>
     <string name="title_activity_nearby_map">NearbyMapActivity</string>
     <string name="title_activity_splash">SplashActivity</string>
+    <string name="title_activity_chat">ChatActivity</string>
+    <string name="chat_message">Enter text here</string>
+    <string name="chat_setting_notification">Turn off notification</string>
+    <string name="chat_setting_delete_conversation">Delete conversation</string>
 </resources>

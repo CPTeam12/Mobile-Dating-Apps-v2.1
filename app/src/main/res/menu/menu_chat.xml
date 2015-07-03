@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.thang.mobile_dating_app_v20.Activity.ChatActivity">
+    <item
+        android:id="@+id/chat_notification"
+        android:orderInCategory="100"
+        android:title="@string/chat_setting_notification"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/chat_delete_conversation"
+        android:orderInCategory="100"
+        android:title="@string/chat_setting_delete_conversation"
+        app:showAsAction="never" />
+</menu>

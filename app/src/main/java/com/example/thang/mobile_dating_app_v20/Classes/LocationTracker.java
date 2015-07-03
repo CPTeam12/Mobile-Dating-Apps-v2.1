@@ -20,7 +20,7 @@ import com.google.android.gms.maps.model.LatLng;
 public class LocationTracker  {
     private static final String URL_UPDATE_LOCATION = MainActivity.URL_CLOUD + "/Service/updatelocation?";
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 1000; //in meters
-    private static final long MIN_TIME_CHANGE_FOR_UPDATES = 10; //in milliseconds
+    private static final long MIN_TIME_CHANGE_FOR_UPDATES = 1000 * 60 *2; //in milliseconds
     Context context;
     Location currentBestLocation;
 
@@ -76,10 +76,10 @@ public class LocationTracker  {
         };
 
         //high priority for network, which is reduces battery usage
-//        if (isNetworkEnabled) {
-//            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-//                    MIN_TIME_CHANGE_FOR_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, locationListener);
-//        }
+        if (isNetworkEnabled) {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                    MIN_TIME_CHANGE_FOR_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, locationListener);
+        }
         if(isGPSEnabled) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                     MIN_TIME_CHANGE_FOR_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, locationListener);

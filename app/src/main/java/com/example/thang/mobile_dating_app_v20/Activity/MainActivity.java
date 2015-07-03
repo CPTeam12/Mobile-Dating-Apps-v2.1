@@ -1,37 +1,22 @@
 package com.example.thang.mobile_dating_app_v20.Activity;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.transition.Explode;
-import android.transition.Fade;
-import android.transition.TransitionInflater;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
-import com.example.thang.mobile_dating_app_v20.Classes.LocationTracker;
-import com.example.thang.mobile_dating_app_v20.Classes.MapTracker;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.Classes.Utils;
-import com.example.thang.mobile_dating_app_v20.Fragments.Setting;
 import com.example.thang.mobile_dating_app_v20.Notification.RegistrationIntentService;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.google.android.gms.common.ConnectionResult;
@@ -44,7 +29,6 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -120,7 +104,10 @@ public class MainActivity extends ActionBarActivity {
                                     startActivity(intent1);
                                     break;
                                 case 3:
-                                    switchFragment(3, "", "");
+                                    DBHelper.getInstance(getApplicationContext()).deleteData();
+                                    Intent intent4 = new Intent(getApplicationContext(), LoginActivity.class);
+                                    finish();
+                                    startActivity(intent4);
                                     break;
                                 case 4:
                                     Intent intent3 = new Intent(getApplicationContext(), TestActivity.class);
@@ -144,7 +131,7 @@ public class MainActivity extends ActionBarActivity {
         //check for GCM
         if (checkPlayServices()) {
             // Start IntentService to register this application with GCM.
-            Intent intent = new Intent(this, RegistrationIntentService.class);
+            Intent intent = new Intent(MainActivity.this, RegistrationIntentService.class);
             startService(intent);
         }
 
@@ -206,7 +193,7 @@ public class MainActivity extends ActionBarActivity {
                 GooglePlayServicesUtil.getErrorDialog(resultCode, this,
                         PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
-                Log.i(TAG, "This device is not supported.");
+                Log.i(null, "This device is not supported.");
                 finish();
             }
             return false;

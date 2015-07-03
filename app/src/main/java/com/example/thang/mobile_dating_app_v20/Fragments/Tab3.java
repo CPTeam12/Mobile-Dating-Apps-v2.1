@@ -25,7 +25,6 @@ import com.example.thang.mobile_dating_app_v20.Adapters.GribAdapter;
 import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.LocationTracker;
-import com.example.thang.mobile_dating_app_v20.Classes.MapTracker;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.R;
@@ -48,7 +47,6 @@ import java.util.List;
 public class Tab3 extends Fragment implements OnRefreshListener {
 
     private List<Person> persons = new ArrayList<>();
-    private MapTracker tracker;
     private int numColumns = 2;
     private static final int DISTANCE = 1000; //in meter
     private String URL_NEARBY_PERSON = MainActivity.URL_CLOUD + "/Service/getnearby?";
@@ -61,8 +59,6 @@ public class Tab3 extends Fragment implements OnRefreshListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_3, container, false);
-
-        tracker = new MapTracker(getActivity());
 
         ProgressBar mProgress = (ProgressBar) v.findViewById(R.id.progress);
         gridView = (GridView) v.findViewById(R.id.gridView);
@@ -82,8 +78,6 @@ public class Tab3 extends Fragment implements OnRefreshListener {
                 locationTracker.getCurrentLocation();
 
                 swipeRefreshLayout.setRefreshing(true);
-                double longtitude = tracker.getLongitude();
-                double latitude = tracker.getLatitude();
                 String url = URL_NEARBY_PERSON + "email=" + DBHelper.getInstance(getActivity()).getCurrentUser().getEmail();
 
                 ConnectionTool connectionTool = new ConnectionTool(getActivity());
