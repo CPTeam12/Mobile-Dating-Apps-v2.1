@@ -14,11 +14,14 @@
     <uses-permission android:name="com.example.ismail.location_test.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-    <!--GCM-->
+    <!-- GCM -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <permission android:name="com.example.thang.mobile_dating_app_v20.permission.C2D_MESSAGE"
+
+    <permission
+        android:name="com.example.thang.mobile_dating_app_v20.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
+
     <uses-permission android:name="com.example.thang.mobile_dating_app_v20.permission.C2D_MESSAGE" />
 
     <uses-library android:name="com.google.android.maps" />
@@ -28,7 +31,6 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-
         <uses-feature
             android:glEsVersion="0x00020000"
             android:required="true" />
@@ -39,7 +41,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBrMkSinF3VVL3z_E5if1G_jU8cdLDBsKU" />
+            android:value="AIzaSyDEvU16VrFz2bNYEFpv96uIy071fyNnwZw" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -58,28 +60,23 @@
 
         <activity
             android:name=".Activity.MainActivity"
-            android:label="@string/app_name"/>
+            android:label="@string/app_name" />
         <activity
             android:name=".Activity.SettingActivity"
             android:label="@string/title_activity_setting"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.LoginActivity"
-            android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:label="@string/app_name" />
         <activity
             android:name=".Activity.ProfileActivity"
-            android:label="@string/title_activity_profile"/>
+            android:label="@string/title_activity_profile" />
         <activity
             android:name=".Activity.TestActivity"
-            android:label="@string/title_activity_test"/>
+            android:label="@string/title_activity_test" />
         <activity
             android:name=".Activity.RegisterActivity"
-            android:label="@string/title_activity_register"/>
+            android:label="@string/title_activity_register" />
         <activity
             android:name=".Activity.SearchActivity"
             android:label="@string/title_activity_search"
@@ -92,34 +89,48 @@
                 android:resource="@xml/searchable" />
         </activity>
 
-        <!-- GCM-->
+        <!-- GCM -->
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="com.example.thang.mobile_dating_app_v20" />
             </intent-filter>
         </receiver>
+
         <service
-            android:name="com.example.thang.mobile_dating_app_v20.Notification.MyGcmListenerService"
-            android:exported="false" >
+            android:name=".Notification.MyGcmListenerService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
         <service
-            android:name="com.example.thang.mobile_dating_app_v20.Notification.MyInstanceIDListenerService"
+            android:name=".Notification.MyInstanceIDListenerService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.android.gms.iid.InstanceID"/>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
         <service
-            android:name="com.example.thang.mobile_dating_app_v20.Notification.RegistrationIntentService"
-            android:exported="false">
-        </service>
+            android:name=".Notification.RegistrationIntentService"
+            android:exported="false"></service>
+
+        <activity
+            android:name=".Activity.NearbyMapActivity"
+            android:label="@string/title_activity_nearby_map"></activity>
+        <activity
+            android:name=".Activity.SplashActivity"
+            android:label="@string/title_activity_splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

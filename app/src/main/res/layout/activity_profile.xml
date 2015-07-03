@@ -18,8 +18,7 @@
         app:contentInsetStart="72dp"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        tools:ignore="UnusedAttribute">
-    </android.support.v7.widget.Toolbar>
+        tools:ignore="UnusedAttribute"></android.support.v7.widget.Toolbar>
 
     <FrameLayout
         android:id="@+id/profileFragment"
@@ -73,8 +72,7 @@
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:maxLines="1"
-                    android:minHeight="30dp"
-                    android:text="asd"
+                    android:minHeight="?attr/actionBarSize"
                     android:textColor="@android:color/white"
                     android:textSize="25sp" />
 

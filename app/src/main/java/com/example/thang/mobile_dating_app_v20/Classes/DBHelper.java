@@ -27,6 +27,9 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String USER_COL_ADDRESS = "address";
     private static final String USER_COL_HOBBIES = "hobbies";
 
+    private static final String USER_COL_LATITUDE = "latitude";
+    private static final String USER_COL_LONGITUDE= "longitude";
+
     private static final String USER_COL_REGISID = "registrationid";
 
     //flag for separate between localuser and their friends
@@ -59,6 +62,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 + USER_COL_PHONE + " text, "
                 + USER_COL_HOBBIES + " text, "
                 + USER_COL_REGISID + " text, "
+                + USER_COL_LATITUDE + " text, "
+                + USER_COL_LONGITUDE + " text, "
                 + USER_FLAG + " text not null"
                 + ");";
         db.execSQL(databaseCreate);
@@ -82,6 +87,8 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(USER_COL_GENDER, person.getGender());
         contentValues.put(USER_COL_PHONE, person.getPhone());
         contentValues.put(USER_COL_HOBBIES,person.getHobbies());
+        contentValues.put(USER_COL_LATITUDE,person.getLatitude());
+        contentValues.put(USER_COL_LONGITUDE,person.getLongitude());
         contentValues.put(USER_COL_REGISID,person.getRegistrationID());
         contentValues.put(USER_FLAG, flag);
 

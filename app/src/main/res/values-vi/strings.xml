@@ -96,4 +96,5 @@
     <string name="dialog_unfriend_negative">Hủy</string>
     <string name="dialog_unfriend_content">Bạn có muốn hủy kết bạn với người này?</string>
     <string name="dialog_unfriended">Đã xóa</string>
+    <string name="no_person_nearby">Không tìm thấy ai gần bạn</string>
 </resources>

@@ -94,7 +94,7 @@ public class ConnectionTool implements Serializable {
                     person.setAddress(jsonObject2.getString("address"));
                     person.setAvatar(jsonObject2.getString("avatar"));
 
-                    person.setLastKnown(Integer.parseInt(jsonObject2.getString("lastKnown")));
+                    person.setLastKnown(jsonObject2.getString("lastKnown"));
                     person.setLatitude(Double.parseDouble(jsonObject2.getString("latitude")));
                     person.setLongitude(Double.parseDouble(jsonObject2.getString("longitude")));
 
@@ -117,7 +117,7 @@ public class ConnectionTool implements Serializable {
                     person.setAddress(jsonObject1.getString("address"));
                     person.setAvatar(jsonObject1.getString("avatar"));
 
-                    person.setLastKnown(Integer.parseInt(jsonObject1.getString("lastKnown")));
+                    person.setLastKnown(jsonObject1.getString("lastKnown"));
                     person.setLatitude(Double.parseDouble(jsonObject1.getString("latitude")));
                     person.setLongitude(Double.parseDouble(jsonObject1.getString("longitude")));
 
@@ -159,14 +159,16 @@ public class ConnectionTool implements Serializable {
             outputStream.close();
 
             //Read
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
+			InputStream inputStream = urlConnection.getInputStream();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
             String line = null;
             StringBuilder sb = new StringBuilder();
             while ((line = bufferedReader.readLine()) != null) {
                 sb.append(line);
             }
             bufferedReader.close();
-            result = sb.toString();
+            inputStream.close();
+			result = sb.toString();
 
         } catch (IOException e) {
             e.printStackTrace();

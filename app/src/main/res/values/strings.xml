@@ -84,8 +84,8 @@
     <string name="register_buddy"><b>You want to date with</b></string>
 
     <!--facebook login-->
-    <string name="facebook_app_id" translatable="false">935300426536787</string>
-    <!--<string name="facebook_app_id">886711624708430</string>-->
+    <!--<string name="facebook_app_id" translatable="false">935300426536787</string>-->
+    <string name="facebook_app_id">1598232803789820</string>
     <!-- Profile-->
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="card_section_request">Friend requests</string>
@@ -135,4 +135,7 @@
     <string name="dialog_unfriend_negative">No</string>
     <string name="dialog_unfriend_content">Do you want to delete relationship?</string>
     <string name="dialog_unfriended">Deleted</string>
+    <string name="no_person_nearby">No person is nearby you.</string>
+    <string name="title_activity_nearby_map">NearbyMapActivity</string>
+    <string name="title_activity_splash">SplashActivity</string>
 </resources>

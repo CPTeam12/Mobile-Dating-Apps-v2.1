@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
+import com.example.thang.mobile_dating_app_v20.Classes.LocationTracker;
 import com.example.thang.mobile_dating_app_v20.Classes.MapTracker;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.Classes.Utils;
@@ -50,7 +51,7 @@ public class MainActivity extends ActionBarActivity {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String TAG = "MainActivity";
 
-    public static final String URL_CLOUD = "http://datingappservice.jelastic.skali.net/datingapp";
+    public static final String URL_CLOUD = "http://datingappservice1.jelastic.skali.net/datingapp1";
     private static final String URL_UPDATE_LOCATION = URL_CLOUD + "/Service/updatelocation?";
     private static String PACKAGE_NAME = "com.example.thang.mobile_dating_app_v20.Fragments.";
     private int currentItem = -1;
@@ -146,25 +147,7 @@ public class MainActivity extends ActionBarActivity {
             Intent intent = new Intent(this, RegistrationIntentService.class);
             startService(intent);
         }
-        //update current location
-        MapTracker tracker = new MapTracker(this);
-        if (tracker.canGetLocation()) {
-            double longtitude = tracker.getLongitude();
-            double latitude = tracker.getLatitude();
-            String url = URL_UPDATE_LOCATION + "email=" + DBHelper.getInstance(this).getCurrentUser().getEmail()
-                    + "&longtitude=" + longtitude + "&latitude=" + latitude;
-            //Toast.makeText(this,url,Toast.LENGTH_LONG).show();
-            ConnectionTool connectionTool = new ConnectionTool(getApplicationContext());
-            if (connectionTool.isNetworkAvailable()) {
-                new updateLocationTask().execute(url);
-            } else {
-                new MaterialDialog.Builder(this)
-                        .title(R.string.error_connection_title)
-                        .content(R.string.error_connection)
-                        .titleColorRes(R.color.md_red_400)
-                        .show();
-            }
-        }
+
     }
 
     @Override
@@ -229,23 +212,5 @@ public class MainActivity extends ActionBarActivity {
             return false;
         }
         return true;
-    }
-
-    private class updateLocationTask extends AsyncTask<String, Integer, String> {
-        @Override
-        protected void onPreExecute() {
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            return ConnectionTool.makeGetRequest(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if (result.isEmpty()) {
-                Toast.makeText(getApplicationContext(), getString(R.string.loading_error), Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,12 @@ import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.R;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.Places;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,7 +47,7 @@ import it.gmariotti.cardslib.library.view.CardListView;
 /**
  * Created by Thang on 5/15/2015.
  */
-public class Tab1 extends Fragment implements OnRefreshListener {
+public class Tab1 extends Fragment implements OnRefreshListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private List<Person> personsRequest = new ArrayList<>();
     private List<Person> personsRecommendation = new ArrayList<>();
@@ -49,6 +56,8 @@ public class Tab1 extends Fragment implements OnRefreshListener {
     private String URL_GET_FRIEND_RECOMMENDATION = MainActivity.URL_CLOUD + "/Service/recommendation?email=";
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    private GoogleApiClient mGoogleApiClient ;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,6 +65,27 @@ public class Tab1 extends Fragment implements OnRefreshListener {
         swipeRefreshLayout = (SwipeRefreshLayout ) v.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.AccentColor);
 
+        //google api client
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(getActivity())
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        //current place
+        String placeId = "ChIJXdSq7IkpdTERpgP-QljuR3Q";
+        Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId)
+                .setResultCallback(new ResultCallback<PlaceBuffer>() {
+                    @Override
+                    public void onResult(PlaceBuffer places) {
+                        if (places.getStatus().isSuccess()) {
+                            final Place myPlace = places.get(0);
+                            Log.i(null, "Place found: " + myPlace.getName());
+                        }
+                        places.release();
+                    }
+                });
         //pull down to refresh
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.post(new Runnable() {
@@ -81,6 +111,7 @@ public class Tab1 extends Fragment implements OnRefreshListener {
 
 
     private void initCards() {
+
         //define card adapter
         CardArrayAdapter mCardArrayAdapter = new CardArrayAdapter(getActivity(), cards);
         //define card section
@@ -111,6 +142,9 @@ public class Tab1 extends Fragment implements OnRefreshListener {
     @Override
     public void onRefresh() {
         cards.clear();
+        if(personsRecommendation != null) personsRecommendation.clear();
+        if(personsRequest != null) personsRequest.clear();
+
         String email = DBHelper.getInstance(getActivity()).getCurrentUser().getEmail();
         ConnectionTool connectionTool = new ConnectionTool(getActivity());
         if (connectionTool.isNetworkAvailable()) {
@@ -123,6 +157,21 @@ public class Tab1 extends Fragment implements OnRefreshListener {
                     .titleColorRes(R.color.md_red_400)
                     .show();
         }
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
     }
 
 
@@ -152,6 +201,8 @@ public class Tab1 extends Fragment implements OnRefreshListener {
                 //initial cardview
                 for (Person item : personsRequest) {
                     CardFriendRequest card = new CardFriendRequest(getActivity());
+                    card.setCardElevation(0);
+                    card.setBackgroundColorResourceId(R.color.md_white_1000);
                     String description = item.getGender() + ", " + item.getAge() +
                             " " + getActivity().getResources().getString(R.string.friend_year_old);
                     card.init(item.getFullName(), description);
@@ -184,34 +235,40 @@ public class Tab1 extends Fragment implements OnRefreshListener {
         @Override
         protected void onPostExecute(String result) {
 
-            //start parsing jsonResponse
-            JSONObject jsonObject = null;
-            try {
-                jsonObject = new JSONObject(result);
-                personsRecommendation = ConnectionTool.fromJSON(jsonObject);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            if (personsRecommendation != null) {
-                for (Person item : personsRecommendation) {
-                    CardFriendRecommendation card = new CardFriendRecommendation(getActivity());
-                    String description = item.getGender() + ", " + item.getAge() + " years old";
-                    card.setContext(getActivity());
-                    card.setTitle(item.getFullName());
-                    card.setSecondaryTitle(description);
-                    card.setFullName(item.getFullName());
-                    card.setEmail(item.getEmail());
-                    card.init(item.getFullName(), description);
-                    if (item.getAvatar().isEmpty()) {
-                        card.setBitMap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.no_avatar));
-                    } else {
-                        card.setBitMap(Utils.decodeBase64StringToBitmap(item.getAvatar()));
-                    }
-                    cards.add(card);
+            if(result != null){
+                //start parsing jsonResponse
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = new JSONObject(result);
+                    personsRecommendation = ConnectionTool.fromJSON(jsonObject);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                initCards();
-            } else {
-                initCards();
+                if (personsRecommendation != null) {
+                    for (Person item : personsRecommendation) {
+                        CardFriendRecommendation card = new CardFriendRecommendation(getActivity());
+                        card.setCardElevation(0);
+                        card.setBackgroundColorResourceId(R.color.md_white_1000);
+                        String description = item.getGender() + ", " + item.getAge() + " years old";
+                        card.setContext(getActivity());
+                        card.setTitle(item.getFullName());
+                        card.setSecondaryTitle(description);
+                        card.setFullName(item.getFullName());
+                        card.setEmail(item.getEmail());
+                        card.init(item.getFullName(), description);
+                        if (item.getAvatar().isEmpty()) {
+                            card.setBitMap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.no_avatar));
+                        } else {
+                            card.setBitMap(Utils.decodeBase64StringToBitmap(item.getAvatar()));
+                        }
+                        cards.add(card);
+                    }
+                    initCards();
+                } else {
+                    initCards();
+                }
+            }else{
+                Toast.makeText(getActivity(), getActivity().getString(R.string.loading_error), Toast.LENGTH_SHORT).show();
             }
         }
     }

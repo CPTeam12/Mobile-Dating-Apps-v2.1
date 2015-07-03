@@ -59,7 +59,10 @@ dependencies {
     compile 'com.google.code.gson:gson:2.3.1'
     //GCM
     compile 'com.google.android.gms:play-services-gcm:7.5.0'
+    //google +
     compile 'com.google.android.gms:play-services-plus:7.5.0'
+    //google place
+    compile 'com.google.android.gms:play-services-location:7.5.0'
 
 }
 

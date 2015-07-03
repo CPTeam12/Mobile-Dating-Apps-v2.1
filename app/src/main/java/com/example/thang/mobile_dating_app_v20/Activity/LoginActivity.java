@@ -1,27 +1,18 @@
 package com.example.thang.mobile_dating_app_v20.Activity;
 
-import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AlertDialog;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,22 +33,12 @@ import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.plus.Plus;
 import com.google.gson.Gson;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rengwuxian.materialedittext.validation.RegexpValidator;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,8 +48,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -172,7 +151,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
 //                md.update(signature.toByteArray());
 //                String something = new String(Base64.encode(md.digest(), 0));
 //                //String something = new String(Base64.encodeBytes(md.digest()));
-//                Log.e("hash key", something);
+//                Log.i("hash key", something);
 //            }
 //        } catch (PackageManager.NameNotFoundException e1) {
 //            Log.e("name not found", e1.toString());
@@ -208,10 +187,7 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
             }
         });
         //---End KhuongMH---
-        //check whether this user have already logged in or not
-        DBHelper dbHelper = new DBHelper(getApplicationContext());
-        Person person = dbHelper.getCurrentUser();
-        if (person.getEmail() == null) {
+
             loginError = (TextView) findViewById(R.id.login_error);
             email = (MaterialEditText) findViewById(R.id.login_email);
             password = (MaterialEditText) findViewById(R.id.password);
@@ -230,14 +206,8 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
                 public void onClick(View v) {
                     if (validateLogin())
                         checkLogin();
-
                 }
             });
-        } else {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
     }
 
     @Override

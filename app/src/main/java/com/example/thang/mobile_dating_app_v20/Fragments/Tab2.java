@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -42,7 +43,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class Tab2 extends Fragment implements OnRefreshListener {
     private ListView mList;
     private ListAdapter mAdapter;
-    private TextView empty;
+    private ImageView empty;
     private SwipeRefreshLayout swipeRefreshLayout;
     //Http request
     private static final String HTTP_URL = MainActivity.URL_CLOUD + "/Service/getfriend?";
@@ -57,12 +58,12 @@ public class Tab2 extends Fragment implements OnRefreshListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_2, container, false);
         mList = (ListView) v.findViewById(R.id.friendlist);
-        empty = (TextView) v.findViewById(R.id.no_friend_item);
+        empty = (ImageView) v.findViewById(R.id.no_friend_item);
         swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.AccentColor);
-        //hide textview
+        //hide imageView
         empty.setVisibility(View.GONE);
-        empty.setText("You have no friend");
+
         //fab search friend
         FloatingActionButton fab_search = (FloatingActionButton) v.findViewById(R.id.fab_search);
         fab_search.setOnClickListener(new View.OnClickListener() {
@@ -247,8 +248,6 @@ public class Tab2 extends Fragment implements OnRefreshListener {
                 if (empty.getVisibility() == View.GONE)
                 empty.setVisibility(View.VISIBLE);
             }
-
-
         }
     }
 

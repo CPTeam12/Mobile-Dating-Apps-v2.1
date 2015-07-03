@@ -32,7 +32,7 @@ public class Person implements Serializable {
     //Position
     private double longitude;
     private double latitude;
-    private int lastKnown;
+    private String lastKnown;
 
     //dating search options
     private boolean datingMen;
@@ -130,11 +130,11 @@ public class Person implements Serializable {
         this.latitude = latitude;
     }
 
-    public int getLastKnown() {
+    public String getLastKnown() {
         return lastKnown;
     }
 
-    public void setLastKnown(int lastKnown) {
+    public void setLastKnown(String lastKnown) {
         this.lastKnown = lastKnown;
     }
 

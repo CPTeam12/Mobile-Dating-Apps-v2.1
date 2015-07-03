@@ -12,7 +12,6 @@
         android:layout_alignParentTop="true"
         android:paddingLeft="8dp"
         android:paddingTop="4dp"
-        android:text="@string/tab1_title"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <android.support.v4.widget.SwipeRefreshLayout

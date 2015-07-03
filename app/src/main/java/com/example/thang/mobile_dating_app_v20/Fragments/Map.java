@@ -44,10 +44,10 @@ public class Map extends Fragment {
     GoogleMap map;
     SupportMapFragment mf;
     MapTracker tracker;
+    Utils utils = new Utils();
     List<Person> persons = new ArrayList<Person>();
     private static final int DISTANCE = 1000; //in meter
     private String URL_NEARBY_PERSON = MainActivity.URL_CLOUD + "/Service/getnearby?";
-    private ProgressBar spiner;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,18 +64,9 @@ public class Map extends Fragment {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8));
             map.animateCamera(CameraUpdateFactory.zoomTo(18));
 
-            String url = URL_NEARBY_PERSON + "email="+ DBHelper.getInstance(getActivity()).getCurrentUser().getEmail()
-                    + "&longtitude=" + longitude + "&latitude=" +latitude;
-            new getNearbyPersonTask().execute(url);
+            String url = URL_NEARBY_PERSON + "email="+ DBHelper.getInstance(getActivity()).getCurrentUser().getEmail();
 
-//            persons.add(new Person(12.687632, 108.053871, "abc"));
-//            persons.add(new Person(12.688773, 108.054847, "def"));
-//            persons.add(new Person(12.685669, 108.056049, "ghi"));
-//            persons.add(new Person(10.85756262, 106.62731409, " "));
-//            persons.add(new Person(10.85206237, 106.62647724, " "));
-//            for(Person person : persons){
-//                new calculateDistantTask().execute(person);
-//            }
+            new getNearbyPersonTask().execute(url);
 
         } else {
             tracker.showSettingsAlert();
@@ -101,7 +92,14 @@ public class Map extends Fragment {
                     persons = ConnectionTool.fromJSON(jsonObject);
                     if (persons != null){
                         for(Person person : persons){
-                            new calculateDistantTask().execute(person);
+                            MarkerOptions options = new MarkerOptions()
+                                    .position(new LatLng(person.getLatitude(), person.getLongitude()))
+                                    .title(person.getFullName())
+                                    .icon(BitmapDescriptorFactory
+                                            .fromBitmap(utils.getCircleBitmap(person.getAvatar().isEmpty() ? BitmapFactory.decodeResource(getResources(),
+                                                    R.drawable.no_avatar) : Utils.decodeBase64StringToBitmap(person.getAvatar())))).anchor(0.5f, 1);
+
+                            map.addMarker(options);
                         }
                     }
                 } catch (JSONException e) {

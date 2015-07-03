@@ -58,8 +58,8 @@ import java.util.Date;
 import java.util.List;
 
 public class RegisterActivity extends ActionBarActivity {
-    private static final String URL_REGISTER = "http://datingappservice.jelastic.skali.net/datingapp/Service/register";
-    private static final String URL_INITIAL_FB = "http://datingappservice.jelastic.skali.net/datingapp/Service/registerfacebook";
+    private static final String URL_REGISTER = MainActivity.URL_CLOUD + "/Service/register";
+    private static final String URL_INITIAL_FB = MainActivity.URL_CLOUD + "/Service/registerfacebook";
     private MaterialDialog.Builder dialogBuilder;
     private MaterialDialog materialDialog;
 
