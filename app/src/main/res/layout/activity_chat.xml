@@ -8,26 +8,27 @@
     <include
         android:id="@+id/tool_bar"
         layout="@layout/tool_bar"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <ListView
         android:id="@+id/chat_panel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/md_white_1000"
         android:layout_above="@+id/linearLayout"
-        android:layout_below="@+id/tool_bar">
-    </ListView>
+        android:layout_below="@+id/tool_bar"
+        android:background="@color/md_white_1000"
+        android:clickable="false"
+        android:divider="@color/md_white_1000"/>
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="fill_parent"
         android:layout_height="60sp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/chat_border"
         android:gravity="bottom"
-        android:orientation="horizontal"
-        android:id="@+id/linearLayout">
+        android:orientation="horizontal">
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/chat_message"
@@ -44,8 +45,8 @@
         <ImageButton
             android:id="@+id/send_message"
             android:layout_width="60dp"
-            android:background="@drawable/chat_border"
             android:layout_height="fill_parent"
+            android:background="@drawable/chat_border"
             android:src="@drawable/ic_action_send" />
 
     </LinearLayout>

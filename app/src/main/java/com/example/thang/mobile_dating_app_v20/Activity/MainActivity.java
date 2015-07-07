@@ -35,7 +35,7 @@ public class MainActivity extends ActionBarActivity {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String TAG = "MainActivity";
 
-    public static final String URL_CLOUD = "http://datingappservice1.jelastic.skali.net/datingapp1";
+    public static final String URL_CLOUD = "http://datingappservice2.jelastic.skali.net/datingapp";
     private static final String URL_UPDATE_LOCATION = URL_CLOUD + "/Service/updatelocation?";
     private static String PACKAGE_NAME = "com.example.thang.mobile_dating_app_v20.Fragments.";
     private int currentItem = -1;

@@ -62,6 +62,8 @@ dependencies {
     compile 'com.google.android.gms:play-services-plus:7.5.0'
     //google place
     compile 'com.google.android.gms:play-services-location:7.5.0'
+    //Android Async Websocket client
+    compile 'com.koushikdutta.async:androidasync:2.+'
 
 }
 

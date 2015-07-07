@@ -1,21 +1,27 @@
 package com.example.thang.mobile_dating_app_v20.Activity;
 
-import android.app.Activity;
 import android.content.Context;
+import android.database.DataSetObserver;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.example.thang.mobile_dating_app_v20.Fragments.Chat;
+import com.example.thang.mobile_dating_app_v20.Adapters.ChatFriendAdapter;
+import com.example.thang.mobile_dating_app_v20.Chat.ChatJSON;
+import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
+import com.example.thang.mobile_dating_app_v20.Classes.Message;
+import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -23,15 +29,27 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChatActivity extends ActionBarActivity {
-    static final int SOCKET_SERVER_PORT = 8089;
+
+    public static final String SOCKET_SERVER_ADDRESS = "192.168.43.179";
+    private static final int SOCKET_SERVER_PORT = 8084;
+
     ListView chatPanel;
     MaterialEditText chatMessage;
     ImageButton send;
+    String msgToSend;
+    SocketClient socketClient;
 
-    ChatThread chatThread = null;
+    List<Message> messages = new ArrayList<>();
+    ChatFriendAdapter friendAdapter;
+    String avatarFriend;
+    String avatarMe;
+
+    //test only
+    static int count = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +68,9 @@ public class ChatActivity extends ActionBarActivity {
                 onBackPressed();
             }
         });
+        //set avatar param
+        avatarFriend = bundle.getString("Avatar");
+        avatarMe = DBHelper.getInstance(this).getCurrentUser().getAvatar();
 
         //view initial
         chatPanel = (ListView) findViewById(R.id.chat_panel);
@@ -65,10 +86,10 @@ public class ChatActivity extends ActionBarActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                if (charSequence.length() != 0){
+                if (charSequence.length() != 0) {
                     send.setImageResource(R.drawable.ic_action_send_active);
                     send.setClickable(true);
-                }else{
+                } else {
                     send.setImageResource(R.drawable.ic_action_send);
                     send.setClickable(false);
                 }
@@ -80,32 +101,41 @@ public class ChatActivity extends ActionBarActivity {
 
             }
         });
-        //start chat thread
-        chatThread = new ChatThread(bundle.getString("FullName"), "", SOCKET_SERVER_PORT);
-        chatThread.start();
 
         //set onclicklistener for send button
-        send.setOnClickListener(new View.OnClickListener() {
+        send.setOnClickListener(buttonSendOnClickListener);
+
+        //apply chat adapter
+        friendAdapter = new ChatFriendAdapter(messages, this);
+        chatPanel.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+        chatPanel.setAdapter(friendAdapter);
+
+        //to scroll the listview to bottom on data change
+        friendAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override
-            public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),chatMessage.getText(),Toast.LENGTH_SHORT).show();
+            public void onChanged() {
+                super.onChanged();
+                ChatActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        chatPanel.setSelection(friendAdapter.getCount() - 1);
+                    }
+                });
             }
         });
+
+        //initial client socket
+        String email = DBHelper.getInstance(this).getCurrentUser().getEmail();
+        socketClient = new SocketClient(SOCKET_SERVER_ADDRESS, SOCKET_SERVER_PORT, email, bundle.getString("Email"));
+        socketClient.start();
 
     }
 
     View.OnClickListener buttonSendOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (chatMessage.getText().toString().equals("")){
-                return;
-            }
-
-            if (chatThread == null){
-                return;
-            }
-
-            chatThread.sendMsg(chatMessage.getText().toString() + "\n");
+            socketClient.sendMessage(chatMessage.getText().toString());
+            chatMessage.setText("");
         }
     };
 
@@ -131,18 +161,30 @@ public class ChatActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class ChatThread extends Thread {
-        String name;
-        String dstAddress;
-        int dstPort;
+    @Override
+    public void onBackPressed() {
+        //disconnect from server after destroy
+        socketClient.disConnect();
+        super.onBackPressed();
+    }
 
-        String msgToSend = "";
-        boolean goOut = false;
+    //Socket Client Class
+    public class SocketClient extends Thread {
+        String email;
+        boolean isClose;
+        String msgToSend;
+        String serverAddress;
+        int port;
+        String receiver;
+        Context context;
 
-        ChatThread( String name, String address, int port) {
-            this.name = name;
-            this.dstAddress = address;
-            this.dstPort = port;
+        public SocketClient(String serverAddress, int port, String email, String receiver) {
+            this.serverAddress = serverAddress;
+            this.port = port;
+            this.email = email;
+            this.receiver = receiver;
+            this.isClose = false;
+            this.msgToSend = "";
         }
 
         @Override
@@ -150,55 +192,63 @@ public class ChatActivity extends ActionBarActivity {
             Socket socket = null;
             DataOutputStream dataOutputStream = null;
             DataInputStream dataInputStream = null;
-
             try {
-                socket = new Socket(dstAddress, dstPort);
+                // Make connection and initialize streams
+                socket = new Socket(serverAddress, port);
                 dataOutputStream = new DataOutputStream(socket.getOutputStream());
                 dataInputStream = new DataInputStream(socket.getInputStream());
 
-                dataOutputStream.writeUTF(name);
+                //Establish connection for the 1st time
+                String establish = ChatJSON.setClientEstablish(email);
+                dataOutputStream.writeUTF(establish);
                 dataOutputStream.flush();
 
-                while (!goOut) {
+                while (!isClose) {
                     if (dataInputStream.available() > 0) {
-                        String message = dataInputStream.readUTF();
+                        String input = dataInputStream.readUTF();
+                        //display input from server
+                        Log.i(null, input);
+                        Message message = new Message(input, avatarFriend, "", Message.CHAT_FRIEND_ITEM);
+                        messages.add(message);
                         ChatActivity.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                //show message text
+                                friendAdapter.notifyDataSetChanged();
                             }
                         });
+
                     }
                     if (!msgToSend.equals("")) {
-                        dataOutputStream.writeUTF(msgToSend);
+                        //display send message
+                        Log.i(null, email + ": " + msgToSend);
+                        Message message = new Message(msgToSend, avatarMe, "", Message.CHAT_ME_ITEM);
+                        messages.add(message);
+                        ChatActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                friendAdapter.notifyDataSetChanged();
+                            }
+                        });
+                        //create message json
+                        String output = ChatJSON.setClientMessage(email, receiver, msgToSend);
+                        //send message to server
+                        dataOutputStream.writeUTF(output);
                         dataOutputStream.flush();
+                        //reset message variable
                         msgToSend = "";
                     }
                 }
-            }  catch (UnknownHostException e) {
-                e.printStackTrace();
-                final String eString = e.toString();
-                ChatActivity.this.runOnUiThread(new Runnable() {
+                //send Exit JSON to server
+                System.out.println("Disconnected from server!");
+                String exit = ChatJSON.setClientDisconnect();
+                dataOutputStream.writeUTF(exit);
+                dataOutputStream.flush();
 
-                    @Override
-                    public void run() {
-                        Toast.makeText(ChatActivity.this, eString, Toast.LENGTH_LONG).show();
-                    }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } finally {
 
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-                final String eString = e.toString();
-                ChatActivity.this.runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        Toast.makeText(ChatActivity.this, eString, Toast.LENGTH_LONG).show();
-                    }
-
-                });
-            }finally {
-                if (socket != null){
+                if (socket != null) {
                     try {
                         socket.close();
                     } catch (IOException e) {
@@ -206,7 +256,7 @@ public class ChatActivity extends ActionBarActivity {
                     }
                 }
 
-                if (dataOutputStream != null){
+                if (dataOutputStream != null) {
                     try {
                         dataOutputStream.close();
                     } catch (IOException e) {
@@ -214,26 +264,23 @@ public class ChatActivity extends ActionBarActivity {
                     }
                 }
 
-                if (dataInputStream != null){
+                if (dataInputStream != null) {
                     try {
                         dataInputStream.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-
             }
         }
 
-        private void sendMsg(String msg){
-            msgToSend = msg;
+        public void sendMessage(String message) {
+            this.msgToSend = message;
         }
 
-        private void disconnect(){
-            goOut = true;
+        public void disConnect() {
+            this.isClose = true;
         }
-
     }
-
 
 }

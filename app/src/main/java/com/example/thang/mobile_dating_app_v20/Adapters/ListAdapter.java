@@ -81,6 +81,8 @@ public class ListAdapter extends BaseAdapter {
                 //move to chat activity
                 Bundle bundle = new Bundle();
                 bundle.putString("FullName", person.getFullName());
+                bundle.putString("Avatar",person.getAvatar());
+                bundle.putString("Email",person.getEmail());
                 Intent intent = new Intent(context, ChatActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtras(bundle);
