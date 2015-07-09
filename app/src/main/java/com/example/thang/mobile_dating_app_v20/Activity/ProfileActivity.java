@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,14 +47,12 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
     private View mOverlayView;
     private View mListBackgroundView;
     private TextView mTitleView;
+    private ProgressBar spinner;
 
     private int mActionBarSize;
     private int mFlexibleSpaceShowFabOffset;
     private int mFlexibleSpaceImageHeight;
-    final static int RESULT_LOAD_IMAGE = 200;
 
-    private MaterialDialog.Builder dialogBuilder;
-    private MaterialDialog materialDialog;
     ObservableListView listView;
     Person person = new Person();
     private String URL_FIND = MainActivity.URL_CLOUD + "/Service/getbyemail?email=";
@@ -97,6 +96,7 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
 
         mTitleView = (TextView) findViewById(R.id.title);
         mListBackgroundView = findViewById(R.id.list_background);
+        spinner = (ProgressBar) findViewById(R.id.spinner);
         listView = (ObservableListView) findViewById(R.id.list);
         listView.setScrollViewCallbacks(this);
 
@@ -121,6 +121,7 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         fabAddFriend.setVisibility(View.GONE);
         fabFriendEditor.setVisibility(View.GONE);
         fabProfileEditor.setVisibility(View.GONE);
+        spinner.setVisibility(View.GONE);
 
         //get current user profile
         Bundle bundle = getIntent().getExtras();
@@ -192,20 +193,13 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
                         String friendEmail = person.getEmail();
                         String param = URL_FRIEND_REQUEST + "from=" + userEmail + "&to=" + friendEmail;
                         new makeFriendRequestTask().execute(param);
-
                     }
                 });
             }
 
             //get profile from service
-            try {
-                //wait getProfileTask finish after show profile
-                new getProfileTask().execute(URL_FIND + bundle.getString("email")).get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
+            new getProfileTask().execute(URL_FIND + bundle.getString("email"));
+
         }
         //animation for menu fab
         final View subLayer = findViewById(R.id.sub_layer);
@@ -330,6 +324,8 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
                         .content(R.string.error_connection)
                         .titleColorRes(R.color.md_red_400)
                         .show();
+            }else{
+                spinner.setVisibility(View.VISIBLE);
             }
         }
 
@@ -341,10 +337,6 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         @Override
         protected void onPostExecute(String result) {
             try {
-                //close loading dialog
-                if (materialDialog != null) {
-                    materialDialog.dismiss();
-                }
                 //start parsing jsonResponse
                 JSONObject jsonObject = new JSONObject(result);
                 List<Person> personList = ConnectionTool.fromJSON(jsonObject);
@@ -355,6 +347,8 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
                         R.drawable.no_avatar) : Utils.decodeBase64StringToBitmap(person.getAvatar()));
                 setFriendAdapter(listView, person);
                 mTitleView.setText(person.getFullName());
+                //hide spinner
+                spinner.setVisibility(View.GONE);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

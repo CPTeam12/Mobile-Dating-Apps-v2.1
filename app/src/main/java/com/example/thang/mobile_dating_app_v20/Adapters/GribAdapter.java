@@ -90,14 +90,14 @@ public class GribAdapter extends BaseAdapter {
         final TextView name;
         final ProgressBar progressBar;
         final LinearLayout linearLayout;
-        final MaterialRippleLayout content;
+        //final MaterialRippleLayout content;
 
         public GribHolder(View v) {
             avatar = (ImageView) v.findViewById(R.id.avatar);
             name = (TextView) v.findViewById(R.id.name);
             progressBar = (ProgressBar) v.findViewById(R.id.progress);
             linearLayout = (LinearLayout) v.findViewById(R.id.titlebg);
-            content = (MaterialRippleLayout) v.findViewById(R.id.walls_ripple);
+            //content = (MaterialRippleLayout) v.findViewById(R.id.walls_ripple);
         }
     }
 }

@@ -23,17 +23,17 @@ public class Utils {
     public Utils() {
     }
 
-    public static Bitmap resizeBitmap(Bitmap bitmap){
+    public static Bitmap resizeBitmap(Bitmap bitmap) {
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
         Bitmap result;
         float scaleWidth = ((float) 200) / width;
         float scaleHeight = ((float) 200) / height;
         Matrix matrix = new Matrix();
-        if (width > height){
-            result = Bitmap.createBitmap(bitmap,width/2 - height/2,0,height,height,matrix,false);
-        }else{
-            result = Bitmap.createBitmap(bitmap,0,height/2 - width/2,width,width,matrix,false);
+        if (width > height) {
+            result = Bitmap.createBitmap(bitmap, width / 2 - height / 2, 0, height, height, matrix, false);
+        } else {
+            result = Bitmap.createBitmap(bitmap, 0, height / 2 - width / 2, width, width, matrix, false);
         }
         return result;
     }
@@ -63,15 +63,55 @@ public class Utils {
         return Bitmap.createScaledBitmap(output, 120, 120, false);
     }
 
-    public static String encodeBitmapToBase64String(Bitmap bitmap){
+    public static String encodeBitmapToBase64String(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 30, stream);
         byte[] byteArray = stream.toByteArray();
         return new String(Base64.encode(byteArray, 1));
     }
 
-    public static Bitmap decodeBase64StringToBitmap(String base64){
-        byte[] byteArray = Base64.decode(base64,1);
-        return BitmapFactory.decodeByteArray(byteArray , 0, byteArray.length);
+    public static Bitmap decodeBase64StringToBitmap(String base64) {
+        byte[] byteArray = Base64.decode(base64, 1);
+        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+    }
+
+    public static Bitmap generateSmaleBitmap(String base64, int reqWidth, int reqHeight) {
+        byte[] byteArray = Base64.decode(base64, 1);
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length, options);
+
+    }
+
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) > reqHeight
+                    && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
 }

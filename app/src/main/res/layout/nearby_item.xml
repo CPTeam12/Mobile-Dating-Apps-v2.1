@@ -15,28 +15,14 @@
         android:layout_gravity="center"
         android:layout_marginBottom="24dp" />
 
-    <com.balysv.materialripple.MaterialRippleLayout
-        android:id="@+id/walls_ripple"
+
+    <com.example.thang.mobile_dating_app_v20.Views.SquareImageView
+        android:id="@+id/avatar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:mrl_rippleAlpha="0.4"
-        app:mrl_rippleColor="#ffffff"
-        app:mrl_rippleDelayClick="false"
-        app:mrl_rippleDuration="250"
-        app:mrl_rippleHover="true"
-        app:mrl_rippleInAdapter="true"
-        app:mrl_rippleOverlay="true">
-
-        <com.example.thang.mobile_dating_app_v20.Views.SquareImageView
-            android:id="@+id/avatar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:transitionName="image"
-            tools:ignore="ContentDescription,UnusedAttribute" />
-
-    </com.balysv.materialripple.MaterialRippleLayout>
-
+        android:scaleType="centerCrop"
+        android:transitionName="image"
+        tools:ignore="ContentDescription,UnusedAttribute" />
 
     <LinearLayout
         android:id="@+id/titlebg"

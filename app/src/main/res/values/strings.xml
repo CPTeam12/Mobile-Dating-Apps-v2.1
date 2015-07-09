@@ -142,4 +142,7 @@
     <string name="chat_message">Enter text here</string>
     <string name="chat_setting_notification">Turn off notification</string>
     <string name="chat_setting_delete_conversation">Delete conversation</string>
+    <string name="chat_today">Today</string>
+    <string name="nearby_start_friend">%1$s friends nearby you</string>
+    <string name="nearby_start_people">%1$s people you might want to know</string>
 </resources>

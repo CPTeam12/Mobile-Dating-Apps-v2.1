@@ -28,12 +28,25 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.example.thang.mobile_dating_app_v20.Activity.ChatActivity;
 import com.example.thang.mobile_dating_app_v20.Activity.MainActivity;
+import com.example.thang.mobile_dating_app_v20.Activity.NearbyMapActivity;
+import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
+import com.example.thang.mobile_dating_app_v20.Classes.Message;
 import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.google.android.gms.gcm.GcmListenerService;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 public class MyGcmListenerService extends GcmListenerService {
+    private static final String FLAG_NOTIFICATION = "notification";
+    private static final String FLAG_LOCATION = "location";
+    private static final String FLAG_CHAT = "chat";
 
     private static final String TAG = "MyGcmListenerService";
 
@@ -49,10 +62,16 @@ public class MyGcmListenerService extends GcmListenerService {
     public void onMessageReceived(String from, Bundle data) {
         String message = data.getString("message");
         String title = data.getString("title");
-        String avatar = data.getString("avatar");
+        String flag = data.getString("flag");
+        String email = data.getString("email");
+        double longitude = data.getDouble("longitude");
+        double latitude = data.getDouble("latitude");
         Log.i(TAG, "From: " + from);
         Log.i(TAG, "Message: " + message);
-        Log.i(TAG, "Avatar:" + avatar);
+        Log.i(TAG, "flag: " + flag);
+        Log.i(TAG, "email: " + email);
+        Log.i(TAG, "latitude: " + latitude);
+        Log.i(TAG, "longitude: " + longitude);
 
         /**
          * Production applications would usually process the message here.
@@ -65,7 +84,7 @@ public class MyGcmListenerService extends GcmListenerService {
          * In some cases it may be useful to show a notification indicating to the user
          * that a message was received.
          */
-        sendNotification(message, title, avatar);
+        sendNotification(message, title, flag, email, longitude, latitude);
     }
     // [END receive_message]
 
@@ -74,8 +93,37 @@ public class MyGcmListenerService extends GcmListenerService {
      *
      * @param message GCM message received.
      */
-    private void sendNotification(String message, String title, String avatar) {
-        Intent intent = new Intent(this, MainActivity.class);
+    private void sendNotification(String message, String title, String flag, String email,
+                                  double longitude, double latitude) {
+        Intent intent;
+        Bundle bundle = new Bundle();
+        bundle.putString("Email", email);
+        if (flag.equals(FLAG_CHAT)) {
+            //check for conversation history
+            String currentUserEmail = DBHelper.getInstance(this).getCurrentUser().getEmail();
+            int conversationId = DBHelper.getInstance(this).getConservationId(currentUserEmail, email);
+
+            if (conversationId == -1) {
+                //insert new conversation
+                DBHelper.getInstance(this).insertConversation(currentUserEmail, email);
+                conversationId = DBHelper.getInstance(this).getConservationId(currentUserEmail, email);
+            }
+
+            //insert chat message to SQLite
+            DBHelper.getInstance(getApplicationContext())
+                    .insertConversationMessage(email, message, conversationId, getTime());
+
+            intent = new Intent(this, ChatActivity.class);
+            intent.putExtras(bundle);
+        } else if (flag.equals(FLAG_LOCATION)) {
+            bundle.putDouble("longitude", longitude);
+            bundle.putDouble("latitude", latitude);
+            intent = new Intent(this, NearbyMapActivity.class);
+            intent.putExtras(bundle);
+        } else {
+            intent = new Intent(this, MainActivity.class);
+        }
+
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
@@ -89,7 +137,7 @@ public class MyGcmListenerService extends GcmListenerService {
                 .setSound(defaultSoundUri)
 //                .setLargeIcon(avatar.isEmpty() ? BitmapFactory.decodeResource(getResources(),
 //                        R.drawable.no_avatar) : Bitmap.createScaledBitmap(Utils.decodeBase64StringToBitmap(avatar),8,8,false))
-                //Bitmap.createScaledBitmap(Utils.decodeBase64StringToBitmap(avatar),16,16,false)
+                        //Bitmap.createScaledBitmap(Utils.decodeBase64StringToBitmap(avatar),16,16,false)
                 .setContentIntent(pendingIntent);
 
         NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
@@ -107,5 +155,11 @@ public class MyGcmListenerService extends GcmListenerService {
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+    }
+
+    private String getTime(){
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 }

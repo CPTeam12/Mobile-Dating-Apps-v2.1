@@ -37,7 +37,7 @@ public class DBHelper extends SQLiteOpenHelper {
     //flag for separate between localuser and their friends
     //flag = localuser for current account
     //flag = friend for their friend
-    private static final String USER_FLAG = "flag";
+    private static final String USER_COL_FLAG = "flag";
     public static final String USER_FLAG_CURRENT = "localuser";
     public static final String USER_FLAG_FRIENDS = "friend";
 
@@ -81,7 +81,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 + USER_COL_REGISID + " text, "
                 + USER_COL_LATITUDE + " text, "
                 + USER_COL_LONGITUDE + " text, "
-                + USER_FLAG + " text not null"
+                + USER_COL_FLAG + " text not null"
                 + ");";
         db.execSQL(userDB);
 
@@ -110,15 +110,23 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void deleteData() {
-        String query = "DELETE FROM " + USER_TABLE;
+
         SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DELETE FROM " + USER_TABLE;
         db.execSQL(query);
+
+        String query1 = "DELETE FROM " + CONVERSATION_TABLE;
+        db.execSQL(query1);
+
+        String query2 = "DELETE FROM " + CONVERSATION_DETAIL_TABLE;
+        db.execSQL(query2);
+
         db.close();
     }
 
     public void deleteCurrentUser() {
         String query = "DELETE FROM " + USER_TABLE + " WHERE "
-                + USER_FLAG + " = '" + USER_FLAG_CURRENT + "'";
+                + USER_COL_FLAG + " = '" + USER_FLAG_CURRENT + "'";
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL(query);
         db.close();
@@ -139,7 +147,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(USER_COL_LATITUDE, person.getLatitude());
         contentValues.put(USER_COL_LONGITUDE, person.getLongitude());
         contentValues.put(USER_COL_REGISID, person.getRegistrationID());
-        contentValues.put(USER_FLAG, flag);
+        contentValues.put(USER_COL_FLAG, flag);
 
         db.insert(USER_TABLE, null, contentValues);
         db.close();
@@ -147,7 +155,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void updatePerson(Person person) {
         String query = "DELETE FROM " + USER_TABLE + " WHERE "
-                + USER_FLAG + " = '" + USER_FLAG_CURRENT + "'";
+                + USER_COL_FLAG + " = '" + USER_FLAG_CURRENT + "'";
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL(query);
         db.close();
@@ -164,7 +172,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void deleteAllFriend() {
         String query = "DELETE FROM " + USER_TABLE + " WHERE "
-                + USER_FLAG + " = '" + USER_FLAG_FRIENDS + "'";
+                + USER_COL_FLAG + " = '" + USER_FLAG_FRIENDS + "'";
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL(query);
         db.close();
@@ -173,7 +181,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public List<Person> getAllFriends() {
         List<Person> persons = new ArrayList<>();
         String query = "SELECT * FROM " + USER_TABLE + " WHERE "
-                + USER_FLAG + " = '" + USER_FLAG_FRIENDS + "'";
+                + USER_COL_FLAG + " = '" + USER_FLAG_FRIENDS + "'";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery(query, null);
@@ -199,7 +207,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public Person getCurrentUser() {
         Person person = new Person();
         String query = "SELECT * FROM " + USER_TABLE + " WHERE "
-                + USER_FLAG + " = '" + USER_FLAG_CURRENT + "'";
+                + USER_COL_FLAG + " = '" + USER_FLAG_CURRENT + "'";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery(query, null);
         res.moveToFirst();
@@ -248,7 +256,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     //Chat History database
-
     public void insertConversation(String email1, String email2) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -260,13 +267,13 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void insertConversationMessage(String email, String message, int conversationId) {
+    public void insertConversationMessage(String email, String message, int conversationId, String time) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(CONVERSATION_DETAIL_COL_EMAIL, email);
         contentValues.put(CONVERSATION_DETAIL_COL_MESSAGE, message);
         contentValues.put(CONVERSATION_DETAIL_COL_C_ID, conversationId);
-        contentValues.put(CONVERSATION_DETAIL_COL_TIME, "");
+        contentValues.put(CONVERSATION_DETAIL_COL_TIME, time);
 
         db.insert(CONVERSATION_DETAIL_TABLE, null, contentValues);
         db.close();
@@ -289,20 +296,20 @@ public class DBHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    public List<Message>  getReplyByConversationId(int conversationId) {
+    public List<Message> getReplyByConversationId (int conversationId) {
         List<Message> messages = new ArrayList<>();
-        String query = "SELECT * FROM " + CONVERSATION_TABLE + " C, " + USER_TABLE + " U WHERE "
-                + USER_COL_EMAIL + " = '" + CONVERSATION_DETAIL_COL_EMAIL + "' AND "
+        String query = "SELECT * FROM " + CONVERSATION_DETAIL_TABLE + ", " + USER_TABLE + " U WHERE "
+                + USER_COL_EMAIL + " = " + CONVERSATION_DETAIL_COL_EMAIL + " AND "
                 + CONVERSATION_DETAIL_COL_C_ID + " = '" + conversationId + "' ";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery(query, null);
         res.moveToFirst();
         int a = res.getCount();
         while (res.moveToNext()) {
-            String email = res.getString(res.getColumnIndex(CONVERSATION_COL_ID));
-            String type = res.getString(res.getColumnIndex(CONVERSATION_COL_ID));
-            String msg = res.getString(res.getColumnIndex(CONVERSATION_COL_ID));
-            String time = res.getString(res.getColumnIndex(CONVERSATION_COL_ID));
+            String email = res.getString(res.getColumnIndex(CONVERSATION_DETAIL_COL_EMAIL));
+            String type = res.getString(res.getColumnIndex(USER_COL_FLAG));
+            String msg = res.getString(res.getColumnIndex(CONVERSATION_DETAIL_COL_MESSAGE));
+            String time = res.getString(res.getColumnIndex(CONVERSATION_DETAIL_COL_TIME));
             String avatar = res.getString(res.getColumnIndex(USER_COL_AVATAR));
             String item = "";
             if (type.equals(USER_FLAG_CURRENT)) {
@@ -318,12 +325,32 @@ public class DBHelper extends SQLiteOpenHelper {
         return messages;
     }
 
+    public void deleteConversationById(int conversationId){
+        String query = "DELETE FROM " + CONVERSATION_TABLE + " WHERE "
+                + CONVERSATION_COL_ID + " = '" + conversationId + "'";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(query);
+        db.close();
+    }
+
+    public void deleteReplyByConversationId(int conversationId){
+        String query = "DELETE FROM " + CONVERSATION_DETAIL_TABLE + " WHERE "
+                + CONVERSATION_DETAIL_COL_C_ID + " = '" + conversationId + "'";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(query);
+        db.close();
+    }
+
+
+
     //TODO: list friend conversation
     public List<Person> getListFriendWithConversation(){
         List<Person> persons = new ArrayList<>();
         String query = "SELECT * FROM " + USER_TABLE +  ", "  + CONVERSATION_TABLE + " WHERE "
-                + USER_FLAG + " = '" + USER_FLAG_FRIENDS + "' AND "
-                + USER_FLAG + " = '" + USER_FLAG_FRIENDS + "'";
+                + USER_COL_FLAG + " = '" + USER_FLAG_FRIENDS + "' AND "
+                + USER_COL_FLAG + " = '" + USER_FLAG_FRIENDS + "'";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery(query, null);

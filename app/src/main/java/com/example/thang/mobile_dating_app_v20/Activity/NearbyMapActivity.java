@@ -81,7 +81,8 @@ public class NearbyMapActivity extends Activity implements OnMapReadyCallback {
         map.animateCamera(CameraUpdateFactory.zoomTo(18));
 
         //show all nearby person on the map
-        if (ConnectionTool.isNetworkAvailable()) {
+        ConnectionTool connectionTool = new ConnectionTool(this);
+        if (connectionTool.isNetworkAvailable()) {
             String url = URL_NEARBY_PERSON + "email=" + DBHelper.getInstance(this).getCurrentUser().getEmail();
             new getNearbyPersonTask().execute(url);
         } else {

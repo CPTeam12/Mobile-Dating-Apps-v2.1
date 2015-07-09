@@ -73,15 +73,14 @@ public class ListAdapter extends BaseAdapter {
         holder.txtName.setText(person.getFullName());
         holder.chatIcon.setImageResource(R.drawable.ic_stat_chat);
         holder.avatar.setImageBitmap(person.getAvatar().isEmpty() ? BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.no_avatar) : Utils.decodeBase64StringToBitmap(person.getAvatar()));
+                R.drawable.no_avatar) : Utils.generateSmaleBitmap(person.getAvatar(),80,80));
 
         holder.chatIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //move to chat activity
                 Bundle bundle = new Bundle();
-                bundle.putString("FullName", person.getFullName());
-                bundle.putString("Avatar",person.getAvatar());
+
                 bundle.putString("Email",person.getEmail());
                 Intent intent = new Intent(context, ChatActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

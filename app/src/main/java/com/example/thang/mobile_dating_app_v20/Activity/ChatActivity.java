@@ -2,12 +2,11 @@ package com.example.thang.mobile_dating_app_v20.Activity;
 
 import android.content.Context;
 import android.database.DataSetObserver;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
@@ -16,12 +15,14 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.thang.mobile_dating_app_v20.Adapters.ChatFriendAdapter;
 import com.example.thang.mobile_dating_app_v20.Chat.ChatJSON;
+import com.example.thang.mobile_dating_app_v20.Classes.ChatItem;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Message;
-import com.example.thang.mobile_dating_app_v20.Classes.Utils;
+import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -29,7 +30,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ChatActivity extends ActionBarActivity {
@@ -44,9 +48,13 @@ public class ChatActivity extends ActionBarActivity {
     SocketClient socketClient;
 
     List<Message> messages = new ArrayList<>();
+    List<ChatItem> chatItems = new ArrayList<>();
+
     ChatFriendAdapter friendAdapter;
     String avatarFriend;
     String avatarMe;
+    int conversationId;
+    String friendChatEmail;
 
     //test only
     static int count = 1;
@@ -59,7 +67,11 @@ public class ChatActivity extends ActionBarActivity {
         //get FullName to set title for activity
         Bundle bundle = getIntent().getExtras();
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
-        toolbar.setTitle(bundle.getString("FullName"));
+
+        //get friend details
+        Person friend = DBHelper.getInstance(this).getPersonByEmail(bundle.getString("Email"));
+
+        toolbar.setTitle(friend.getFullName());
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -68,8 +80,10 @@ public class ChatActivity extends ActionBarActivity {
                 onBackPressed();
             }
         });
+
         //set avatar param
-        avatarFriend = bundle.getString("Avatar");
+
+        avatarFriend = friend.getAvatar();
         avatarMe = DBHelper.getInstance(this).getCurrentUser().getAvatar();
 
         //view initial
@@ -105,10 +119,43 @@ public class ChatActivity extends ActionBarActivity {
         //set onclicklistener for send button
         send.setOnClickListener(buttonSendOnClickListener);
 
+        //check for chat history
+        String currentUserEmail = DBHelper.getInstance(this).getCurrentUser().getEmail();
+        friendChatEmail = bundle.getString("Email");
+        conversationId = DBHelper.getInstance(this).getConservationId(currentUserEmail, friendChatEmail);
+        if (conversationId != -1) {
+            messages = DBHelper.getInstance(this).getReplyByConversationId(conversationId);
+        } else {
+            //insert new conversation
+            DBHelper.getInstance(this).insertConversation(currentUserEmail, friendChatEmail);
+            conversationId = DBHelper.getInstance(this).getConservationId(currentUserEmail, friendChatEmail);
+        }
+
         //apply chat adapter
-        friendAdapter = new ChatFriendAdapter(messages, this);
+        String lastDivider = "";
+        for (Message message : messages){
+            //format time
+            String[] date = message.getTime().split(" ");
+            String dateOnly = date[0];
+            String timeOnly = date[1];
+            String currentDate = getChatDateOnly();
+
+            if (!TextUtils.equals(lastDivider, dateOnly)){
+                //insert new time divider
+                if(currentDate.equals(dateOnly)){
+                    chatItems.add(new ChatItem(message,true,getResources().getString(R.string.chat_today)));
+                }else{
+                    chatItems.add(new ChatItem(message,true,dateOnly));
+                }
+                lastDivider = dateOnly;
+            }
+            chatItems.add(new ChatItem(message,false,timeOnly));
+        }
+
+        friendAdapter = new ChatFriendAdapter(chatItems, this);
         chatPanel.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         chatPanel.setAdapter(friendAdapter);
+        chatPanel.setSelection(messages.size() - 1);
 
         //to scroll the listview to bottom on data change
         friendAdapter.registerDataSetObserver(new DataSetObserver() {
@@ -153,12 +200,25 @@ public class ChatActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        // Handle item selection
+        switch (id) {
+            case R.id.chat_notification:
+                Toast.makeText(getApplicationContext(),"Notification disabled", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.chat_delete_conversation:
+                //delete conversation from SQLite
+                DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
+                dbHelper.deleteConversationById(conversationId);
+                dbHelper.deleteReplyByConversationId(conversationId);
+                //empty messages
+                messages.clear();
+                chatItems.clear();
+                friendAdapter.notifyDataSetChanged();
+                Toast.makeText(getApplicationContext(),"Conversation is emptied", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -210,6 +270,11 @@ public class ChatActivity extends ActionBarActivity {
                         Log.i(null, input);
                         Message message = new Message(input, avatarFriend, "", Message.CHAT_FRIEND_ITEM);
                         messages.add(message);
+                        chatItems.add(new ChatItem(message, false, getChatTimeOnly()));
+                        //insert chat message to SQLite
+                        DBHelper.getInstance(getApplicationContext())
+                                .insertConversationMessage(friendChatEmail, input, conversationId, getTime());
+                        //update message list
                         ChatActivity.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -223,6 +288,12 @@ public class ChatActivity extends ActionBarActivity {
                         Log.i(null, email + ": " + msgToSend);
                         Message message = new Message(msgToSend, avatarMe, "", Message.CHAT_ME_ITEM);
                         messages.add(message);
+                        chatItems.add(new ChatItem(message,false, getChatTimeOnly()));
+                        //insert chat message to SQLite
+                        DBHelper.getInstance(getApplicationContext())
+                                .insertConversationMessage(DBHelper.getInstance(getApplicationContext()).getCurrentUser().getEmail(),
+                                        msgToSend, conversationId, getTime());
+                        //update message list
                         ChatActivity.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -281,6 +352,22 @@ public class ChatActivity extends ActionBarActivity {
         public void disConnect() {
             this.isClose = true;
         }
+    }
+
+    private String getTime(){
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
+
+    private String getChatTimeOnly(){
+        String[] time = getTime().split(" ");
+        return time[1];
+    }
+
+    private String getChatDateOnly(){
+        String[] time = getTime().split(" ");
+        return time[0];
     }
 
 }

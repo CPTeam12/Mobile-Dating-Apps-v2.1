@@ -100,4 +100,7 @@
     <string name="chat_message">Soạn tin nhắn</string>
     <string name="chat_setting_notification">Tắt thông báo</string>
     <string name="chat_setting_delete_conversation">Xóa hội thoại</string>
+    <string name="chat_today">Hôm nay</string>
+    <string name="nearby_start_friend">%1$s bạn của bạn gần đây</string>
+    <string name="nearby_start_people">%1$s người bạn có thể muốn làm quen</string>
 </resources>
