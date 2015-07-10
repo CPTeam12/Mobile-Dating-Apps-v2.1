@@ -2,6 +2,8 @@ package com.example.thang.mobile_dating_app_v20.Fragments;
 
 import com.example.thang.mobile_dating_app_v20.R;
 import com.example.thang.mobile_dating_app_v20.Adapters.ViewPagerAdapter;
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
+import com.github.ksoichiro.android.observablescrollview.ScrollState;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -22,7 +24,7 @@ import it.neokree.materialtabs.MaterialTabListener;
 /**
  * Created by Thang on 5/15/2015.
  */
-public class Home extends Fragment implements MaterialTabListener{
+public class Home extends Fragment implements MaterialTabListener, ObservableScrollViewCallbacks {
     ViewPager pager;
     ViewPagerAdapter adapter;
     MaterialTabHost tabs;
@@ -89,6 +91,21 @@ public class Home extends Fragment implements MaterialTabListener{
 
     @Override
     public void onTabUnselected(MaterialTab materialTab) {
+
+    }
+
+    @Override
+    public void onScrollChanged(int i, boolean b, boolean b1) {
+
+    }
+
+    @Override
+    public void onDownMotionEvent() {
+
+    }
+
+    @Override
+    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
 
     }
 }

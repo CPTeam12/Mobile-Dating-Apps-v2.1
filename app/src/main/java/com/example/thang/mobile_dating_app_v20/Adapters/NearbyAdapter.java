@@ -66,7 +66,7 @@ public class NearbyAdapter extends RecyclerView.Adapter<HeaderViewHolder> {
             return new HeaderViewHolder(view, mContext, true);
         } else if (viewType == VIEW_TYPE_HEADER) {
             view = LayoutInflater.from(mContext)
-                    .inflate(R.layout.header_demo, parent, false);
+                    .inflate(R.layout.header_item, parent, false);
             return new HeaderViewHolder(view);
         } else {
             view = LayoutInflater.from(mContext)
@@ -90,7 +90,7 @@ public class NearbyAdapter extends RecyclerView.Adapter<HeaderViewHolder> {
             holder.bindHeaderItem(item.text);
             lp.setSlm(GridSLM.ID);
         } else {
-            holder.bindNearbyItem(item.person.getFullName(), item.person.getAvatar());
+            holder.bindNearbyItem(item.person);
             lp.setSlm(GridSLM.ID);
         }
 

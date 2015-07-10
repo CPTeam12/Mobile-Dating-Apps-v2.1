@@ -9,6 +9,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +24,14 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.thang.mobile_dating_app_v20.Activity.MainActivity;
 import com.example.thang.mobile_dating_app_v20.Activity.NearbyMapActivity;
 import com.example.thang.mobile_dating_app_v20.Adapters.GribAdapter;
+import com.example.thang.mobile_dating_app_v20.Adapters.NearbyAdapter;
 import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.LocationTracker;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.R;
+import com.tonicartos.superslim.LayoutManager;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -51,8 +55,7 @@ public class Tab3 extends Fragment implements OnRefreshListener {
     private static final int DISTANCE = 1000; //in meter
     private String URL_NEARBY_PERSON = MainActivity.URL_CLOUD + "/Service/getnearby?";
     private String URL_NEARBY_PERSON_NOTIFY = MainActivity.URL_CLOUD + "/Service/nearbynotify?";
-    private GridView gridView;
-    private TextView title;
+    private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
@@ -61,11 +64,10 @@ public class Tab3 extends Fragment implements OnRefreshListener {
         View v = inflater.inflate(R.layout.tab_3, container, false);
 
         ProgressBar mProgress = (ProgressBar) v.findViewById(R.id.progress);
-        gridView = (GridView) v.findViewById(R.id.gridView);
-        title = (TextView) v.findViewById(R.id.tab_title);
-        swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
+        recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
 
-        gridView.setNumColumns(numColumns);
+        recyclerView.setLayoutManager(new LayoutManager(getActivity()));
+        swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 
         //pull down to refresh
         swipeRefreshLayout.setColorSchemeResources(R.color.AccentColor);
@@ -132,6 +134,7 @@ public class Tab3 extends Fragment implements OnRefreshListener {
                     JSONObject jsonObject = new JSONObject(result);
                     persons = ConnectionTool.fromJSON(jsonObject);
                     if (persons != null) {
+
                         //send notification for all friends who nearby
 //                        List<Person> friend = DBHelper.getInstance(getActivity()).getAllFriends();
 //                        for (Person item : persons){
@@ -145,26 +148,14 @@ public class Tab3 extends Fragment implements OnRefreshListener {
 //                            }
 //                        }
 
-                        GribAdapter gribAdapter = new GribAdapter(getActivity(), persons, numColumns);
-                        gridView.setAdapter(gribAdapter);
+                        //GribAdapter gribAdapter = new GribAdapter(getActivity(), persons, numColumns);
+                        NearbyAdapter nearbyAdapter = new NearbyAdapter(getActivity(), persons);
+                       
+                        recyclerView.setAdapter(nearbyAdapter);
 
-                        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                                Bundle dataBundle = new Bundle();
-                                dataBundle.putDouble("latitude", persons.get(position).getLatitude());
-                                dataBundle.putDouble("longitude", persons.get(position).getLongitude());
-
-                                Intent intent = new Intent(getActivity(), NearbyMapActivity.class);
-                                intent.putExtras(dataBundle);
-                                startActivity(intent);
-
-                            }
-                        });
-                        title.setText(persons.size() + " " + getResources().getString(R.string.tab1_title));
-                    }else{
-                        title.setText(getResources().getString(R.string.no_person_nearby));
+                    } else {
+                       //TODO: when no nearby item
                     }
                     swipeRefreshLayout.setRefreshing(false);
                 } catch (JSONException e) {
