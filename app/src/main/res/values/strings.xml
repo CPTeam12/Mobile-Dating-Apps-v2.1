@@ -55,7 +55,7 @@
     <string name="error_connection_title">Connection Error</string>
     <string name="error_invalid_year">Invalid year (4 digits)</string>
     <string name="error_invalid_age">Invalid age (2 digits)</string>
-    <string name="error_password">Password doesn\'t match</string>
+    <string name="error_password">Password does not match</string>
     <string name="error_dating_age">Age must be upper than 18</string>
 
     <!--register login-->
@@ -72,13 +72,21 @@
     <string name="register_back_login">Already have account ? <b>Sign in</b></string>
     <string name="register_hobby">Your Hobbies</string>
     <string-array name="register_hobbies">
+        <item>Book</item>
+        <item>Drink</item>
         <item>Music</item>
-        <item>Noob</item>
-        <item>Newbie</item>
-        <item>Stupid</item>
-        <item>KhuongMH</item>
-        <item>Hello</item>
-        <item>Bye Bye</item>
+        <item>Movie</item>
+        <item>Sport</item>
+        <item>Food</item>
+        <item>Pet</item>
+        <item>Football</item>
+        <item>Swimming</item>
+        <item>Dance</item>
+        <item>Tennis</item>
+        <item>Basketball</item>
+        <item>Table Tennis</item>
+        <item>Gymnastic</item>
+        <item>Fishing</item>
     </string-array>
     <string name="register_datingage">Minimum Dating Age</string>
     <string name="register_buddy"><b>You want to date with</b></string>
@@ -112,7 +120,7 @@
     <string name="title_activity_register">RegisterActivity</string>
     <string name="register_duplicate_email">This email is exists, please try another email.</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="profile_phone">Phone</string>
     <string name="profile_address">Address</string>
@@ -145,4 +153,91 @@
     <string name="chat_today">Today</string>
     <string name="nearby_start_friend">%1$s friends nearby you</string>
     <string name="nearby_start_people">%1$s people you might want to know</string>
+    <string name="no_nearby">No nearby person has been found</string>
+    <string name="nearby_friend">Your nearby friend</string>
+    <string name="nearby_people">People nearby you might want to meet</string>
+    <string name="title_activity_register_new">RegisterNewActivity</string>
+    <string name="register_one_title">General information</string>
+    <string name="register_continue">Continue</string>
+    <string name="register_email_error">Wrong email format</string>
+    <string name="title_activity_hobby">HobbyActivity</string>
+
+    <string-array name="hobbies">
+        <item>Book</item>
+        <item>Drink</item>
+        <item>Music</item>
+        <item>Movie</item>
+        <item>Sport</item>
+        <item>Food</item>
+        <item>Pet</item>
+    </string-array>
+    <string-array name="Book">
+        <item>Novel</item>
+        <item>Fiction</item>
+        <item>Science Fiction</item>
+        <item>Biography</item>
+        <item>Romance</item>
+        <item>Personal Development</item>
+    </string-array>
+    <string-array name="Drink">
+        <item>Alcohol</item>
+        <item>Soft Drinks</item>
+        <item>Tea</item>
+        <item>Juice</item>
+    </string-array>
+    <string-array name="Music">
+        <item>Classic</item>
+        <item>Dance</item>
+        <item>Electronic</item>
+        <item>Pop</item>
+        <item>Jazz</item>
+        <item>Country</item>
+        <item>Rock</item>
+        <item>Opera</item>
+        <item>Blue</item>
+        <item>R&amp;B</item>
+        <item>Soul</item>
+    </string-array>
+    <string-array name="Movie">
+        <item>Action</item>
+        <item>Horror</item>
+        <item>Drama</item>
+        <item>Comedy</item>
+        <item>Cartoon</item>
+        <item>Science Fiction</item>
+        <item>Suspense</item>
+    </string-array>
+    <string-array name="Food">
+        <item>Pizza</item>
+        <item>Spaghetti</item>
+        <item>Sushi</item>
+        <item>Hamburger</item>
+        <item>BBQ</item>
+        <item>Fast Food</item>
+        <item>Sea Food</item>
+    </string-array>
+    <string-array name="Sport">
+        <item>Football</item>
+        <item>Swimming</item>
+        <item>Dance</item>
+        <item>Tennis</item>
+        <item>Basketball</item>
+        <item>Table Tennis</item>
+        <item>Gymnastic</item>
+        <item>Fishing</item>
+    </string-array>
+    <string-array name="Pet">
+        <item>Cat</item>
+        <item>Dog</item>
+        <item>Rabbit</item>
+        <item>Hamster</item>
+        <item>Birth</item>
+        <item>Fish</item>
+    </string-array>
+    <string name="hobby_finish">Finish</string>
+    <string name="choose">Choose</string>
+    <string name="hobby_choose">Choose your hobby</string>
+    <string name="dialog_hobby">You must select your hobbies to start using this application</string>
+    <string name="dialog_ok">OK</string>
+
 </resources>

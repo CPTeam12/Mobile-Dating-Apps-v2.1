@@ -13,13 +13,13 @@ import android.graphics.RectF;
 import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Thang on 5/28/2015.
  */
 public class Utils {
-    private static double DISTANCE_RADIUS = 0.05; // 1000m
-
     public Utils() {
     }
 
@@ -92,6 +92,22 @@ public class Utils {
 
     }
 
+    public static Bitmap scaleBitmapFromFile(String  path,int reqWidth,int reqHeight){
+        // First decode with inJustDecodeBounds=true to check dimensions
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFile(path, options);
+    }
+
+
+
     public static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
@@ -113,5 +129,22 @@ public class Utils {
         }
 
         return inSampleSize;
+    }
+
+    public static String parseListToString(List<String> list){
+        String result = "";
+        for (String item : list){
+            result += item + ",";
+        }
+        return  result;
+    }
+
+    public static List<String> parseStringToList (String string){
+        String[] array = string.split(",");
+        List<String> result = new ArrayList<>();
+        for (int i = 0; i < array.length;  i++){
+            result.add(array[i]);
+        }
+        return result;
     }
 }

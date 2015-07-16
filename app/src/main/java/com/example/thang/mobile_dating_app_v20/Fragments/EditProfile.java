@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.thang.mobile_dating_app_v20.Activity.MainActivity;
+import com.example.thang.mobile_dating_app_v20.Activity.ProfileActivity;
 import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
@@ -176,8 +177,11 @@ public class EditProfile extends Fragment {
                     DBHelper helper = new DBHelper(getActivity().getApplicationContext());
                     helper.updatePerson(currentPerson);
 
-                    //move to main activity
+                    //move to profile activity
+                    Bundle bundle = new Bundle();
+                    bundle.putString("ProfileOf",DBHelper.USER_FLAG_CURRENT);
                     Intent intent = new Intent(getActivity(), MainActivity.class);
+                    intent.putExtras(bundle);
                     startActivity(intent);
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(),getResources().getText(R.string.error_connection),Toast.LENGTH_SHORT).show();
@@ -200,11 +204,13 @@ public class EditProfile extends Fragment {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
-            Bitmap avatar = (Utils.resizeBitmap(BitmapFactory.decodeFile(picturePath)));
+            Bitmap avatar = (Utils.resizeBitmap(Utils.scaleBitmapFromFile(picturePath, 200, 200)));
+            //Bitmap avatar = Utils.scaleBitmapFromFile(picturePath, 400, 400);
             profile.setImageBitmap(avatar);
             //Convert avatar to Base64 for transfer to service
             currentPerson.setAvatar(Utils.encodeBitmapToBase64String(avatar));
         }
     }
+
 
 }

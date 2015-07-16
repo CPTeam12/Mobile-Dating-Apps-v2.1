@@ -1,5 +1,7 @@
 package com.example.thang.mobile_dating_app_v20.Activity;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.RadioButton;
@@ -26,6 +29,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
+import com.example.thang.mobile_dating_app_v20.Classes.Hobby;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.R;
@@ -71,7 +75,6 @@ public class RegisterActivity extends ActionBarActivity {
     MaterialEditText datingage;
     RadioButton rb_male, rb_female;
     Button accept, back;
-    MultiAutoCompleteTextView hobby;
     CheckBox cb_male, cb_female;
     String facebookLogin = "";
     List<Person> friends = new ArrayList<Person>();
@@ -90,33 +93,32 @@ public class RegisterActivity extends ActionBarActivity {
         rb_male = (RadioButton) findViewById(R.id.register_male_rb);
         rb_female = (RadioButton) findViewById(R.id.register_female_rb);
         back = (Button) findViewById(R.id.register_back_login);
-        hobby = (MultiAutoCompleteTextView) findViewById(R.id.register_hobby);
         cb_male = (CheckBox) findViewById(R.id.register_male_cb);
         cb_female = (CheckBox) findViewById(R.id.register_female_cb);
         String[] hobbies = getResources().getStringArray(R.array.register_hobbies);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.simple_dropdown_item,hobbies);
-        hobby.setAdapter(adapter);
-        hobby.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.simple_dropdown_item, hobbies);
 
         Bundle bundle = getIntent().getExtras();
-        if(bundle!=null){
+        if (bundle != null) {
             Gson gson = new Gson();
-            Person person = gson.fromJson(bundle.getString("currentUser"),Person.class);
+            Person person = gson.fromJson(bundle.getString("currentUser"), Person.class);
 
             //get friend list from LoginActivity
-            Type listType = new TypeToken<ArrayList<Person>>() {}.getType();
-            friends = gson.fromJson(bundle.getString("friends"),listType);
+            Type listType = new TypeToken<ArrayList<Person>>() {
+            }.getType();
+            friends = gson.fromJson(bundle.getString("friends"), listType);
 
             flag = bundle.getString("flag");
-            if(flag!=null){
+            if (flag != null) {
                 password.setVisibility(View.GONE);
                 confirm_password.setVisibility(View.GONE);
+                email.setEnabled(false);
             }
-            if(person.getFacebookId() != null) facebookLogin = person.getFacebookId();
+            if (person.getFacebookId() != null) facebookLogin = person.getFacebookId();
             email.setText(person.getEmail());
             fullname.setText(person.getFullName());
             String gender = person.getGender();
-            if(gender.equalsIgnoreCase("Male")){
+            if (gender.equalsIgnoreCase("Male")) {
                 rb_male.setChecked(true);
                 rb_female.setChecked(false);
             } else {
@@ -125,42 +127,51 @@ public class RegisterActivity extends ActionBarActivity {
             }
         }
 
+        birthyear.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
+                    createDialog().show();
+                }
+            }
+        });
+
         accept = (Button) findViewById(R.id.register_accept);
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(validateLogin()){
+                if (validateLogin()) {
                     Person person = new Person();
                     person.setEmail(email.getText().toString());
                     person.setFullName(fullname.getText().toString());
                     person.setAge(Calendar.getInstance().get(Calendar.YEAR) - Integer.parseInt(birthyear.getText().toString()));
-                    person.setHobbies(hobby.getText().toString());
+                    person.setHobbies("");
                     person.setDatingAge(Integer.parseInt(datingage.getText().toString()));
-                    if(cb_male.isChecked()){
+                    if (cb_male.isChecked()) {
                         person.setDatingMen(true);
                     } else {
                         person.setDatingMen(false);
                     }
-                    if(cb_female.isChecked()){
+                    if (cb_female.isChecked()) {
                         person.setDatingWomen(true);
                     } else {
                         person.setDatingWomen(false);
                     }
-                    if(rb_male.isChecked()){
+                    if (rb_male.isChecked()) {
                         person.setGender("Male");
                     } else {
                         person.setGender("Female");
                     }
 
                     //only set password when not register as facebook
-                    if(flag == null) person.setPassword(password.getText().toString());
+                    if (flag == null) person.setPassword(password.getText().toString());
 
                     person.setFacebookId(facebookLogin);
                     List<Person> currentUser = new ArrayList<Person>();
                     List<Person> friendUser = new ArrayList<Person>();
                     currentUser.add(person);
                     friendUser.add(person);
-                    for(Person p : friends){
+                    for (Person p : friends) {
                         friendUser.add(p);
                     }
 
@@ -168,7 +179,7 @@ public class RegisterActivity extends ActionBarActivity {
                     new registerNew().execute(currentUser);
 
                     //set relationship for facebook
-                    if(flag != null) new setRelationshipFriends().execute(friendUser);
+                    if (flag != null) new setRelationshipFriends().execute(friendUser);
                 }
             }
         });
@@ -185,6 +196,7 @@ public class RegisterActivity extends ActionBarActivity {
 
     private class registerNew extends AsyncTask<List<Person>, Integer, String> {
         DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
+
         @Override
         protected void onPreExecute() {
             ConnectionTool connectionTool = new ConnectionTool(RegisterActivity.this);
@@ -209,14 +221,14 @@ public class RegisterActivity extends ActionBarActivity {
         protected String doInBackground(List<Person>... persons) {
             List<Person> p = persons[0];
             String response;
-            for(Person person : p){
+            for (Person person : p) {
                 //get image facebook for each person
-                if(!person.getFacebookId().isEmpty()){
+                if (!person.getFacebookId().isEmpty()) {
                     try {
-                        String url = "http://graph.facebook.com/"+ person.getFacebookId()+"/picture?type=large&redirect=false";
+                        String url = "http://graph.facebook.com/" + person.getFacebookId() + "/picture?type=large&redirect=false";
                         String rp = ConnectionTool.makeGetRequest(url);
                         JSONObject jobj = new JSONObject(rp).getJSONObject("data");
-                        String imageURL = jobj.getString("url").replace("\\u003d","=").replace("\\u0026", "&");
+                        String imageURL = jobj.getString("url").replace("\\u003d", "=").replace("\\u0026", "&");
                         URLConnection conn = new URL(imageURL).openConnection();
                         conn.connect();
                         InputStream is = conn.getInputStream();
@@ -230,7 +242,7 @@ public class RegisterActivity extends ActionBarActivity {
             }
 
             // checking register new account or set relationship for user's friends
-            return ConnectionTool.makePostRequest(URL_REGISTER,p);
+            return ConnectionTool.makePostRequest(URL_REGISTER, p);
         }
 
         @Override
@@ -243,15 +255,14 @@ public class RegisterActivity extends ActionBarActivity {
                 //start parsing jsonResponse
                 JSONObject jsonObject = new JSONObject(result);
                 List<Person> personList = ConnectionTool.fromJSON(jsonObject);
-                if(personList != null){
+                if (personList != null) {
                     //insert current user into database
                     dbHelper.insertPerson(personList.get(0), dbHelper.USER_FLAG_CURRENT);
-                    //move to main activity
-                        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                        startActivity(intent);
-                }
-                else {
-                    Toast.makeText(getApplicationContext(),getApplicationContext().getResources().getString(R.string.register_duplicate_email),
+                    //move to hobby activity
+                    Intent intent = new Intent(RegisterActivity.this, HobbyActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.register_duplicate_email),
                             Toast.LENGTH_SHORT).show();
                     email.setText("");
                     password.setText("");
@@ -266,6 +277,7 @@ public class RegisterActivity extends ActionBarActivity {
 
     private class setRelationshipFriends extends AsyncTask<List<Person>, Integer, String> {
         DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
+
         @Override
         protected void onPreExecute() {
         }
@@ -274,14 +286,14 @@ public class RegisterActivity extends ActionBarActivity {
         protected String doInBackground(List<Person>... persons) {
             List<Person> p = persons[0];
             String response;
-            for(Person person : p){
+            for (Person person : p) {
                 //get image facebook for each person
-                if(person.getFacebookId() != null){
+                if (person.getFacebookId() != null) {
                     try {
-                        String url = "http://graph.facebook.com/"+ person.getFacebookId()+"/picture?type=large&redirect=false";
+                        String url = "http://graph.facebook.com/" + person.getFacebookId() + "/picture?type=large&redirect=false";
                         String rp = ConnectionTool.makeGetRequest(url);
                         JSONObject jobj = new JSONObject(rp).getJSONObject("data");
-                        String imageURL = jobj.getString("url").replace("\\u003d","=").replace("\\u0026", "&");
+                        String imageURL = jobj.getString("url").replace("\\u003d", "=").replace("\\u0026", "&");
                         URLConnection conn = new URL(imageURL).openConnection();
                         conn.connect();
                         InputStream is = conn.getInputStream();
@@ -293,7 +305,7 @@ public class RegisterActivity extends ActionBarActivity {
                     }
                 }
             }
-            return ConnectionTool.makePostRequest(URL_INITIAL_FB,p);
+            return ConnectionTool.makePostRequest(URL_INITIAL_FB, p);
         }
 
         @Override
@@ -306,9 +318,9 @@ public class RegisterActivity extends ActionBarActivity {
                 //start parsing jsonResponse
                 JSONObject jsonObject = new JSONObject(result);
                 List<Person> personList = ConnectionTool.fromJSON(jsonObject);
-                if(personList != null){
+                if (personList != null) {
                     //insert friend
-                    for (int i = 0; i< personList.size();i++){
+                    for (int i = 0; i < personList.size(); i++) {
                         dbHelper.insertPerson(personList.get(i), dbHelper.USER_FLAG_FRIENDS);
                     }
                 }
@@ -366,14 +378,28 @@ public class RegisterActivity extends ActionBarActivity {
         boolean e = birthyear.validateWith(new RegexpValidator(getResources().getString(R.string.error_invalid_year), "^(\\d{4})([\\.|,]\\d{1,2})?$"));
         boolean f = datingage.validateWith(new RegexpValidator(getResources().getString(R.string.error_invalid_age), "^(\\d{2})([\\.|,]\\d{1,2})?$"));
         boolean g = password.getText().toString().equals(confirm_password.getText().toString());
-        boolean h = !hobby.getText().toString().equals("");
-        if(!password.getText().toString().equals(confirm_password.getText().toString())){
+        if (!password.getText().toString().equals(confirm_password.getText().toString())) {
             confirm_password.setError(getResources().getText(R.string.error_password));
         }
-        if(Integer.parseInt(datingage.getText().toString()) < 18){
+        if (Integer.parseInt(datingage.getText().toString()) < 18) {
             datingage.setError(getResources().getText(R.string.error_dating_age));
         }
-        if(flag != null) return (a && d && e && f && h);
-        return (a && b && c && d && e && f && g && h);
+        if (flag != null) return (a && d && e && f);
+        return (a && b && c && d && e && f && g);
     }
+
+    protected Dialog createDialog() {
+        return new DatePickerDialog(this, dateSetListener,
+                1993, 10, 3);
+    }
+
+    private DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int selectedYear,
+                              int selectedMonth, int selectedDay) {
+            String date = selectedDay + "/" + selectedMonth + "/" + selectedYear;
+            //Toast.makeText(RegisterActivity.this, date, Toast.LENGTH_LONG).show();
+            birthyear.setText(String.valueOf(selectedYear));
+        }
+    };
 }

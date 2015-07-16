@@ -1,6 +1,7 @@
 package com.example.thang.mobile_dating_app_v20.Classes;
 
 import android.content.Context;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -14,13 +15,15 @@ import com.example.thang.mobile_dating_app_v20.Activity.MainActivity;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.concurrent.ExecutionException;
+
 /**
  * Created by Thang on 6/30/2015.
  */
-public class LocationTracker  {
+public class LocationTracker {
     private static final String URL_UPDATE_LOCATION = MainActivity.URL_CLOUD + "/Service/updatelocation?";
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 1000; //in meters
-    private static final long MIN_TIME_CHANGE_FOR_UPDATES = 1000 * 60 *2; //in milliseconds
+    private static final long MIN_TIME_CHANGE_FOR_UPDATES = 1000 * 60 * 2; //in milliseconds
     Context context;
     Location currentBestLocation;
 
@@ -41,15 +44,23 @@ public class LocationTracker  {
             public void onLocationChanged(Location location) {
                 makeUseOfNewLocation(location);
 
-                if(currentBestLocation == null){
+                if (currentBestLocation == null) {
                     currentBestLocation = location;
                 }
 
                 String url = URL_UPDATE_LOCATION + "email=" + DBHelper.getInstance(context).getCurrentUser().getEmail()
                         + "&longtitude=" + currentBestLocation.getLongitude() + "&latitude=" + currentBestLocation.getLatitude();
                 ConnectionTool connectionTool = new ConnectionTool(context);
+
+
                 if (connectionTool.isNetworkAvailable()) {
-                    new updateLocationTask().execute(url);
+                    try {
+                        new updateLocationTask().execute(url).get();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     new MaterialDialog.Builder(context)
                             .title(R.string.error_connection_title)
@@ -80,11 +91,21 @@ public class LocationTracker  {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
                     MIN_TIME_CHANGE_FOR_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, locationListener);
         }
-        if(isGPSEnabled) {
+        if (isGPSEnabled) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                     MIN_TIME_CHANGE_FOR_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, locationListener);
         }
 
+    }
+
+    public void getCurrentLocationNew(){
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+
+        Location lastLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+        if (lastLocation != null){
+
+        }
     }
 
     private class updateLocationTask extends AsyncTask<String, Integer, String> {
@@ -106,7 +127,7 @@ public class LocationTracker  {
     }
 
     void makeUseOfNewLocation(Location location) {
-        if ( isBetterLocation(location, currentBestLocation) ) {
+        if (isBetterLocation(location, currentBestLocation)) {
             currentBestLocation = location;
         }
     }
@@ -163,4 +184,4 @@ public class LocationTracker  {
         return provider1.equals(provider2);
     }
 
- }
+}

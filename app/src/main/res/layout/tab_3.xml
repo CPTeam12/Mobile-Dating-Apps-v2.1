@@ -17,5 +17,29 @@
             android:scrollbars="vertical" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <LinearLayout
+        android:id="@+id/no_nearby_icon"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="100dp"
+            android:maxWidth="100dp"
+            android:src="@drawable/ic_zero_nearby" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="4dp"
+            android:paddingLeft="80dp"
+            android:paddingRight="80dp"
+            android:text="@string/no_nearby"
+            android:textSize="20sp" />
+
+    </LinearLayout>
 
 </RelativeLayout>

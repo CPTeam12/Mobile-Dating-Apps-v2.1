@@ -16,14 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.thang.mobile_dating_app_v20.Activity.MainActivity;
-import com.example.thang.mobile_dating_app_v20.Activity.NearbyMapActivity;
-import com.example.thang.mobile_dating_app_v20.Adapters.GribAdapter;
 import com.example.thang.mobile_dating_app_v20.Adapters.NearbyAdapter;
 import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
@@ -33,12 +32,6 @@ import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.tonicartos.superslim.LayoutManager;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -54,18 +47,18 @@ public class Tab3 extends Fragment implements OnRefreshListener {
     private int numColumns = 2;
     private static final int DISTANCE = 1000; //in meter
     private String URL_NEARBY_PERSON = MainActivity.URL_CLOUD + "/Service/getnearby?";
-    private String URL_NEARBY_PERSON_NOTIFY = MainActivity.URL_CLOUD + "/Service/nearbynotify?";
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private View noNearby;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_3, container, false);
 
-        ProgressBar mProgress = (ProgressBar) v.findViewById(R.id.progress);
+        noNearby = (View) v.findViewById(R.id.no_nearby_icon);
+        noNearby.setVisibility(View.GONE);
         recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
-
         recyclerView.setLayoutManager(new LayoutManager(getActivity()));
         swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
 
@@ -120,6 +113,7 @@ public class Tab3 extends Fragment implements OnRefreshListener {
     private class getNearbyPersonTask extends AsyncTask<String, Integer, String> {
         @Override
         protected void onPreExecute() {
+
         }
 
         @Override
@@ -148,14 +142,14 @@ public class Tab3 extends Fragment implements OnRefreshListener {
 //                            }
 //                        }
 
-                        //GribAdapter gribAdapter = new GribAdapter(getActivity(), persons, numColumns);
+                        //SubHobbyAdapter gribAdapter = new SubHobbyAdapter(getActivity(), persons, numColumns);
                         NearbyAdapter nearbyAdapter = new NearbyAdapter(getActivity(), persons);
                        
                         recyclerView.setAdapter(nearbyAdapter);
 
-
+                        noNearby.setVisibility(View.GONE);
                     } else {
-                       //TODO: when no nearby item
+                        noNearby.setVisibility(View.VISIBLE);
                     }
                     swipeRefreshLayout.setRefreshing(false);
                 } catch (JSONException e) {
@@ -219,6 +213,7 @@ public class Tab3 extends Fragment implements OnRefreshListener {
     private class sendNotificationTask extends AsyncTask<String, Integer, String> {
         @Override
         protected void onPreExecute() {
+            noNearby.setVisibility(View.GONE);
         }
 
         @Override

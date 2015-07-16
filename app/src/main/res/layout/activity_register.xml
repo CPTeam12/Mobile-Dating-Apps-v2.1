@@ -35,6 +35,17 @@
                 app:met_textColorHint="@color/primary_text" />
 
             <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/register_fullname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/prompt_fullname"
+                app:met_baseColor="@color/primary_text"
+                app:met_errorColor="#ffdd4c3a"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/primary_text"
+                app:met_textColorHint="@color/primary_text" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/register_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -59,34 +70,11 @@
                 app:met_textColorHint="@color/primary_text" />
 
             <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/register_fullname"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/prompt_fullname"
-                app:met_baseColor="@color/primary_text"
-                app:met_errorColor="#ffdd4c3a"
-                app:met_floatingLabel="highlight"
-                app:met_primaryColor="@color/primary_text"
-                app:met_textColorHint="@color/primary_text" />
-
-            <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/register_birthyear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_yearbirth"
                 android:inputType="date"
-                app:met_baseColor="@color/primary_text"
-                app:met_errorColor="#ffdd4c3a"
-                app:met_floatingLabel="highlight"
-                app:met_primaryColor="@color/primary_text"
-                app:met_textColorHint="@color/primary_text" />
-
-            <com.rengwuxian.materialedittext.MaterialMultiAutoCompleteTextView
-                android:id="@+id/register_hobby"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:completionThreshold="1"
-                android:hint="@string/register_hobby"
                 app:met_baseColor="@color/primary_text"
                 app:met_errorColor="#ffdd4c3a"
                 app:met_floatingLabel="highlight"

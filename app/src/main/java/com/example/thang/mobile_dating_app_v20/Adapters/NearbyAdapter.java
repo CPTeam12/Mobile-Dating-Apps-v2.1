@@ -24,60 +24,95 @@ public class NearbyAdapter extends RecyclerView.Adapter<HeaderViewHolder> {
     private static final int VIEW_TYPE_HEADER = 1;
     private static final int VIEW_TYPE_CONTENT = 2;
 
-    private final ArrayList<LineItem> mItems;
-    private final Context mContext;
+    private final ArrayList<LineItem> lineItems;
+    private final Context context;
 
     public NearbyAdapter(Context context, List<Person> persons) {
-        mContext = context;
-        mItems = new ArrayList<>();
+        this.context = context;
+        lineItems = new ArrayList<>();
         //int sectionManager = -1;
         int headerCount = 1;
         int sectionFirstPosition = 0;
+        int totalCount = 0;
+        int friendCount = 0;
+        int peopleCount = 0;
 
         //add start item as always
-        String nearbyFriend = mContext.getResources().getString(R.string.nearby_start_friend, 5);
-        String nearbyPeople = mContext.getResources().getString(R.string.nearby_start_people, 5);
-
-        mItems.add(new LineItem(nearbyFriend, nearbyPeople, true,
-                DBHelper.getInstance(context).getCurrentUser(),0));
+        lineItems.add(new LineItem("", "", true,
+                DBHelper.getInstance(context).getCurrentUser(), 0));
         //sectionFirstPosition++;
-        for (int i = 0; i < persons.size(); i++) {
-            if (i == 0 || i == 1) {
-                //sectionManager = (sectionManager + 1) % 2;
-                sectionFirstPosition = i + headerCount;
-                headerCount += 1;
-                mItems.add(new LineItem("Your Friend", true, sectionFirstPosition));
-            }
-            mItems.add(new LineItem("You might known", false, sectionFirstPosition, persons.get(i)));
+        String currentHeader = "";
 
+        //for friend
+        for (int i = 0; i < persons.size(); i++) {
+            Person person = DBHelper.getInstance(context).getPersonByEmail(persons.get(i).getEmail());
+            if (person.getEmail() != null) {
+                //is friend
+                if (!currentHeader.equals(context.getResources().getString(R.string.nearby_friend))) {
+                    //add header
+                    currentHeader = context.getResources().getString(R.string.nearby_friend);
+                    sectionFirstPosition = totalCount + headerCount;
+                    headerCount += 1;
+                    lineItems.add(new LineItem(currentHeader, true, sectionFirstPosition));
+                }
+                //add content
+                lineItems.add(new LineItem("", false, sectionFirstPosition, persons.get(i)));
+                totalCount++;
+                friendCount++;
+            }
         }
+
+        String nearbyFriend = this.context.getResources().getString(R.string.nearby_start_friend, friendCount);
+        lineItems.get(0).start_friend = nearbyFriend;
+
+        //not friend
+        for (int i = 0; i < persons.size(); i++) {
+            Person person = DBHelper.getInstance(context).getPersonByEmail(persons.get(i).getEmail());
+            if (person.getEmail() == null) {
+                //is friend
+                if (!currentHeader.equals(context.getResources().getString(R.string.nearby_people))) {
+                    //add header
+                    currentHeader = context.getResources().getString(R.string.nearby_people);
+                    sectionFirstPosition = totalCount + headerCount;
+                    headerCount += 1;
+                    lineItems.add(new LineItem(currentHeader, true, sectionFirstPosition));
+                }
+                //add content
+                lineItems.add(new LineItem("", false, sectionFirstPosition, persons.get(i)));
+                totalCount++;
+                peopleCount++;
+            }
+        }
+
+        String nearbyPeople = this.context.getResources().getString(R.string.nearby_start_people, peopleCount);
+        lineItems.get(0).start_people = nearbyPeople;
     }
 
     public boolean isItemHeader(int position) {
-        return mItems.get(position).isHeader;
+        return lineItems.get(position).isHeader;
     }
 
     @Override
     public HeaderViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
         if (viewType == VIEW_TYPE_START) {
-            view = LayoutInflater.from(mContext)
+            view = LayoutInflater.from(context)
                     .inflate(R.layout.nearby_start_item, parent, false);
-            return new HeaderViewHolder(view, mContext, true);
+            return new HeaderViewHolder(view, context, true);
         } else if (viewType == VIEW_TYPE_HEADER) {
-            view = LayoutInflater.from(mContext)
+            view = LayoutInflater.from(context)
                     .inflate(R.layout.header_item, parent, false);
             return new HeaderViewHolder(view);
         } else {
-            view = LayoutInflater.from(mContext)
+            view = LayoutInflater.from(context)
                     .inflate(R.layout.nearby_item, parent, false);
-            return new HeaderViewHolder(view, mContext);
+            return new HeaderViewHolder(view, context);
         }
     }
 
     @Override
     public void onBindViewHolder(HeaderViewHolder holder, int position) {
-        final LineItem item = mItems.get(position);
+        final LineItem item = lineItems.get(position);
         final View itemView = holder.itemView;
 
         final GridSLM.LayoutParams lp = GridSLM.LayoutParams.from(itemView.getLayoutParams());
@@ -85,8 +120,7 @@ public class NearbyAdapter extends RecyclerView.Adapter<HeaderViewHolder> {
             holder.bindStartItem(item.start_friend, item.start_people, item.person.getAvatar());
             lp.setSlm(LinearSLM.ID);
 
-        }
-        else if (item.isHeader) {
+        } else if (item.isHeader) {
             holder.bindHeaderItem(item.text);
             lp.setSlm(GridSLM.ID);
         } else {
@@ -94,21 +128,21 @@ public class NearbyAdapter extends RecyclerView.Adapter<HeaderViewHolder> {
             lp.setSlm(GridSLM.ID);
         }
 
-        lp.setColumnWidth(mContext.getResources().getDimensionPixelSize(R.dimen.grid_column_width));
+        lp.setColumnWidth(context.getResources().getDimensionPixelSize(R.dimen.grid_column_width));
         lp.setFirstPosition(item.sectionFirstPosition);
         itemView.setLayoutParams(lp);
     }
 
     @Override
     public int getItemCount() {
-        return mItems.size();
+        return lineItems.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (mItems.get(position).isStart) {
+        if (lineItems.get(position).isStart) {
             return VIEW_TYPE_START;
-        } else if (mItems.get(position).isHeader) {
+        } else if (lineItems.get(position).isHeader) {
             return VIEW_TYPE_HEADER;
         } else {
             return VIEW_TYPE_CONTENT;

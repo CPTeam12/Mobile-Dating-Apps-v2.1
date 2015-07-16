@@ -44,7 +44,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class Tab2 extends Fragment implements OnRefreshListener {
     private ListView mList;
     private ListAdapter mAdapter;
-    private ImageView empty;
+    private View empty;
     private SwipeRefreshLayout swipeRefreshLayout;
     //Http request
     private static final String HTTP_URL = MainActivity.URL_CLOUD + "/Service/getfriend?";
@@ -59,7 +59,7 @@ public class Tab2 extends Fragment implements OnRefreshListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_2, container, false);
         mList = (ListView) v.findViewById(R.id.friendlist);
-        empty = (ImageView) v.findViewById(R.id.no_friend_item);
+        empty =  v.findViewById(R.id.no_friend_item);
         swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.AccentColor);
         //hide imageView
@@ -176,7 +176,7 @@ public class Tab2 extends Fragment implements OnRefreshListener {
     private class getFriendTask extends AsyncTask<String, Integer, String> {
         @Override
         protected void onPreExecute() {
-
+            empty.setVisibility(View.GONE);
         }
 
         @Override
@@ -201,10 +201,10 @@ public class Tab2 extends Fragment implements OnRefreshListener {
                 if (empty.getVisibility() == View.VISIBLE)
                     empty.setVisibility(View.GONE);
 
-                //insert user's friends into database
                 DBHelper dbHelper = DBHelper.getInstance(getActivity());
                 //delete db before insert new
                 dbHelper.deleteAllFriend();
+                //insert user's friends into database
                 for (Person person : persons) {
                     dbHelper.insertPerson(person, DBHelper.USER_FLAG_FRIENDS);
                 }

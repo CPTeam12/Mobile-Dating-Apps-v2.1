@@ -4,6 +4,7 @@ apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 21
     buildToolsVersion "22.0.1"
+    compileOptions.encoding = 'UTF-8'
 
     defaultConfig {
         applicationId "com.example.thang.mobile_dating_app_v20"

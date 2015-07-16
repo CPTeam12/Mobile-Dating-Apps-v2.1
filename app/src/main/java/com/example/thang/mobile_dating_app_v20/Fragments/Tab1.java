@@ -201,7 +201,7 @@ public class Tab1 extends Fragment implements OnRefreshListener, GoogleApiClient
                 //initial cardview
                 for (Person item : personsRequest) {
                     CardFriendRequest card = new CardFriendRequest(getActivity());
-                    card.setCardElevation(0);
+                    card.setCardElevation(4);
                     card.setBackgroundColorResourceId(R.color.md_white_1000);
                     String description = item.getGender() + ", " + item.getAge() +
                             " " + getActivity().getResources().getString(R.string.friend_year_old);
@@ -247,7 +247,7 @@ public class Tab1 extends Fragment implements OnRefreshListener, GoogleApiClient
                 if (personsRecommendation != null) {
                     for (Person item : personsRecommendation) {
                         CardFriendRecommendation card = new CardFriendRecommendation(getActivity());
-                        card.setCardElevation(0);
+                        card.setCardElevation(4);
                         card.setBackgroundColorResourceId(R.color.md_white_1000);
                         String description = item.getGender() + ", " + item.getAge() + " years old";
                         card.setContext(getActivity());

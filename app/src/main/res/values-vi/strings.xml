@@ -44,7 +44,7 @@
     <string name="progress_dialog">Đang xử lý...</string>
     <string name="friend_accept">Xác nhận</string>
     <string name="friend_dismiss">Xóa</string>
-    <string name="no_friend_item">Không có bạn</string>
+    <string name="no_friend_item">Không có người bạn nào</string>
     <string name="setting_dating">Bạn muốn hẹn hò</string>
     <string name="setting_dating_men">Nam</string>
     <string name="setting_dating_women">Nữ</string>
@@ -101,6 +101,90 @@
     <string name="chat_setting_notification">Tắt thông báo</string>
     <string name="chat_setting_delete_conversation">Xóa hội thoại</string>
     <string name="chat_today">Hôm nay</string>
-    <string name="nearby_start_friend">%1$s bạn của bạn gần đây</string>
-    <string name="nearby_start_people">%1$s người bạn có thể muốn làm quen</string>
+    <string name="nearby_start_friend">có %1$s bạn gần đây</string>
+    <string name="nearby_start_people">có %1$s người bạn có thể làm quen</string>
+    <string name="no_nearby">Không tìm thấy ai xung quanh bạn</string>
+    <string name="nearby_friend">Bạn xung quanh</string>
+    <string name="nearby_people">Những người khác</string>
+    <string name="register_one_title">Thông tin cơ bản</string>
+    <string name="register_continue">Tiếp tục</string>
+    <string name="register_email_error">Địa chỉ email không tồn tại</string>
+    <string name="hobby_finish">Hoàn tất</string>
+    <string name="choose">Chọn</string>
+    <string name="hello_world" translatable="false"></string>
+    <string name="hobby_choose">Chọn sở thích phù hợp</string>
+    <string-array name="hobbies">
+        <item>Sách</item>
+        <item>Thức uống</item>
+        <item>Âm nhạc</item>
+        <item>Phim ảnh</item>
+        <item>Thể thao</item>
+        <item>Thức ăn</item>
+        <item>Thú cưng</item>
+    </string-array>
+    <string-array name="Book">
+        <item>Tiểu thuyết</item>
+        <item>Fiction</item>
+        <item>Khoa học</item>
+        <item>Biography</item>
+        <item>Lãng mạn</item>
+        <item>Phát triển cá nhân</item>
+    </string-array>
+    <string-array name="Drink">
+        <item>Nước Có cồn</item>
+        <item>Nước Có ga</item>
+        <item>Trà</item>
+        <item>Nước ép</item>
+    </string-array>
+    <string-array name="Music">
+        <item>Cổ điển</item>
+        <item>Dance</item>
+        <item>Điện tử</item>
+        <item>Pop</item>
+        <item>Jazz</item>
+        <item>Đồng quê</item>
+        <item>Rock</item>
+        <item>Opera</item>
+        <item>Blue</item>
+        <item>R&amp;B</item>
+        <item>Soul</item>
+    </string-array>
+    <string-array name="Movie">
+        <item>Hành động</item>
+        <item>Kinh dị</item>
+        <item>Phim tryện</item>
+        <item>Hài kịch</item>
+        <item>Hoạt hình</item>
+        <item>Khoa học</item>
+        <item>Kịch tính</item>
+    </string-array>
+    <string-array name="Food">
+        <item>Pizza</item>
+        <item>Spaghetti</item>
+        <item>Sushi</item>
+        <item>Hamburger</item>
+        <item>BBQ</item>
+        <item>Thức ăn nhanh</item>
+        <item>Hải sản</item>
+    </string-array>
+    <string-array name="Sport">
+        <item>Đá banh</item>
+        <item>bơi lội</item>
+        <item>khiêu vũ</item>
+        <item>Tennis</item>
+        <item>bóng rổ</item>
+        <item>Bóng bàn</item>
+        <item>GYM</item>
+        <item>Câu cá</item>
+    </string-array>
+    <string-array name="Pet">
+        <item>Mèo</item>
+        <item>Chó</item>
+        <item>Thỏ</item>
+        <item>Hamster</item>
+        <item>Chim</item>
+        <item>Cá</item>
+    </string-array>
+    <string name="dialog_hobby">Bạn phải chọn sở thích của mình để có thể bắt đầu sử dụng ứng dụng này.</string>
+    <string name="dialog_ok">OK</string>
 </resources>

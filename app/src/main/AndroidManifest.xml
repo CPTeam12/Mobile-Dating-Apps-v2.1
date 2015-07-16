@@ -72,9 +72,6 @@
             android:name=".Activity.ProfileActivity"
             android:label="@string/title_activity_profile" />
         <activity
-            android:name=".Activity.TestActivity"
-            android:label="@string/title_activity_test" />
-        <activity
             android:name=".Activity.RegisterActivity"
             android:label="@string/title_activity_register" />
         <activity
@@ -135,6 +132,10 @@
         <activity
             android:name=".Activity.ChatActivity"
             android:label="@string/title_activity_chat" >
+        </activity>
+        <activity
+            android:name=".Activity.HobbyActivity"
+            android:label="@string/title_activity_hobby" >
         </activity>
     </application>
 

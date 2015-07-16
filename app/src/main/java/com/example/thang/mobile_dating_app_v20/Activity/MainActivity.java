@@ -35,6 +35,7 @@ public class MainActivity extends ActionBarActivity {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String TAG = "MainActivity";
 
+    //public static final String URL_CLOUD = "http://192.168.43.180:8084/DatingAppService";
     public static final String URL_CLOUD = "http://datingappservice2.jelastic.skali.net/datingapp";
     private static final String URL_UPDATE_LOCATION = URL_CLOUD + "/Service/updatelocation?";
     private static String PACKAGE_NAME = "com.example.thang.mobile_dating_app_v20.Fragments.";
@@ -67,7 +68,7 @@ public class MainActivity extends ActionBarActivity {
                                 withName(fullname).
                                 withEmail(email).
                                 withIcon(person.getAvatar().isEmpty() ? getResources().getDrawable(R.drawable.no_avatar)
-                                        : new BitmapDrawable(Utils.decodeBase64StringToBitmap(person.getAvatar())))
+                                        : new BitmapDrawable(getApplicationContext().getResources(),Utils.generateSmaleBitmap(person.getAvatar(),800,800)))
                 )
                 .build();
 
@@ -110,7 +111,10 @@ public class MainActivity extends ActionBarActivity {
                                     startActivity(intent4);
                                     break;
                                 case 4:
-                                    switchFragment(4, "Test", "HeaderFragment");
+                                    //switchFragment(4, "Test", "HeaderFragment");
+                                    Intent intent5 = new Intent(getApplicationContext(), HobbyActivity.class);
+                                    finish();
+                                    startActivity(intent5);
                                     break;
                                 case 5:
                                     Intent intent2 = new Intent(getApplicationContext(), SettingActivity.class);
