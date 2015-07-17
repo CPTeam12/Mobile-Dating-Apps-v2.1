@@ -74,11 +74,7 @@ public class EditProfileActivity extends ActionBarActivity {
         female = (RadioButton) findViewById(R.id.edit_female_rb);
         update = (FloatingActionButton) findViewById(R.id.edit_accept);
 
-        //hobby = (MaterialMultiAutoCompleteTextView) findViewById(R.id.edit_hobby);
         String[] hobbies = getResources().getStringArray(R.array.register_hobbies);
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.simple_dropdown_item, hobbies);
-        //hobby.setAdapter(adapter);
-        //hobby.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
         avatar = (ImageView) findViewById(R.id.edit_profile_avatar);
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override

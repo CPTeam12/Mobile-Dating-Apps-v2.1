@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Dating App</string>
     <string name="nav_home">Trang chủ</string>
     <string name="nav_profile">Quản lý tài khoản</string>
     <string name="action_settings">Thiết lập</string>
@@ -111,7 +110,6 @@
     <string name="register_email_error">Địa chỉ email không tồn tại</string>
     <string name="hobby_finish">Hoàn tất</string>
     <string name="choose">Chọn</string>
-    <string name="hello_world" translatable="false"></string>
     <string name="hobby_choose">Chọn sở thích phù hợp</string>
     <string-array name="hobbies">
         <item>Sách</item>

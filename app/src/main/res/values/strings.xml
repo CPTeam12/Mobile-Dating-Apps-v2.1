@@ -38,7 +38,7 @@
     <string name="setting_notify_off">Disable notification</string>
 
     <!-- Strings related to login -->
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_login" translatable="false">LoginActivity</string>
     <string name="prompt_email">Email</string>
 
     <string name="action_sign_in">Sign in</string>
@@ -88,6 +88,7 @@
         <item>Gymnastic</item>
         <item>Fishing</item>
     </string-array>
+    <string name="register_dating">Dating Gender</string>
     <string name="register_datingage">Minimum Dating Age</string>
     <string name="register_buddy"><b>You want to date with</b></string>
 
@@ -95,10 +96,10 @@
     <!--<string name="facebook_app_id" translatable="false">935300426536787</string>-->
     <string name="facebook_app_id">1598232803789820</string>
     <!-- Profile-->
-    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="title_activity_profile" translatable="false">ProfileActivity</string>
     <string name="card_section_request">Friend requests</string>
     <string name="card_section_recommend">Person you may know</string>
-    <string name="title_activity_test">TestActivity</string>
+    <string name="title_activity_test" translatable="false">TestActivity</string>
     <string name="edit_age">Age</string>
     <string name="edit_agree">Update Profile</string>
     <string name="edit_phone">Phone Number</string>
@@ -117,7 +118,7 @@
     <string name="setting_dating_age">Ages</string>
     <string name="setting_dating_age_summary">Age from</string>
     <string name="add_friend">Add friend</string>
-    <string name="title_activity_register">RegisterActivity</string>
+    <string name="title_activity_register" translatable="false">RegisterActivity</string>
     <string name="register_duplicate_email">This email is exists, please try another email.</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -127,7 +128,7 @@
     <string name="profile_age">Age</string>
     <string name="profile_hobbies">Hobbies</string>
     <string name="search_hint">Search by name</string>
-    <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_search" translatable="false">SearchActivity</string>
     <string name="search_no_result">No search result have been found.</string>
     <string name="profile_friend_request">Send friend request successfully</string>
     <string name="friend_accepted">Make friend successfully</string>
@@ -144,9 +145,9 @@
     <string name="dialog_unfriend_content">Do you want to delete relationship?</string>
     <string name="dialog_unfriended">Deleted</string>
     <string name="no_person_nearby">No person is nearby you.</string>
-    <string name="title_activity_nearby_map">NearbyMapActivity</string>
-    <string name="title_activity_splash">SplashActivity</string>
-    <string name="title_activity_chat">ChatActivity</string>
+    <string name="title_activity_nearby_map" translatable="false">NearbyMapActivity</string>
+    <string name="title_activity_splash" translatable="false">SplashActivity</string>
+    <string name="title_activity_chat" translatable="false">ChatActivity</string>
     <string name="chat_message">Enter text here</string>
     <string name="chat_setting_notification">Turn off notification</string>
     <string name="chat_setting_delete_conversation">Delete conversation</string>
@@ -156,11 +157,11 @@
     <string name="no_nearby">No nearby person has been found</string>
     <string name="nearby_friend">Your nearby friend</string>
     <string name="nearby_people">People nearby you might want to meet</string>
-    <string name="title_activity_register_new">RegisterNewActivity</string>
+    <string name="title_activity_register_new" translatable="false">RegisterNewActivity</string>
     <string name="register_one_title">General information</string>
     <string name="register_continue">Continue</string>
     <string name="register_email_error">Wrong email format</string>
-    <string name="title_activity_hobby">HobbyActivity</string>
+    <string name="title_activity_hobby" translatable="false">HobbyActivity</string>
 
     <string-array name="hobbies">
         <item>Book</item>
@@ -239,8 +240,8 @@
     <string name="hobby_choose">Choose your hobby</string>
     <string name="dialog_hobby">You must select your hobbies to start using this application</string>
     <string name="dialog_ok">OK</string>
-    <string name="title_activity_new_profile">NewProfileActivity</string>
-    <string name="title_activity_edit_profile">EditProfileActivity</string>
+    <string name="title_activity_new_profile" translatable="false">NewProfileActivity</string>
+    <string name="title_activity_edit_profile" translatable="false">EditProfileActivity</string>
     <string name="editprofile_avatar">Change Avatar</string>
     <string name="edit_password">Update your password</string>
     <string name="edit_hobby">Update your hobby</string>

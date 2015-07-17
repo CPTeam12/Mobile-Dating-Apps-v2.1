@@ -172,6 +172,6 @@
         android:layout_marginRight="16dp"
         app:fab_colorNormal="@color/md_red_500"
         app:fab_colorPressed="@color/md_red_400"
-        app:fab_icon="@drawable/ic_save_white_48dp" />
+        app:fab_icon="@drawable/ic_save_white_24dp" />
 
 </RelativeLayout>
