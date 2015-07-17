@@ -128,25 +128,8 @@ public class Tab3 extends Fragment implements OnRefreshListener {
                     JSONObject jsonObject = new JSONObject(result);
                     persons = ConnectionTool.fromJSON(jsonObject);
                     if (persons != null) {
-
-                        //send notification for all friends who nearby
-//                        List<Person> friend = DBHelper.getInstance(getActivity()).getAllFriends();
-//                        for (Person item : persons){
-//                            for(Person temp : friend){
-//                                if (item.getEmail().equals(temp.getEmail())){
-//                                    String url = URL_NEARBY_PERSON_NOTIFY + "from="
-//                                            + DBHelper.getInstance(getActivity()).getCurrentUser().getEmail()
-//                                            + "&to=" + temp.getEmail();
-//                                    new sendNotificationTask().execute(url);
-//                                }
-//                            }
-//                        }
-
-                        //SubHobbyAdapter gribAdapter = new SubHobbyAdapter(getActivity(), persons, numColumns);
                         NearbyAdapter nearbyAdapter = new NearbyAdapter(getActivity(), persons);
-                       
                         recyclerView.setAdapter(nearbyAdapter);
-
                         noNearby.setVisibility(View.GONE);
                     } else {
                         noNearby.setVisibility(View.VISIBLE);

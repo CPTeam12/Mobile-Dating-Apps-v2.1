@@ -17,12 +17,12 @@ import java.util.Map;
 /**
  * Created by Thang on 5/28/2015.
  */
-public class ProfileAdapter extends BaseAdapter {
+public class ProfileInfoAdapter extends BaseAdapter {
     private Map<String, String> profile = new HashMap<String, String>();
     private Context context;
     private static final String[] PROFILE_CASE = {"AGE", "GENDER", "EMAIL", "PHONE", "ADDRESS", "HOBBIES"};
 
-    public ProfileAdapter(Map<String, String> profile, Context context) {
+    public ProfileInfoAdapter(Map<String, String> profile, Context context) {
         this.profile = profile;
         this.context = context;
     }

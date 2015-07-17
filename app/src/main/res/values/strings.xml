@@ -239,5 +239,12 @@
     <string name="hobby_choose">Choose your hobby</string>
     <string name="dialog_hobby">You must select your hobbies to start using this application</string>
     <string name="dialog_ok">OK</string>
+    <string name="title_activity_new_profile">NewProfileActivity</string>
+    <string name="title_activity_edit_profile">EditProfileActivity</string>
+    <string name="editprofile_avatar">Change Avatar</string>
+    <string name="edit_password">Update your password</string>
+    <string name="edit_hobby">Update your hobby</string>
+    <string name="edit_profile">Edit your profile</string>
+    <string name="save">Save</string>
 
 </resources>

@@ -100,7 +100,7 @@ public class MainActivity extends ActionBarActivity {
                                 case 2:
                                     Bundle dataBundle = new Bundle();
                                     dataBundle.putString("ProfileOf", DBHelper.USER_FLAG_CURRENT);
-                                    Intent intent1 = new Intent(getApplicationContext(), ProfileActivity.class);
+                                    Intent intent1 = new Intent(getApplicationContext(), NewProfileActivity.class);
                                     intent1.putExtras(dataBundle);
                                     startActivity(intent1);
                                     break;

@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.widget.ListView;
 
-import com.example.thang.mobile_dating_app_v20.Adapters.ProfileAdapter;
+import com.example.thang.mobile_dating_app_v20.Adapters.ProfileInfoAdapter;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.R;
 
@@ -30,9 +30,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     //new function
     protected void setFriendAdapter(ListView listView, Person person) {
         Map<String, String> friendHashMap = transferToMap(person);
-        ProfileAdapter profileAdapter = new ProfileAdapter(friendHashMap,getApplicationContext());
+        ProfileInfoAdapter profileInfoAdapter = new ProfileInfoAdapter(friendHashMap,getApplicationContext());
         if (!friendHashMap.isEmpty()){
-            listView.setAdapter(profileAdapter);
+            listView.setAdapter(profileInfoAdapter);
             if (listView!=null){
                 listView.setClickable(true);
             }

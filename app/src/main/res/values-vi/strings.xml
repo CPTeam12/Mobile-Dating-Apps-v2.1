@@ -187,4 +187,9 @@
     </string-array>
     <string name="dialog_hobby">Bạn phải chọn sở thích của mình để có thể bắt đầu sử dụng ứng dụng này.</string>
     <string name="dialog_ok">OK</string>
+    <string name="editprofile_avatar">Đổi hình đại diện</string>
+    <string name="edit_password">Thay đổi mật khẩu</string>
+    <string name="edit_hobby">Cập nhật sở thích</string>
+    <string name="edit_profile">Thay đổi thông tin </string>
+    <string name="save">Lưu</string>
 </resources>

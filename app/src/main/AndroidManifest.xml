@@ -137,6 +137,14 @@
             android:name=".Activity.HobbyActivity"
             android:label="@string/title_activity_hobby" >
         </activity>
+        <activity
+            android:name=".Activity.NewProfileActivity"
+            android:label="@string/title_activity_new_profile" >
+        </activity>
+        <activity
+            android:name=".Activity.EditProfileActivity"
+            android:label="@string/title_activity_edit_profile" >
+        </activity>
     </application>
 
 </manifest>

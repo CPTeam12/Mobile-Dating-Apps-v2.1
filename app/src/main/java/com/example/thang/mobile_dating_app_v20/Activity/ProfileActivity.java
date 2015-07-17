@@ -121,16 +121,16 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
         fabAddFriend.setVisibility(View.GONE);
         fabFriendEditor.setVisibility(View.GONE);
         fabProfileEditor.setVisibility(View.GONE);
-        spinner.setVisibility(View.GONE);
+               spinner.setVisibility(View.GONE);
 
-        //get current user profile
+        //get current user avatar
         Bundle bundle = getIntent().getExtras();
         String flag = bundle.getString("ProfileOf");
         DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
 
         if (flag.equals(DBHelper.USER_FLAG_CURRENT)) {
             person = dbHelper.getCurrentUser();
-            //show edit fab, onclick to update profile
+            //show edit fab, onclick to update avatar
             fabProfileEditor.setVisibility(View.VISIBLE);
             fabProfileEditor.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -197,7 +197,7 @@ public class ProfileActivity extends BaseActivity implements ObservableScrollVie
                 });
             }
 
-            //get profile from service
+            //get avatar from service
             new getProfileTask().execute(URL_FIND + bundle.getString("email"));
 
         }

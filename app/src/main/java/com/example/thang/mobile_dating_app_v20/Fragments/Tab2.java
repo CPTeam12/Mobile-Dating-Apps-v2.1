@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.thang.mobile_dating_app_v20.Activity.ChatActivity;
 import com.example.thang.mobile_dating_app_v20.Activity.MainActivity;
+import com.example.thang.mobile_dating_app_v20.Activity.NewProfileActivity;
 import com.example.thang.mobile_dating_app_v20.Activity.ProfileActivity;
 import com.example.thang.mobile_dating_app_v20.Activity.SearchActivity;
 import com.example.thang.mobile_dating_app_v20.Adapters.ListAdapter;
@@ -222,7 +223,7 @@ public class Tab2 extends Fragment implements OnRefreshListener {
                         dataBundle.putString("ProfileOf", DBHelper.USER_FLAG_FRIENDS);
                         dataBundle.putString("email", person.getEmail());
 
-                        Intent intent1 = new Intent(getActivity(), ProfileActivity.class);
+                        Intent intent1 = new Intent(getActivity(), NewProfileActivity.class);
                         intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent1.putExtras(dataBundle);
                         getActivity().startActivity(intent1);

@@ -63,7 +63,6 @@ public class EditProfile extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        Bundle bundle = this.getArguments();
         fullname = (MaterialEditText) getView().findViewById(R.id.edit_fullname);
         password = (MaterialEditText) getView().findViewById(R.id.edit_password);
         confirm_password = (MaterialEditText) getView().findViewById(R.id.edit_confirm_password);
@@ -205,7 +204,6 @@ public class EditProfile extends Fragment {
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
             Bitmap avatar = (Utils.resizeBitmap(Utils.scaleBitmapFromFile(picturePath, 200, 200)));
-            //Bitmap avatar = Utils.scaleBitmapFromFile(picturePath, 400, 400);
             profile.setImageBitmap(avatar);
             //Convert avatar to Base64 for transfer to service
             currentPerson.setAvatar(Utils.encodeBitmapToBase64String(avatar));

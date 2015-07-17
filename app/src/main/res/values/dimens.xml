@@ -6,8 +6,9 @@
     <!--profile -->
     <dimen name="toolbar_margin_start">72dp</dimen>
     <dimen name="flexible_space_height">72dp</dimen>
-    <dimen name="flexible_space_image_height">320dp</dimen>
+    <dimen name="flexible_space_image_height">240dp</dimen>
     <dimen name="flexible_space_show_fab_offset">120dp</dimen>
     <dimen name="margin_standard">18dp</dimen>
     <dimen name="grid_column_width">144dp</dimen>
+    <dimen name="tab_height">48dp</dimen>
 </resources>

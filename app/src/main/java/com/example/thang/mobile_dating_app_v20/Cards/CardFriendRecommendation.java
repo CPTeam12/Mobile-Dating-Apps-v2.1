@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.thang.mobile_dating_app_v20.Activity.MainActivity;
+import com.example.thang.mobile_dating_app_v20.Activity.NewProfileActivity;
 import com.example.thang.mobile_dating_app_v20.Activity.ProfileActivity;
 import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
@@ -109,7 +110,7 @@ public class CardFriendRecommendation extends Card {
                     bundle.putString("email", email);
                     bundle.putString("ProfileOf", "Person");
 
-                    Intent intent = new Intent(context, ProfileActivity.class);
+                    Intent intent = new Intent(context, NewProfileActivity.class);
                     intent.putExtras(bundle);
                     context.startActivity(intent);
                 }

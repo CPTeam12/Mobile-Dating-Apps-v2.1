@@ -98,13 +98,31 @@ public class LocationTracker {
 
     }
 
-    public void getCurrentLocationNew(){
+    public void getCurrentLocationNew() {
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
 
         Location lastLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-        if (lastLocation != null){
+        if (lastLocation != null) {
+            String url = URL_UPDATE_LOCATION + "email=" + DBHelper.getInstance(context).getCurrentUser().getEmail()
+                    + "&longtitude=" + lastLocation.getLongitude() + "&latitude=" + lastLocation.getLatitude();
+            ConnectionTool connectionTool = new ConnectionTool(context);
 
+            if (connectionTool.isNetworkAvailable()) {
+                try {
+                    new updateLocationTask().execute(url).get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                new MaterialDialog.Builder(context)
+                        .title(R.string.error_connection_title)
+                        .content(R.string.error_connection)
+                        .titleColorRes(R.color.md_red_400)
+                        .show();
+            }
         }
     }
 

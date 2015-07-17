@@ -1,0 +1,177 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/md_white_1000"
+    android:orientation="vertical"
+    tools:context="com.example.thang.mobile_dating_app_v20.Fragments.EditProfile">
+
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/tool_bar">
+
+        <ScrollView
+            android:id="@+id/login_form"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:isScrollContainer="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="20dp">
+
+                <RelativeLayout
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:layout_marginBottom="15dp">
+
+                    <ImageView
+                        android:id="@+id/edit_profile_avatar"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:src="@drawable/no_avatar" />
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:alpha="0.5"
+                        android:background="@color/md_black_1000" />
+
+                    <TextView
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:gravity="center"
+                        android:text="@string/editprofile_avatar"
+                        android:textColor="@color/md_white_1000"
+                        android:textSize="15sp" />
+
+
+                </RelativeLayout>
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/edit_fullname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:hint="@string/prompt_fullname"
+                    app:met_baseColor="@color/primary_text"
+                    app:met_errorColor="#ffdd4c3a"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="@color/primary_text"
+                    app:met_textColorHint="@color/primary_text" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/edit_age"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:hint="@string/edit_age"
+                    app:met_baseColor="@color/primary_text"
+                    app:met_floatingLabel="highlight"
+                    app:met_maxCharacters="2"
+                    app:met_minCharacters="2"
+                    app:met_primaryColor="@color/primary_text" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="15dp"
+                        android:text="@string/register_gender"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/primary_text" />
+
+                    <RadioGroup
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:orientation="horizontal"
+                        android:weightSum="1">
+
+                        <RadioButton
+                            android:id="@+id/edit_male_rb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_marginLeft="20dp"
+                            android:buttonTint="@color/md_blue_800"
+                            android:checked="true"
+                            android:text="@string/setting_dating_men"
+                            android:textColor="@color/primary_text"
+                            android:textSize="16dp" />
+
+                        <RadioButton
+                            android:id="@+id/edit_female_rb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_marginLeft="20dp"
+                            android:buttonTint="@color/md_blue_800"
+                            android:checked="false"
+                            android:text="@string/setting_dating_women"
+                            android:textColor="@color/primary_text"
+                            android:textSize="16dp" />
+                    </RadioGroup>
+                </LinearLayout>
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/edit_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:hint="@string/edit_phone"
+                    app:met_baseColor="@color/primary_text"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="@color/primary_text"
+                    app:met_textColorHint="@color/primary_text" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/edit_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:hint="@string/edit_address"
+                    app:met_baseColor="@color/primary_text"
+                    app:met_errorColor="#ffdd4c3a"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="@color/primary_text"
+                    app:met_textColorHint="@color/primary_text" />
+
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
+
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/edit_accept"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        app:fab_colorNormal="@color/md_red_500"
+        app:fab_colorPressed="@color/md_red_400"
+        app:fab_icon="@drawable/ic_save_white_48dp" />
+
+</RelativeLayout>

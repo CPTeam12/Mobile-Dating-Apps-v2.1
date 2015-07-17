@@ -61,7 +61,7 @@ public class HeaderViewHolder extends RecyclerView.ViewHolder {
         this.nearbyFriend.setText(nearbyFriend);
         this.nearbyPerosn.setText(nearbyPerosn);
         avatar.setImageBitmap(avatarText.isEmpty() ? BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.no_avatar) : Utils.decodeBase64StringToBitmap(avatarText));
+                R.drawable.no_avatar) : Utils.generateSmaleBitmap(avatarText,200,200));
     }
 
     public void bindHeaderItem(String text) {
@@ -71,7 +71,7 @@ public class HeaderViewHolder extends RecyclerView.ViewHolder {
     public void bindNearbyItem(final Person person) {
         name.setText(person.getFullName());
         avatar.setImageBitmap(person.getAvatar().isEmpty() ? BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.no_avatar) : Utils.decodeBase64StringToBitmap(person.getAvatar()));
+                R.drawable.no_avatar) : Utils.generateSmaleBitmap(person.getAvatar(), 80, 80));
         frameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
