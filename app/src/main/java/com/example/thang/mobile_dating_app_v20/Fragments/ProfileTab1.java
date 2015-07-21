@@ -30,39 +30,38 @@ public class ProfileTab1 extends Fragment {
         View view = inflater.inflate(R.layout.profile_tab1, container, false);
 
         Activity parentActivity = getActivity();
-        final ObservableListView listView = (ObservableListView) view.findViewById(R.id.scroll);
+        ObservableListView listView = (ObservableListView) view.findViewById(R.id.scroll);
         //set adapter
         Bundle bundle = getArguments();
         Person person = (Person) bundle.getSerializable("Person");
-        setFriendAdapter(listView,person);
+        setFriendAdapter(listView, person);
 
         listView.setTouchInterceptionViewGroup((ViewGroup) parentActivity.findViewById(R.id.container));
         if (parentActivity instanceof ObservableScrollViewCallbacks) {
             listView.setScrollViewCallbacks((ObservableScrollViewCallbacks) parentActivity);
         }
 
-        return  view;
+        return view;
     }
 
     private void setFriendAdapter(ListView listView, Person person) {
         Map<String, String> friendHashMap = transferToMap(person);
-        ProfileInfoAdapter profileInfoAdapter = new ProfileInfoAdapter(friendHashMap,getActivity());
-        if (!friendHashMap.isEmpty()){
+        ProfileInfoAdapter profileInfoAdapter = new ProfileInfoAdapter(friendHashMap, getActivity());
+        if (!friendHashMap.isEmpty()) {
             listView.setAdapter(profileInfoAdapter);
-            if (listView!=null){
+            if (listView != null) {
                 listView.setClickable(true);
             }
         }
     }
 
-    private Map<String, String> transferToMap(Person person){
+    private Map<String, String> transferToMap(Person person) {
         Map<String, String> transfer = new HashMap<>();
-        transfer.put("AGE",String.valueOf(person.getAge()));
-        transfer.put("EMAIL",person.getEmail());
-        transfer.put("GENDER",person.getGender());
-        transfer.put("PHONE",String.valueOf(person.getPhone()));
-        transfer.put("ADDRESS",person.getAddress());
-        transfer.put("HOBBIES", person.getHobbies());
+        transfer.put("AGE", String.valueOf(person.getAge()));
+        transfer.put("EMAIL", person.getEmail());
+        transfer.put("GENDER", person.getGender());
+        transfer.put("PHONE", String.valueOf(person.getPhone()));
+        transfer.put("ADDRESS", person.getAddress());
         return transfer;
     }
 }

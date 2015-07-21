@@ -11,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +75,7 @@ public class Tab3 extends Fragment implements OnRefreshListener {
 
                 swipeRefreshLayout.setRefreshing(true);
                 String url = URL_NEARBY_PERSON + "email=" + DBHelper.getInstance(getActivity()).getCurrentUser().getEmail();
-
+                Log.i(null,url);
                 ConnectionTool connectionTool = new ConnectionTool(getActivity());
                 if (connectionTool.isNetworkAvailable()) {
                     new getNearbyPersonTask().execute(url);

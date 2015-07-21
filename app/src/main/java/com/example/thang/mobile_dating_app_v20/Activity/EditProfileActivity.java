@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -24,6 +25,7 @@ import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.Classes.Utils;
+import com.example.thang.mobile_dating_app_v20.Fragments.EditPassword;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -39,8 +41,7 @@ public class EditProfileActivity extends ActionBarActivity {
     private static final String URL_UPDATE = MainActivity.URL_CLOUD + "/Service/updateprofile";
     MaterialEditText fullname, age, phone, address;
     RadioButton male, female;
-    FloatingActionButton update;
-    //MaterialMultiAutoCompleteTextView hobby;
+
     Person currentPerson;
     ImageView avatar;
     private MaterialDialog materialDialog;
@@ -72,9 +73,7 @@ public class EditProfileActivity extends ActionBarActivity {
         address = (MaterialEditText) findViewById(R.id.edit_address);
         male = (RadioButton) findViewById(R.id.edit_male_rb);
         female = (RadioButton) findViewById(R.id.edit_female_rb);
-        update = (FloatingActionButton) findViewById(R.id.edit_accept);
 
-        String[] hobbies = getResources().getStringArray(R.array.register_hobbies);
         avatar = (ImageView) findViewById(R.id.edit_profile_avatar);
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,27 +83,14 @@ public class EditProfileActivity extends ActionBarActivity {
             }
         });
 
-        setupProfile();
-        update.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (validate()) {
-                    currentPerson.setFullName(fullname.getText().toString());
-                    currentPerson.setAge(Integer.parseInt(age.getText().toString()));
-                    //currentPerson.setHobbies(hobby.getText().toString());
-                    if (!phone.getText().toString().isEmpty())
-                        currentPerson.setPhone(phone.getText().toString());
-                    if (!address.getText().toString().isEmpty())
-                        currentPerson.setAddress(address.getText().toString());
-                    if (male.isChecked()) currentPerson.setGender("Male");
-                    if (female.isChecked()) currentPerson.setGender("Female");
-                    List<Person> persons = new ArrayList<Person>();
-                    persons.add(currentPerson);
-                    new updateProfileTask().execute(persons);
-                }
-            }
-        });
+        //set up loading dialog
+        MaterialDialog.Builder dialogBuilder = new MaterialDialog.Builder(EditProfileActivity.this)
+                .cancelable(false)
+                .content(R.string.progress_dialog)
+                .progress(true, 0);
+        materialDialog = dialogBuilder.build();
 
+        setupProfile();
     }
 
     @Override
@@ -138,6 +124,15 @@ public class EditProfileActivity extends ActionBarActivity {
                 new updateProfileTask().execute(persons);
             }
             return true;
+        } else if (id == R.id.update_password) {
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                    .replace(R.id.mainFragment, new EditPassword())
+                    .addToBackStack(null)
+                    .commit();
+        } else if (id == R.id.update_hobby) {
+            Intent intent = new Intent(EditProfileActivity.this, HobbyActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -201,6 +196,8 @@ public class EditProfileActivity extends ActionBarActivity {
                         .content(R.string.error_connection)
                         .titleColorRes(R.color.md_red_400)
                         .show();
+            } else {
+                materialDialog.show();
             }
         }
 
@@ -226,10 +223,10 @@ public class EditProfileActivity extends ActionBarActivity {
                     DBHelper helper = new DBHelper(getApplicationContext());
                     helper.updatePerson(currentPerson);
 
-                    //move to avatar activity
+                    //move to profile activity
                     Bundle bundle = new Bundle();
                     bundle.putString("ProfileOf", DBHelper.USER_FLAG_CURRENT);
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), NewProfileActivity.class);
                     intent.putExtras(bundle);
                     startActivity(intent);
                 } else {

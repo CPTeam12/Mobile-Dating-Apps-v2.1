@@ -4,19 +4,19 @@
     android:layout_height="wrap_content"
     android:background="@color/md_white_1000"
     android:orientation="vertical"
+    android:id="@+id/container"
     android:padding="8dp">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/picture"
-            android:layout_width="40dp"
-            android:layout_height="45dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:src="@drawable/avatar" />
 
         <TextView
@@ -39,4 +39,16 @@
             android:layout_marginRight="10dp"
             android:src="@drawable/ic_add" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/hobby_details"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:capitalize="words"
+        android:paddingLeft="60dp"
+        android:paddingRight="50dp"
+        android:text="demo"
+        android:textColor="@color/md_blue_800"
+        android:textSize="18sp" />
+
 </LinearLayout>

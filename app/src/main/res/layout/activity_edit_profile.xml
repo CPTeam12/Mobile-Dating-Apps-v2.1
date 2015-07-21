@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <RelativeLayout
+    <FrameLayout
+        android:id="@+id/mainFragment"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@+id/tool_bar">
@@ -51,11 +52,11 @@
                         android:background="@color/md_black_1000" />
 
                     <TextView
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:gravity="center"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
                         android:text="@string/editprofile_avatar"
                         android:textColor="@color/md_white_1000"
                         android:textSize="15sp" />
@@ -68,6 +69,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="2dp"
+                    android:capitalize="words"
                     android:hint="@string/prompt_fullname"
                     app:met_baseColor="@color/primary_text"
                     app:met_errorColor="#ffdd4c3a"
@@ -90,20 +92,20 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginLeft="4dp"
                         android:text="@string/register_gender"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/primary_text" />
 
                     <RadioGroup
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
+                        android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:weightSum="1">
 
@@ -158,20 +160,6 @@
 
             </LinearLayout>
         </ScrollView>
-    </RelativeLayout>
-
-    <com.getbase.floatingactionbutton.FloatingActionButton
-        android:id="@+id/edit_accept"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        app:fab_colorNormal="@color/md_red_500"
-        app:fab_colorPressed="@color/md_red_400"
-        app:fab_icon="@drawable/ic_save_white_24dp" />
+    </FrameLayout>
 
 </RelativeLayout>

@@ -20,7 +20,7 @@ import java.util.Map;
 public class ProfileInfoAdapter extends BaseAdapter {
     private Map<String, String> profile = new HashMap<String, String>();
     private Context context;
-    private static final String[] PROFILE_CASE = {"AGE", "GENDER", "EMAIL", "PHONE", "ADDRESS", "HOBBIES"};
+    private static final String[] PROFILE_CASE = {"AGE", "GENDER", "EMAIL", "PHONE", "ADDRESS"};
 
     public ProfileInfoAdapter(Map<String, String> profile, Context context) {
         this.profile = profile;
@@ -80,18 +80,21 @@ public class ProfileInfoAdapter extends BaseAdapter {
                 break;
             case "ADDRESS":
                 holder.profileIcon.setImageResource(R.drawable.profile_address);
-                holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                if (!profile.get(PROFILE_CASE[position]).isEmpty()) {
+                    holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                } else {
+                    holder.profileText.setText("-");
+                }
                 holder.profileHeaderText.setText(R.string.profile_address);
                 break;
             case "PHONE":
                 holder.profileIcon.setImageResource(R.drawable.profile_phone);
-                holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                if (!profile.get(PROFILE_CASE[position]).isEmpty()) {
+                    holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                } else {
+                    holder.profileText.setText("-");
+                }
                 holder.profileHeaderText.setText(R.string.profile_phone);
-                break;
-            case "HOBBIES":
-                holder.profileIcon.setImageResource(R.drawable.profile_hobbies);
-                holder.profileText.setText(profile.get(PROFILE_CASE[position]));
-                holder.profileHeaderText.setText(R.string.profile_hobbies);
                 break;
         }
 

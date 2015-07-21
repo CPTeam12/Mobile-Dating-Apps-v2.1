@@ -182,7 +182,7 @@ public class NewProfileActivity extends ActionBarActivity implements ObservableS
                     R.drawable.no_avatar) : Utils.decodeBase64StringToBitmap(person.getAvatar()));
             //setFriendAdapter(listView, person);
             mTitleView.setText(person.getFullName());
-        }else{
+        } else {
             person = dbHelper.getPersonByEmail(bundle.getString("email"));
             //setup diaglog
             final MaterialDialog unfriendDialog = new MaterialDialog.Builder(this)
@@ -480,9 +480,9 @@ public class NewProfileActivity extends ActionBarActivity implements ObservableS
      * This adapter provides two types of fragments as an example.
      * {@linkplain #createItem(int)} should be modified if you use this example for your app.
      */
-    private static class NavigationAdapter extends CacheFragmentStatePagerAdapter {
+    private class NavigationAdapter extends CacheFragmentStatePagerAdapter {
 
-        private static final String[] TITLES = new String[]{"Thông tin chung", "Sở thích"};
+        private final String[] TITLES = new String[]{"Thông tin chung", "Sở thích"};
 
         public NavigationAdapter(FragmentManager fm) {
             super(fm);
@@ -492,7 +492,7 @@ public class NewProfileActivity extends ActionBarActivity implements ObservableS
         protected Fragment createItem(int position) {
             Fragment f;
             Bundle bundle = new Bundle();
-            bundle.putSerializable("Person",person);
+            bundle.putSerializable("Person", person);
             switch (position) {
                 case 0:
                     f = new ProfileTab1();
@@ -584,7 +584,7 @@ public class NewProfileActivity extends ActionBarActivity implements ObservableS
                         .content(R.string.error_connection)
                         .titleColorRes(R.color.md_red_400)
                         .show();
-            }else{
+            } else {
                 spinner.setVisibility(View.VISIBLE);
             }
         }
@@ -608,6 +608,7 @@ public class NewProfileActivity extends ActionBarActivity implements ObservableS
                 //setFriendAdapter(listView, person);
                 mTitleView.setText(person.getFullName());
                 mPager.setAdapter(mPagerAdapter);
+
 
                 //hide spinner
                 spinner.setVisibility(View.GONE);

@@ -56,13 +56,13 @@ public class Tab1 extends Fragment implements OnRefreshListener, GoogleApiClient
     private String URL_GET_FRIEND_RECOMMENDATION = MainActivity.URL_CLOUD + "/Service/recommendation?email=";
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    private GoogleApiClient mGoogleApiClient ;
+    private GoogleApiClient mGoogleApiClient;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_1, container, false);
-        swipeRefreshLayout = (SwipeRefreshLayout ) v.findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.AccentColor);
 
         //google api client
@@ -135,15 +135,15 @@ public class Tab1 extends Fragment implements OnRefreshListener, GoogleApiClient
 
         CardListView listView = (CardListView) getActivity().findViewById(R.id.myList);
         //if (listView != null) {
-            listView.setExternalAdapter(sectionAdapter, mCardArrayAdapter);
+        listView.setExternalAdapter(sectionAdapter, mCardArrayAdapter);
         //}
     }
 
     @Override
     public void onRefresh() {
         cards.clear();
-        if(personsRecommendation != null) personsRecommendation.clear();
-        if(personsRequest != null) personsRequest.clear();
+        if (personsRecommendation != null) personsRecommendation.clear();
+        if (personsRequest != null) personsRequest.clear();
 
         String email = DBHelper.getInstance(getActivity()).getCurrentUser().getEmail();
         ConnectionTool connectionTool = new ConnectionTool(getActivity());
@@ -203,9 +203,15 @@ public class Tab1 extends Fragment implements OnRefreshListener, GoogleApiClient
                     CardFriendRequest card = new CardFriendRequest(getActivity());
                     card.setCardElevation(4);
                     card.setBackgroundColorResourceId(R.color.md_white_1000);
-                    String description = item.getGender() + ", " + item.getAge() +
-                            " " + getActivity().getResources().getString(R.string.friend_year_old);
-                    card.init(item.getFullName(), description);
+                    String gender = "";
+                    if (item.getGender().equals("Male")) {
+                        gender = getString(R.string.register_gender_male);
+                    } else {
+                        gender = getString(R.string.register_gender_female);
+                    }
+
+                    String briefInfo = getActivity().getString(R.string.friend_info, gender, item.getAge());
+                    card.init(item.getFullName(), briefInfo);
                     card.setEmail(item.getEmail());
                     card.setContext(getActivity());
                     if (item.getAvatar().isEmpty()) {
@@ -235,7 +241,7 @@ public class Tab1 extends Fragment implements OnRefreshListener, GoogleApiClient
         @Override
         protected void onPostExecute(String result) {
 
-            if(result != null){
+            if (result != null) {
                 //start parsing jsonResponse
                 JSONObject jsonObject = null;
                 try {
@@ -249,13 +255,25 @@ public class Tab1 extends Fragment implements OnRefreshListener, GoogleApiClient
                         CardFriendRecommendation card = new CardFriendRecommendation(getActivity());
                         card.setCardElevation(4);
                         card.setBackgroundColorResourceId(R.color.md_white_1000);
-                        String description = item.getGender() + ", " + item.getAge() + " years old";
+
+                        String gender = "";
+                        if (item.getGender().equals("Male")) {
+                            gender = getString(R.string.register_gender_male);
+                        } else {
+                            gender = getString(R.string.register_gender_female);
+                        }
+                        String percent = "";
+                        if (item.getPercent() != 0) {
+                            percent = String.valueOf(item.getPercent());
+                        }
+                        String briefInfo = getActivity().getString(R.string.friend_recommend_info, gender, item.getAge(), percent);
+
                         card.setContext(getActivity());
                         card.setTitle(item.getFullName());
-                        card.setSecondaryTitle(description);
+                        card.setSecondaryTitle(briefInfo);
                         card.setFullName(item.getFullName());
                         card.setEmail(item.getEmail());
-                        card.init(item.getFullName(), description);
+                        card.init(item.getFullName(), briefInfo);
                         if (item.getAvatar().isEmpty()) {
                             card.setBitMap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.no_avatar));
                         } else {
@@ -267,7 +285,7 @@ public class Tab1 extends Fragment implements OnRefreshListener, GoogleApiClient
                 } else {
                     initCards();
                 }
-            }else{
+            } else {
                 Toast.makeText(getActivity(), getActivity().getString(R.string.loading_error), Toast.LENGTH_SHORT).show();
             }
         }

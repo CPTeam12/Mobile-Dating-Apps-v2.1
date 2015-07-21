@@ -33,7 +33,6 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         if (position == 0){
             Tab1 tab1 = new Tab1();
-
             return Fragment.instantiate(context, tab1.getClass().getName());
         }else if(position == 1){
             return  new Tab3();

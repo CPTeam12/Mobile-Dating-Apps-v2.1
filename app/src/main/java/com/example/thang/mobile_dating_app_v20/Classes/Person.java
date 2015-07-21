@@ -43,6 +43,9 @@ public class Person implements Serializable {
     //notification
     private String registrationID;
 
+    //Matching profile percent
+    private double percent;
+
     public Person() {
     }
 
@@ -192,6 +195,14 @@ public class Person implements Serializable {
 
     public void setRegistrationID(String registrationID) {
         this.registrationID = registrationID;
+    }
+
+    public double getPercent() {
+        return percent;
+    }
+
+    public void setPercent(double percent) {
+        this.percent = percent;
     }
 
     @Override

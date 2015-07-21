@@ -32,6 +32,9 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String USER_COL_LATITUDE = "latitude";
     private static final String USER_COL_LONGITUDE = "longitude";
 
+    private static final String USER_COL_ISDATINGMEN = "isdatingmen";
+    private static final String USER_COL_ISDATINGWOMEN = "isdatingwomen";
+
     private static final String USER_COL_REGISID = "registrationid";
 
     //flag for separate between localuser and their friends
@@ -77,10 +80,12 @@ public class DBHelper extends SQLiteOpenHelper {
                 + USER_COL_ADDRESS + " text, "
                 + USER_COL_GENDER + " text, "
                 + USER_COL_PHONE + " text, "
-                + USER_COL_HOBBIES + " text, "
                 + USER_COL_REGISID + " text, "
                 + USER_COL_LATITUDE + " text, "
                 + USER_COL_LONGITUDE + " text, "
+                + USER_COL_ISDATINGMEN + " text, "
+                + USER_COL_ISDATINGWOMEN + " text, "
+                + USER_COL_HOBBIES + " text, "
                 + USER_COL_FLAG + " text not null"
                 + ");";
         db.execSQL(userDB);
@@ -147,6 +152,8 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(USER_COL_LATITUDE, person.getLatitude());
         contentValues.put(USER_COL_LONGITUDE, person.getLongitude());
         contentValues.put(USER_COL_REGISID, person.getRegistrationID());
+        contentValues.put(USER_COL_ISDATINGMEN,person.isDatingMen());
+        contentValues.put(USER_COL_ISDATINGWOMEN,person.isDatingWomen());
         contentValues.put(USER_COL_FLAG, flag);
 
         db.insert(USER_TABLE, null, contentValues);
@@ -222,6 +229,9 @@ public class DBHelper extends SQLiteOpenHelper {
             person.setPhone(res.getString(res.getColumnIndex(USER_COL_PHONE)));
             person.setHobbies(res.getString(res.getColumnIndex(USER_COL_HOBBIES)));
             person.setRegistrationID(res.getString(res.getColumnIndex(USER_COL_REGISID)));
+
+            person.setDatingMen(Boolean.valueOf(res.getString(res.getColumnIndex(USER_COL_ISDATINGMEN))));
+            person.setDatingWomen(Boolean.valueOf(res.getString(res.getColumnIndex(USER_COL_ISDATINGWOMEN))));
         }
         res.close();
         db.close();
@@ -248,6 +258,9 @@ public class DBHelper extends SQLiteOpenHelper {
             person.setPhone(res.getString(res.getColumnIndex(USER_COL_PHONE)));
             person.setHobbies(res.getString(res.getColumnIndex(USER_COL_HOBBIES)));
             person.setRegistrationID(res.getString(res.getColumnIndex(USER_COL_REGISID)));
+
+            person.setDatingMen(Boolean.valueOf(res.getString(res.getColumnIndex(USER_COL_ISDATINGMEN))));
+            person.setDatingWomen(Boolean.valueOf(res.getString(res.getColumnIndex(USER_COL_ISDATINGWOMEN))));
         }
         res.close();
         db.close();

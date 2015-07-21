@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.method.CharacterPickerDialog;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -95,8 +96,6 @@ public class RegisterActivity extends ActionBarActivity {
         back = (Button) findViewById(R.id.register_back_login);
         cb_male = (CheckBox) findViewById(R.id.register_male_cb);
         cb_female = (CheckBox) findViewById(R.id.register_female_cb);
-        String[] hobbies = getResources().getStringArray(R.array.register_hobbies);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.simple_dropdown_item, hobbies);
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -222,6 +221,7 @@ public class RegisterActivity extends ActionBarActivity {
             List<Person> p = persons[0];
             String response;
             for (Person person : p) {
+                Log.i(null, String.valueOf(person.isDatingMen()) + "--" + String.valueOf(person.isDatingWomen()) );
                 //get image facebook for each person
                 if (!person.getFacebookId().isEmpty()) {
                     try {
@@ -261,6 +261,7 @@ public class RegisterActivity extends ActionBarActivity {
                     //move to hobby activity
                     Intent intent = new Intent(RegisterActivity.this, HobbyActivity.class);
                     startActivity(intent);
+                    finish();
                 } else {
                     Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.register_duplicate_email),
                             Toast.LENGTH_SHORT).show();

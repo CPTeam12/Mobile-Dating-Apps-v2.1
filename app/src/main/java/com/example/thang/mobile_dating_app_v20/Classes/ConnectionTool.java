@@ -99,9 +99,11 @@ public class ConnectionTool implements Serializable {
                     person.setLongitude(Double.parseDouble(jsonObject2.getString("longitude")));
 
                     person.setHobbies(jsonObject2.getString("hobbies"));
-                    person.setDatingMen(Boolean.getBoolean(jsonObject2.getString("datingMen")));
-                    person.setDatingWomen(Boolean.getBoolean(jsonObject2.getString("datingWomen")));
+                    person.setDatingMen(Boolean.valueOf(jsonObject2.getString("datingMen")));
+                    person.setDatingWomen(Boolean.valueOf(jsonObject2.getString("datingWomen")));
                     person.setDatingAge(Integer.parseInt(jsonObject2.getString("datingAge")));
+
+                    person.setPercent(Double.parseDouble(jsonObject2.getString("percent")));
                     persons.add(person);
                 }
             } else {
@@ -122,9 +124,11 @@ public class ConnectionTool implements Serializable {
                     person.setLongitude(Double.parseDouble(jsonObject1.getString("longitude")));
 
                     person.setHobbies(jsonObject1.getString("hobbies"));
-                    person.setDatingMen(Boolean.getBoolean(jsonObject1.getString("datingMen")));
-                    person.setDatingWomen(Boolean.getBoolean(jsonObject1.getString("datingWomen")));
+                    person.setDatingMen(Boolean.valueOf(jsonObject1.getString("datingMen")));
+                    person.setDatingWomen(Boolean.valueOf(jsonObject1.getString("datingWomen")));
                     person.setDatingAge(Integer.parseInt(jsonObject1.getString("datingAge")));
+
+                    person.setPercent(Double.parseDouble(jsonObject1.getString("percent")));
 
                     persons.add(person);
                 }

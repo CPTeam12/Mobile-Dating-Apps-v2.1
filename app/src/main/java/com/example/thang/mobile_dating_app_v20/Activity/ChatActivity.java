@@ -38,7 +38,7 @@ import java.util.List;
 
 public class ChatActivity extends ActionBarActivity {
 
-    public static final String SOCKET_SERVER_ADDRESS = "192.168.43.179";
+    public static final String SOCKET_SERVER_ADDRESS = "192.168.1.17";
     private static final int SOCKET_SERVER_PORT = 8084;
 
     ListView chatPanel;

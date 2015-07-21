@@ -167,10 +167,10 @@
     </string-array>
     <string-array name="Sport">
         <item>Đá banh</item>
-        <item>bơi lội</item>
-        <item>khiêu vũ</item>
+        <item>Bơi lội</item>
+        <item>Khiêu vũ</item>
         <item>Tennis</item>
-        <item>bóng rổ</item>
+        <item>Bóng rổ</item>
         <item>Bóng bàn</item>
         <item>GYM</item>
         <item>Câu cá</item>
@@ -190,4 +190,8 @@
     <string name="edit_hobby">Cập nhật sở thích</string>
     <string name="edit_profile">Thay đổi thông tin </string>
     <string name="save">Lưu</string>
+    <string name="prompt_old_password">Mật khẩu hiện tại</string>
+    <string name="change_password">Thay đổi mật khẩu</string>
+    <string name="friend_info">%1$s, %2$s</string>
+    <string name="friend_recommend_info">%1$s, %2$s | tương đồng %3$s %</string>
 </resources>

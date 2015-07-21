@@ -2,22 +2,17 @@ package com.example.thang.mobile_dating_app_v20.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.thang.mobile_dating_app_v20.Classes.Hobby;
+import com.example.thang.mobile_dating_app_v20.Classes.SubHobby;
 import com.example.thang.mobile_dating_app_v20.R;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -26,12 +21,17 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by Thang on 7/13/2015.
  */
 public class HobbyAdapter extends BaseAdapter {
+    public final static String FLAG_REGISTER = "register";
+    public final static String FLAG_DETAIL = "detail";
+
     private List<Hobby> hobbies;
     private Context context;
+    private String flag;
 
-    public HobbyAdapter(Context context, List<Hobby> hobbies) {
+    public HobbyAdapter(Context context, List<Hobby> hobbies, String flag) {
         this.hobbies = hobbies;
         this.context = context;
+        this.flag = flag;
     }
 
     @Override
@@ -61,14 +61,17 @@ public class HobbyAdapter extends BaseAdapter {
             viewHolder.image = (CircleImageView) view.findViewById(R.id.picture);
             viewHolder.title = (TextView) view.findViewById(R.id.title);
             viewHolder.expand = (ImageView) view.findViewById(R.id.expand);
+            viewHolder.details = (TextView) view.findViewById(R.id.hobby_details);
+            viewHolder.container = view.findViewById(R.id.container);
+
             view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();
         }
 
         viewHolder.title.setText(hobby);
+        viewHolder.details.setVisibility(View.GONE);
 
-        List<String> subHobby = new ArrayList<>();
         if (hobby.equals("Âm nhạc")) {
             viewHolder.image.setImageResource(R.drawable.music);
         } else if (hobby.equals("Phim ảnh")) {
@@ -85,33 +88,41 @@ public class HobbyAdapter extends BaseAdapter {
             viewHolder.image.setImageResource(R.drawable.drink);
         }
 
-//        final SubHobbyAdapter gribAdapter = new SubHobbyAdapter(context, subHobby);
-//        viewHolder.subHobby.setAdapter(gribAdapter);
-//        viewHolder.expand.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (viewHolder.subHobby.getVisibility() == View.GONE) {
-//                    viewHolder.subHobby.setVisibility(View.VISIBLE);
-//                    viewHolder.expand.setImageResource(R.drawable.ic_close);
-//                } else {
-//                    viewHolder.subHobby.setVisibility(View.GONE);
-//                    viewHolder.expand.setImageResource(R.drawable.ic_add);
-//                }
-//            }
-//        });
+        if (flag.equals(FLAG_DETAIL)) {
+            viewHolder.expand.setImageResource(R.drawable.ic_moveup);
+            viewHolder.expand.setVisibility(View.GONE);
 
-//        final List<String> finalSubHobby = subHobby;
-//        viewHolder.subHobby.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                Toast.makeText(context, finalSubHobby.get(i),Toast.LENGTH_SHORT).show();
-//                ImageView selected = (ImageView) view.findViewById(R.id.selected);
-//                gribAdapter.setTemp(i);
-//                selected.setVisibility(View.VISIBLE);
-//                selected.setTag(View.VISIBLE);
-//            }
-//        });
+            String details = "";
+            for (SubHobby subHobby : hobbies.get(i).getSubHobby()) {
+                if (subHobby.getIsSelected()) {
+                    viewHolder.container.setVisibility(View.VISIBLE);
+                    viewHolder.details.setVisibility(View.VISIBLE);
+                    viewHolder.expand.setVisibility(View.VISIBLE);
+                    details += subHobby.getName() + ", ";
+                    //System.getProperty("line.separator");
+                }
+            }
 
+            if (!details.isEmpty()) {
+                viewHolder.details.setText(details.substring(0, details.length() - 2));
+            } else {
+                viewHolder.details.setText("-");
+            }
+
+
+            viewHolder.expand.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (viewHolder.details.getVisibility() == View.GONE) {
+                        viewHolder.details.setVisibility(View.VISIBLE);
+                        viewHolder.expand.setImageResource(R.drawable.ic_moveup);
+                    } else {
+                        viewHolder.details.setVisibility(View.GONE);
+                        viewHolder.expand.setImageResource(R.drawable.ic_movedown);
+                    }
+                }
+            });
+        }
         return view;
     }
 
@@ -119,6 +130,8 @@ public class HobbyAdapter extends BaseAdapter {
         TextView title;
         ImageView expand;
         CircleImageView image;
+        TextView details;
+        View container;
 
         public ViewHolder() {
 

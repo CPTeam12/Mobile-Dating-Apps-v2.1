@@ -35,6 +35,8 @@ public class HobbyActivity extends ActionBarActivity {
     private static final String URL_UPDATE_HOBBY = MainActivity.URL_CLOUD + "/Service/updateprofile";
     private MaterialDialog.Builder dialogBuilder;
     private MaterialDialog materialDialog;
+    private boolean isRegister = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,40 +48,52 @@ public class HobbyActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 onBackPressed();
             }
         });
+
         ListView listView = (ListView) findViewById(R.id.listView);
 
         String[] array = getResources().getStringArray(R.array.hobbies);
-        Toast.makeText(this, array.toString(), Toast.LENGTH_LONG).show();
+
         List<Hobby> hobbies = new ArrayList<>();
-        for (String item : array) {
-            String[] tempArray;
-            if (item.equals("Âm nhạc")) {
-                tempArray = getResources().getStringArray(R.array.Music);
-            } else if (item.equals("Phim ảnh")) {
-                tempArray = getResources().getStringArray(R.array.Movie);
-            } else if (item.equals("Sách")) {
-                tempArray = getResources().getStringArray(R.array.Book);
-            } else if (item.equals("Thể thao")) {
-                tempArray = getResources().getStringArray(R.array.Sport);
-            } else if (item.equals("Thức ăn")) {
-                tempArray = getResources().getStringArray(R.array.Food);
-            } else if (item.equals("Thú cưng")) {
-                tempArray = getResources().getStringArray(R.array.Pet);
-            } else {//drink
-                tempArray = getResources().getStringArray(R.array.Drink);
+
+        //if current user is empty mean register
+        //else is transfer from edit profile activity
+        Person person = DBHelper.getInstance(this).getCurrentUser();
+        if (person.getHobbies().isEmpty()) {
+            //register
+            for (String item : array) {
+                String[] tempArray;
+                if (item.equals("Âm nhạc")) {
+                    tempArray = getResources().getStringArray(R.array.Music);
+                } else if (item.equals("Phim ảnh")) {
+                    tempArray = getResources().getStringArray(R.array.Movie);
+                } else if (item.equals("Sách")) {
+                    tempArray = getResources().getStringArray(R.array.Book);
+                } else if (item.equals("Thể thao")) {
+                    tempArray = getResources().getStringArray(R.array.Sport);
+                } else if (item.equals("Thức ăn")) {
+                    tempArray = getResources().getStringArray(R.array.Food);
+                } else if (item.equals("Thú cưng")) {
+                    tempArray = getResources().getStringArray(R.array.Pet);
+                } else {//drink
+                    tempArray = getResources().getStringArray(R.array.Drink);
+                }
+                List<SubHobby> subHobbies = new ArrayList<>();
+                for (int i = 0; i < tempArray.length; i++) {
+                    subHobbies.add(new SubHobby(tempArray[i], false));
+                }
+                hobbies.add(new Hobby(item, subHobbies));
             }
-            List<SubHobby> subHobbies = new ArrayList<>();
-            for (int i = 0; i < tempArray.length; i++) {
-                subHobbies.add(new SubHobby(tempArray[i], false));
-            }
-            hobbies.add(new Hobby(item, subHobbies));
+        } else {
+            //edit profle
+            isRegister = false;
+            hobbies = Hobby.toList(person.getHobbies());
         }
 
-        HobbyAdapter hobbyAdapter = new HobbyAdapter(this, hobbies);
+        HobbyAdapter hobbyAdapter = new HobbyAdapter(this, hobbies, HobbyAdapter.FLAG_REGISTER);
         listView.setAdapter(hobbyAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -162,7 +176,7 @@ public class HobbyActivity extends ActionBarActivity {
                             .content(R.string.error_connection)
                             .titleColorRes(R.color.md_red_400)
                             .show();
-                }else{
+                } else {
                     List<Person> persons = new ArrayList<>();
                     Person person = DBHelper.getInstance(getApplicationContext()).getCurrentUser();
                     person.setHobbies(sharePref);
@@ -204,16 +218,28 @@ public class HobbyActivity extends ActionBarActivity {
                 //start parsing jsonResponse
                 JSONObject jsonObject = new JSONObject(result);
                 List<Person> personList = ConnectionTool.fromJSON(jsonObject);
-                if(personList != null){
+                if (personList != null) {
                     //update current user into database
                     DBHelper helper = new DBHelper(getApplicationContext());
                     helper.updatePerson(personList.get(0));
-                    //move to main activity
-                    Intent intent = new Intent(HobbyActivity.this, MainActivity.class);
-                    startActivity(intent);
+                    if (isRegister){
+                        //move to main activity
+                        Intent intent = new Intent(HobbyActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }else{
+                        //move to profile activity
+                        Bundle bundle = new Bundle();
+                        bundle.putString("ProfileOf", DBHelper.USER_FLAG_CURRENT);
+                        Intent intent = new Intent(getApplicationContext(), NewProfileActivity.class);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                        finish();
+                    }
+
                 } else {
-                    Toast.makeText(getApplicationContext(),getResources().
-                            getText(R.string.error_connection),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().
+                            getText(R.string.error_connection), Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
