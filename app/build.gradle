@@ -63,6 +63,8 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:7.5.0'
     //Session header
     compile 'com.tonicartos:superslim:0.4.+'
+    //fab with animation
+    compile 'com.melnykov:floatingactionbutton:1.3.0'
 
 }
 

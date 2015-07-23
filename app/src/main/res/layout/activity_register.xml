@@ -81,6 +81,31 @@
                 app:met_primaryColor="@color/primary_text"
                 app:met_textColorHint="@color/primary_text" />
 
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/register_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/promt_location"
+                    android:inputType="text"
+                    app:met_baseColor="@color/primary_text"
+                    app:met_errorColor="#ffdd4c3a"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="@color/primary_text"
+                    app:met_textColorHint="@color/primary_text" />
+
+                <ProgressBar
+                    android:id="@+id/spinner"
+                    android:layout_width="30dp"
+                    android:layout_height="fill_parent"
+                    android:layout_alignBottom="@+id/register_location"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true" />
+            </RelativeLayout>
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
@@ -201,7 +226,7 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="14dp"
-                android:background="#ce2aa7d6"
+                android:background="@color/primary_dark"
                 android:text="@string/register_reg"
                 android:textColor="@color/md_white_1000"
                 android:textStyle="bold" />

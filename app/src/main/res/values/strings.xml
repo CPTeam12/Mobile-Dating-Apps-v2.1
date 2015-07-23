@@ -249,7 +249,9 @@
     <string name="save">Save</string>
     <string name="prompt_old_password">Old password</string>
     <string name="change_password">Change Password</string>
-    <string name="friend_info">%1$s, %2$s</string>
-    <string name="friend_recommend_info">%1$s, %2$s | %3$s % matching</string>
+    <string name="friend_info">%1$s, %2$d years old.</string>
+    <string name="friend_recommend_info">%1$s, %2$s years old, %3$s matching</string>
+    <string name="update_profile_success">Update profile successfully</string>
+    <string name="promt_location">Location</string>
 
 </resources>

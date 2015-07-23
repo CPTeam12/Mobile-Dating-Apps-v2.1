@@ -10,10 +10,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.balysv.materialripple.MaterialRippleLayout;
 import com.example.thang.mobile_dating_app_v20.Activity.NearbyMapActivity;
+import com.example.thang.mobile_dating_app_v20.Activity.NewProfileActivity;
 import com.example.thang.mobile_dating_app_v20.R;
 
 import org.w3c.dom.Text;
@@ -26,13 +28,12 @@ public class HeaderViewHolder extends RecyclerView.ViewHolder {
     private ImageView avatar;
     private TextView name;
     private ProgressBar progressBar;
-    private LinearLayout linearLayout;
-    private MaterialRippleLayout content;
+    private RelativeLayout linearLayout;
     private Context context;
-    private FrameLayout frameLayout;
 
     private TextView nearbyFriend;
     private TextView nearbyPerosn;
+    private TextView subName;
 
     public HeaderViewHolder(View itemView) {
         super(itemView);
@@ -44,8 +45,11 @@ public class HeaderViewHolder extends RecyclerView.ViewHolder {
         avatar = (ImageView) itemView.findViewById(R.id.avatar);
         name = (TextView) itemView.findViewById(R.id.name);
         progressBar = (ProgressBar) itemView.findViewById(R.id.progress);
-        linearLayout = (LinearLayout) itemView.findViewById(R.id.titlebg);
-        frameLayout = (FrameLayout) itemView.findViewById(R.id.nearbyItem);
+        linearLayout = (RelativeLayout) itemView.findViewById(R.id.titlebg);
+
+        //new item
+        subName = (TextView) itemView.findViewById(R.id.subname);
+
         this.context = context;
     }
 
@@ -61,7 +65,7 @@ public class HeaderViewHolder extends RecyclerView.ViewHolder {
         this.nearbyFriend.setText(nearbyFriend);
         this.nearbyPerosn.setText(nearbyPerosn);
         avatar.setImageBitmap(avatarText.isEmpty() ? BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.no_avatar) : Utils.generateSmaleBitmap(avatarText,200,200));
+                R.drawable.no_avatar) : Utils.generateSmaleBitmap(avatarText, 200, 200));
     }
 
     public void bindHeaderItem(String text) {
@@ -69,10 +73,10 @@ public class HeaderViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindNearbyItem(final Person person) {
-        name.setText(person.getFullName());
+
         avatar.setImageBitmap(person.getAvatar().isEmpty() ? BitmapFactory.decodeResource(context.getResources(),
                 R.drawable.no_avatar) : Utils.generateSmaleBitmap(person.getAvatar(), 144, 144));
-        frameLayout.setOnClickListener(new View.OnClickListener() {
+        avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Bundle dataBundle = new Bundle();
@@ -84,5 +88,33 @@ public class HeaderViewHolder extends RecyclerView.ViewHolder {
                 context.startActivity(intent);
             }
         });
+        name.setText(person.getFullName());
+
+        String gender = "";
+        if (person.getGender().equals("Male")) {
+            gender = context.getResources().getString(R.string.register_gender_male);
+        } else {
+            gender = context.getResources().getString(R.string.register_gender_female);
+        }
+        String title = "";
+        if (person.getPercent() != 0){
+            title = " | " + String.format("%.0f",person.getPercent() * 100) + "%";
+        }
+        String briefInfo = context.getResources().getString(R.string.friend_info, gender, person.getAge()) + title;
+        subName.setText(briefInfo);
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("email", person.getEmail());
+                bundle.putString("ProfileOf", "Person");
+
+                Intent intent = new Intent(context, NewProfileActivity.class);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+            }
+        });
     }
+
+
 }

@@ -1,7 +1,6 @@
 package com.example.thang.mobile_dating_app_v20.Fragments;
 
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,17 +8,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -27,9 +20,9 @@ import com.example.thang.mobile_dating_app_v20.Activity.MainActivity;
 import com.example.thang.mobile_dating_app_v20.Adapters.NearbyAdapter;
 import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
+import com.example.thang.mobile_dating_app_v20.Classes.GPSTracker;
 import com.example.thang.mobile_dating_app_v20.Classes.LocationTracker;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
-import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.tonicartos.superslim.LayoutManager;
 
@@ -38,16 +31,19 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Thang on 5/15/2015.
  */
 public class Tab3 extends Fragment implements OnRefreshListener {
+    private static final String URL_UPDATE_LOCATION = MainActivity.URL_CLOUD + "/Service/updatelocation?";
+    private String URL_NEARBY_PERSON = MainActivity.URL_CLOUD + "/Service/getnearby?";
+
 
     private List<Person> persons = new ArrayList<>();
     private int numColumns = 2;
     private static final int DISTANCE = 1000; //in meter
-    private String URL_NEARBY_PERSON = MainActivity.URL_CLOUD + "/Service/getnearby?";
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private View noNearby;
@@ -66,28 +62,89 @@ public class Tab3 extends Fragment implements OnRefreshListener {
         //pull down to refresh
         swipeRefreshLayout.setColorSchemeResources(R.color.AccentColor);
         swipeRefreshLayout.setOnRefreshListener(this);
+//        swipeRefreshLayout.setRefreshing(true);
+//        GPSTracker gpsTracker = new GPSTracker(getActivity());
+//        if (gpsTracker.canGetLocation()) {
+//
+//            String url = URL_UPDATE_LOCATION + "email=" + DBHelper.getInstance(getActivity()).getCurrentUser().getEmail()
+//                    + "&longtitude=" + gpsTracker.getLongitude() + "&latitude=" + gpsTracker.getLatitude();
+//            ConnectionTool connectionTool = new ConnectionTool(getActivity());
+//
+//
+//            if (connectionTool.isNetworkAvailable()) {
+//                try {
+//                    new updateLocationTask().execute(url).get();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                } catch (ExecutionException e) {
+//                    e.printStackTrace();
+//                }
+//            } else {
+//                new MaterialDialog.Builder(getActivity())
+//                        .title(R.string.error_connection_title)
+//                        .content(R.string.error_connection)
+//                        .titleColorRes(R.color.md_red_400)
+//                        .show();
+//            }
+//            gpsTracker.stopUsingGPS();
+//        } else {
+//            gpsTracker.showSettingsAlert();
+//        }
+
         swipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
                 //check for current location
-                LocationTracker locationTracker = new LocationTracker(getActivity());
-                locationTracker.getCurrentLocation();
-
+//                LocationTracker locationTracker = new LocationTracker(getActivity());
+//                locationTracker.getCurrentLocation();
+//
                 swipeRefreshLayout.setRefreshing(true);
-                String url = URL_NEARBY_PERSON + "email=" + DBHelper.getInstance(getActivity()).getCurrentUser().getEmail();
-                Log.i(null,url);
-                ConnectionTool connectionTool = new ConnectionTool(getActivity());
-                if (connectionTool.isNetworkAvailable()) {
-                    new getNearbyPersonTask().execute(url);
+//                String url = URL_NEARBY_PERSON + "email=" + DBHelper.getInstance(getActivity()).getCurrentUser().getEmail();
+//                Log.i(null, url);
+//                ConnectionTool connectionTool = new ConnectionTool(getActivity());
+//                if (connectionTool.isNetworkAvailable()) {
+//                    new getNearbyPersonTask().execute(url);
+//                } else {
+//                    new MaterialDialog.Builder(getActivity())
+//                            .title(R.string.error_connection_title)
+//                            .content(R.string.error_connection)
+//                            .titleColorRes(R.color.md_red_400)
+//                            .show();
+//                }
+
+                //new
+                GPSTracker gpsTracker = new GPSTracker(getActivity());
+                if (gpsTracker.canGetLocation()) {
+
+                    String url = URL_UPDATE_LOCATION + "email=" + DBHelper.getInstance(getActivity()).getCurrentUser().getEmail()
+                            + "&longtitude=" + gpsTracker.getLongitude() + "&latitude=" + gpsTracker.getLatitude();
+                    ConnectionTool connectionTool = new ConnectionTool(getActivity());
+
+
+                    if (connectionTool.isNetworkAvailable()) {
+                        try {
+                            new updateLocationTask().execute(url).get();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        new MaterialDialog.Builder(getActivity())
+                                .title(R.string.error_connection_title)
+                                .content(R.string.error_connection)
+                                .titleColorRes(R.color.md_red_400)
+                                .show();
+                    }
+                    gpsTracker.stopUsingGPS();
                 } else {
-                    new MaterialDialog.Builder(getActivity())
-                            .title(R.string.error_connection_title)
-                            .content(R.string.error_connection)
-                            .titleColorRes(R.color.md_red_400)
-                            .show();
+                    gpsTracker.showSettingsAlert();
                 }
+
+
             }
         });
+
 
         return v;
     }
@@ -95,19 +152,55 @@ public class Tab3 extends Fragment implements OnRefreshListener {
     @Override
     public void onRefresh() {
         //check for current location
-        LocationTracker locationTracker = new LocationTracker(getActivity());
-        locationTracker.getCurrentLocation();
+//        LocationTracker locationTracker = new LocationTracker(getActivity());
+//        locationTracker.getCurrentLocation();
 
-        String url = URL_NEARBY_PERSON + "email=" + DBHelper.getInstance(getActivity()).getCurrentUser().getEmail();
-        ConnectionTool connectionTool = new ConnectionTool(getActivity());
-        if (connectionTool.isNetworkAvailable()) {
-            new getNearbyPersonTask().execute(url);
+        GPSTracker gpsTracker = new GPSTracker(getActivity());
+        if (gpsTracker.canGetLocation()) {
+
+            String url = URL_UPDATE_LOCATION + "email=" + DBHelper.getInstance(getActivity()).getCurrentUser().getEmail()
+                    + "&longtitude=" + gpsTracker.getLongitude() + "&latitude=" + gpsTracker.getLatitude();
+            ConnectionTool connectionTool = new ConnectionTool(getActivity());
+
+
+            if (connectionTool.isNetworkAvailable()) {
+                try {
+                    new updateLocationTask().execute(url).get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                new MaterialDialog.Builder(getActivity())
+                        .title(R.string.error_connection_title)
+                        .content(R.string.error_connection)
+                        .titleColorRes(R.color.md_red_400)
+                        .show();
+            }
+            gpsTracker.stopUsingGPS();
         } else {
-            new MaterialDialog.Builder(getActivity())
-                    .title(R.string.error_connection_title)
-                    .content(R.string.error_connection)
-                    .titleColorRes(R.color.md_red_400)
-                    .show();
+            gpsTracker.showSettingsAlert();
+        }
+    }
+
+    private class updateLocationTask extends AsyncTask<String, Integer, String> {
+
+
+        @Override
+        protected String doInBackground(String... params) {
+            return ConnectionTool.makeGetRequest(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.isEmpty()) {
+                Toast.makeText(getActivity(), getActivity().
+                        getString(R.string.loading_error), Toast.LENGTH_SHORT).show();
+            } else {
+                String url = URL_NEARBY_PERSON + "email=" + DBHelper.getInstance(getActivity()).getCurrentUser().getEmail();
+                new getNearbyPersonTask().execute(url);
+            }
         }
     }
 

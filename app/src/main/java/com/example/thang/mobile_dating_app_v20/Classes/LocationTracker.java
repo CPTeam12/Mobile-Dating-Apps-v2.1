@@ -15,6 +15,9 @@ import com.example.thang.mobile_dating_app_v20.Activity.MainActivity;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -98,32 +101,13 @@ public class LocationTracker {
 
     }
 
-    public void getCurrentLocationNew() {
+    public String getCurrentGeocoding() {
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
 
         Location lastLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-        if (lastLocation != null) {
-            String url = URL_UPDATE_LOCATION + "email=" + DBHelper.getInstance(context).getCurrentUser().getEmail()
-                    + "&longtitude=" + lastLocation.getLongitude() + "&latitude=" + lastLocation.getLatitude();
-            ConnectionTool connectionTool = new ConnectionTool(context);
 
-            if (connectionTool.isNetworkAvailable()) {
-                try {
-                    new updateLocationTask().execute(url).get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                new MaterialDialog.Builder(context)
-                        .title(R.string.error_connection_title)
-                        .content(R.string.error_connection)
-                        .titleColorRes(R.color.md_red_400)
-                        .show();
-            }
-        }
+        return lastLocation.getLatitude() + "," + lastLocation.getLongitude();
     }
 
     private class updateLocationTask extends AsyncTask<String, Integer, String> {
@@ -200,6 +184,32 @@ public class LocationTracker {
             return provider2 == null;
         }
         return provider1.equals(provider2);
+    }
+
+    private static final String KEY = "AIzaSyCFZATVHZnh_L6FGOGGMteGw0c9I0Ql5hE";
+
+    public static String getLocation(double latitude, double longtitude) {
+        String address = latitude + "," + longtitude;
+        String url = "https://maps.googleapis.com/maps/api/geocode/json?"
+                + "address=" + address
+                + "&key=" + KEY;
+        String response = ConnectionTool.makeGetRequest(url);
+        JSONObject resultJSON = null;
+        String result = "";
+        try {
+            resultJSON = new JSONObject(response);
+
+            String temp1 = resultJSON.getJSONArray("results").getJSONObject(0).getString("formatted_address");
+            String[] temp2 = temp1.split(", ");
+
+            for (int i = temp2.length - 1; i > temp2.length - 4; i--) {
+                result = temp2[i] + ", " + result;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        //System.out.println(result.substring(0, result.length()-2));
+        return result.substring(0, result.length() - 2);
     }
 
 }

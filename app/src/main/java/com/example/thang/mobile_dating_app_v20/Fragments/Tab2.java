@@ -21,7 +21,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.thang.mobile_dating_app_v20.Activity.ChatActivity;
 import com.example.thang.mobile_dating_app_v20.Activity.MainActivity;
 import com.example.thang.mobile_dating_app_v20.Activity.NewProfileActivity;
-import com.example.thang.mobile_dating_app_v20.Activity.ProfileActivity;
 import com.example.thang.mobile_dating_app_v20.Activity.SearchActivity;
 import com.example.thang.mobile_dating_app_v20.Adapters.ListAdapter;
 import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;

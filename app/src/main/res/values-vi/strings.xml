@@ -27,7 +27,7 @@
         <item>Tiết kiệm pin</item>
         <item>Chỉ thiết bị</item>
     </string-array>
-    <string name="card_section_recommend">Những người bạn có thể biết</string>
+    <string name="card_section_recommend">Những người phù hợp với bạn</string>
     <string name="card_section_request">Lời mời kết bạn</string>
     <string name="prompt_password">Mật khẩu</string>
     <string name="prompt_username">Tên đăng nhập</string>
@@ -100,11 +100,11 @@
     <string name="chat_setting_notification">Tắt thông báo</string>
     <string name="chat_setting_delete_conversation">Xóa hội thoại</string>
     <string name="chat_today">Hôm nay</string>
-    <string name="nearby_start_friend">có %1$s bạn gần đây</string>
-    <string name="nearby_start_people">có %1$s người bạn có thể làm quen</string>
+    <string name="nearby_start_friend">Có %1$s bạn gần đây</string>
+    <string name="nearby_start_people">Có %1$s người bạn có thể làm quen</string>
     <string name="no_nearby">Không tìm thấy ai xung quanh bạn</string>
     <string name="nearby_friend">Bạn xung quanh</string>
-    <string name="nearby_people">Những người khác</string>
+    <string name="nearby_people">Những người bạn có thể làm quen</string>
     <string name="register_one_title">Thông tin cơ bản</string>
     <string name="register_continue">Tiếp tục</string>
     <string name="register_email_error">Địa chỉ email không tồn tại</string>
@@ -192,6 +192,8 @@
     <string name="save">Lưu</string>
     <string name="prompt_old_password">Mật khẩu hiện tại</string>
     <string name="change_password">Thay đổi mật khẩu</string>
-    <string name="friend_info">%1$s, %2$s</string>
-    <string name="friend_recommend_info">%1$s, %2$s | tương đồng %3$s %</string>
+    <string name="friend_info">%1$s, %2$d tuổi.</string>
+    <string name="friend_recommend_info">%1$s, %2$s tuổi, tương đồng %3$s</string>
+    <string name="update_profile_success">Thông tin cá nhân đã được thay đổi thành công.</string>
+    <string name="promt_location">Địa điểm</string>
 </resources>

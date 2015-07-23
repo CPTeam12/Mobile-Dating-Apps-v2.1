@@ -226,8 +226,9 @@ public class EditProfileActivity extends ActionBarActivity {
                     //move to profile activity
                     Bundle bundle = new Bundle();
                     bundle.putString("ProfileOf", DBHelper.USER_FLAG_CURRENT);
-                    Intent intent = new Intent(getApplicationContext(), NewProfileActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.putExtras(bundle);
+                    Toast.makeText(EditProfileActivity.this, getString(R.string.update_profile_success), Toast.LENGTH_SHORT).show();
                     startActivity(intent);
                 } else {
                     Toast.makeText(getApplicationContext().getApplicationContext(),

@@ -262,18 +262,17 @@ public class Tab1 extends Fragment implements OnRefreshListener, GoogleApiClient
                         } else {
                             gender = getString(R.string.register_gender_female);
                         }
-                        String percent = "";
-                        if (item.getPercent() != 0) {
-                            percent = String.valueOf(item.getPercent());
-                        }
-                        String briefInfo = getActivity().getString(R.string.friend_recommend_info, gender, item.getAge(), percent);
 
+                        String briefInfo = getActivity().getString(R.string.friend_info, gender, item.getAge());
+
+                        String title = "";
+                        title = item.getFullName() + " • " + String.format("%.0f",item.getPercent() * 100) + "%";
                         card.setContext(getActivity());
-                        card.setTitle(item.getFullName());
+                        card.setTitle(title);
                         card.setSecondaryTitle(briefInfo);
                         card.setFullName(item.getFullName());
                         card.setEmail(item.getEmail());
-                        card.init(item.getFullName(), briefInfo);
+                        card.init(title, briefInfo);
                         if (item.getAvatar().isEmpty()) {
                             card.setBitMap(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.no_avatar));
                         } else {

@@ -56,7 +56,7 @@ public class ChatActivity extends ActionBarActivity {
     int conversationId;
     String friendChatEmail;
 
-    //test only
+    //Test only
     static int count = 1;
 
     @Override

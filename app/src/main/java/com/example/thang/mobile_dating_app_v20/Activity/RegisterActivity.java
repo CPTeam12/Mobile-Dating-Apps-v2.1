@@ -24,13 +24,16 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.MultiAutoCompleteTextView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
+import com.example.thang.mobile_dating_app_v20.Classes.GPSTracker;
 import com.example.thang.mobile_dating_app_v20.Classes.Hobby;
+import com.example.thang.mobile_dating_app_v20.Classes.LocationTracker;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.R;
@@ -46,6 +49,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -74,6 +78,8 @@ public class RegisterActivity extends ActionBarActivity {
     MaterialEditText fullname;
     MaterialEditText birthyear;
     MaterialEditText datingage;
+    MaterialEditText location;
+    ProgressBar spinner;
     RadioButton rb_male, rb_female;
     Button accept, back;
     CheckBox cb_male, cb_female;
@@ -96,6 +102,10 @@ public class RegisterActivity extends ActionBarActivity {
         back = (Button) findViewById(R.id.register_back_login);
         cb_male = (CheckBox) findViewById(R.id.register_male_cb);
         cb_female = (CheckBox) findViewById(R.id.register_female_cb);
+        location = (MaterialEditText) findViewById(R.id.register_location);
+        location.setEnabled(false);
+        spinner = (ProgressBar) findViewById(R.id.spinner);
+        spinner.setVisibility(View.GONE);
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -146,6 +156,9 @@ public class RegisterActivity extends ActionBarActivity {
                     person.setAge(Calendar.getInstance().get(Calendar.YEAR) - Integer.parseInt(birthyear.getText().toString()));
                     person.setHobbies("");
                     person.setDatingAge(Integer.parseInt(datingage.getText().toString()));
+                    if (!location.getText().toString().equals("")) {
+                        person.setAddress(location.getText().toString());
+                    }
                     if (cb_male.isChecked()) {
                         person.setDatingMen(true);
                     } else {
@@ -191,6 +204,21 @@ public class RegisterActivity extends ActionBarActivity {
             }
         });
 
+        //get current location for address:
+        LocationTracker locationTracker = new LocationTracker(this);
+        //String geoLocation = locationTracker.getCurrentGeocoding();
+        //Log.i(null, geoLocation);
+
+        GPSTracker gps = new GPSTracker(this);
+        if (gps.canGetLocation()){
+            new getLocationTask().execute(gps.getLatitude() + "," + gps.getLongitude());
+            Log.i("new: ", gps.getLatitude() + "," + gps.getLongitude());
+        }else{
+            gps.showSettingsAlert();
+        }
+        gps.stopUsingGPS();
+        //new getLocationTask().execute(geoLocation);
+
     }
 
     private class registerNew extends AsyncTask<List<Person>, Integer, String> {
@@ -221,7 +249,7 @@ public class RegisterActivity extends ActionBarActivity {
             List<Person> p = persons[0];
             String response;
             for (Person person : p) {
-                Log.i(null, String.valueOf(person.isDatingMen()) + "--" + String.valueOf(person.isDatingWomen()) );
+                Log.i(null, String.valueOf(person.isDatingMen()) + "--" + String.valueOf(person.isDatingWomen()));
                 //get image facebook for each person
                 if (!person.getFacebookId().isEmpty()) {
                     try {
@@ -403,4 +431,45 @@ public class RegisterActivity extends ActionBarActivity {
             birthyear.setText(String.valueOf(selectedYear));
         }
     };
+
+    private static final String KEY = "AIzaSyCFZATVHZnh_L6FGOGGMteGw0c9I0Ql5hE";
+
+    private class getLocationTask extends AsyncTask<String, Integer, String> {
+        @Override
+        protected void onPreExecute() {
+            spinner.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String url = "https://maps.googleapis.com/maps/api/geocode/json?"
+                    + "address=" + params[0]
+                    + "&key=" + KEY;
+            return ConnectionTool.makeGetRequest(url);
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            spinner.setVisibility(View.GONE);
+            try {
+                String result = "";
+                JSONObject resultJSON = new JSONObject(response);
+
+                String temp1 = resultJSON.getJSONArray("results").getJSONObject(0).getString("formatted_address");
+                String[] temp2 = temp1.split(", ");
+
+                for (int i = temp2.length - 1; i > temp2.length - 4; i--) {
+                    result = temp2[i] + ", " + result;
+                }
+
+                location.setText(result.substring(0, result.length() - 2));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+
 }

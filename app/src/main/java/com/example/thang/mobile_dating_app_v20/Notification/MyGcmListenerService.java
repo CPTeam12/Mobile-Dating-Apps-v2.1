@@ -64,8 +64,8 @@ public class MyGcmListenerService extends GcmListenerService {
         String title = data.getString("title");
         String flag = data.getString("flag");
         String email = data.getString("email");
-        double longitude = data.getDouble("longitude");
-        double latitude = data.getDouble("latitude");
+        double longitude = Double.valueOf(data.getString("longitude"));
+        double latitude = Double.valueOf(data.getString("latitude"));
         Log.i(TAG, "From: " + from);
         Log.i(TAG, "Message: " + message);
         Log.i(TAG, "flag: " + flag);

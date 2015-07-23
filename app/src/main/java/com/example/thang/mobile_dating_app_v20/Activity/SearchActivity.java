@@ -135,7 +135,7 @@ public class SearchActivity extends ActionBarActivity {
                 bundle.putString("email", person.getEmail());
                 bundle.putString("ProfileOf", "Person");
 
-                Intent intent = new Intent(SearchActivity.this, ProfileActivity.class);
+                Intent intent = new Intent(SearchActivity.this, NewProfileActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }

@@ -15,7 +15,7 @@ import it.gmariotti.cardslib.library.prototypes.SectionedCardAdapter;
  */
 public class SectionAdapter extends SectionedCardAdapter {
     public SectionAdapter(Context context, CardArrayAdapter cardArrayAdapter) {
-        super(context, R.layout.card_custom_sectioned_list, cardArrayAdapter);
+        super(context, R.layout.header_item, cardArrayAdapter);
     }
 
     @Override
@@ -25,7 +25,7 @@ public class SectionAdapter extends SectionedCardAdapter {
 
         if(section != null){
             //set the title
-            TextView textView = (TextView) view.findViewById(R.id.section_title);
+            TextView textView = (TextView) view.findViewById(R.id.text);
             if(textView != null){
                 textView.setText(section.getTitle());
             }

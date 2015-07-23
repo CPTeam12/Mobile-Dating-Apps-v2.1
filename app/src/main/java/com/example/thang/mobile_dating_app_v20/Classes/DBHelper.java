@@ -34,6 +34,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static final String USER_COL_ISDATINGMEN = "isdatingmen";
     private static final String USER_COL_ISDATINGWOMEN = "isdatingwomen";
+    private static final String USER_COL_DATINGAGE = "datingage";
 
     private static final String USER_COL_REGISID = "registrationid";
 
@@ -83,8 +84,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 + USER_COL_REGISID + " text, "
                 + USER_COL_LATITUDE + " text, "
                 + USER_COL_LONGITUDE + " text, "
-                + USER_COL_ISDATINGMEN + " text, "
-                + USER_COL_ISDATINGWOMEN + " text, "
+                + USER_COL_ISDATINGMEN + " INTEGER default 0, "
+                + USER_COL_ISDATINGWOMEN + " INTEGER default 0, "
+                + USER_COL_DATINGAGE + " INTEGER default 18, "
                 + USER_COL_HOBBIES + " text, "
                 + USER_COL_FLAG + " text not null"
                 + ");";
@@ -152,8 +154,11 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(USER_COL_LATITUDE, person.getLatitude());
         contentValues.put(USER_COL_LONGITUDE, person.getLongitude());
         contentValues.put(USER_COL_REGISID, person.getRegistrationID());
-        contentValues.put(USER_COL_ISDATINGMEN,person.isDatingMen());
-        contentValues.put(USER_COL_ISDATINGWOMEN,person.isDatingWomen());
+        int isDatingMen = person.isDatingMen() ? 1 : 0;
+        contentValues.put(USER_COL_ISDATINGMEN, isDatingMen);
+        int isDatingWomean = person.isDatingWomen() ? 1 : 0;
+        contentValues.put(USER_COL_ISDATINGWOMEN, isDatingWomean);
+        contentValues.put(USER_COL_DATINGAGE,person.getDatingAge());
         contentValues.put(USER_COL_FLAG, flag);
 
         db.insert(USER_TABLE, null, contentValues);
@@ -222,16 +227,18 @@ public class DBHelper extends SQLiteOpenHelper {
         if (res.getCount() != 0) {
             person.setAddress(res.getString(res.getColumnIndex(USER_COL_ADDRESS)));
             person.setFullName(res.getString(res.getColumnIndex(USER_COL_FULLNAME)));
-            person.setAge(Integer.parseInt(res.getString(res.getColumnIndex(USER_COL_AGE))));
+            person.setAge(res.getInt(res.getColumnIndex(USER_COL_AGE)));
             person.setAvatar(res.getString(res.getColumnIndex(USER_COL_AVATAR)));
             person.setEmail(res.getString(res.getColumnIndex(USER_COL_EMAIL)));
             person.setGender(res.getString(res.getColumnIndex(USER_COL_GENDER)));
             person.setPhone(res.getString(res.getColumnIndex(USER_COL_PHONE)));
             person.setHobbies(res.getString(res.getColumnIndex(USER_COL_HOBBIES)));
             person.setRegistrationID(res.getString(res.getColumnIndex(USER_COL_REGISID)));
-
-            person.setDatingMen(Boolean.valueOf(res.getString(res.getColumnIndex(USER_COL_ISDATINGMEN))));
-            person.setDatingWomen(Boolean.valueOf(res.getString(res.getColumnIndex(USER_COL_ISDATINGWOMEN))));
+            boolean isDatingMen = (res.getInt(res.getColumnIndex(USER_COL_ISDATINGMEN)) == 1) ? true : false;
+            person.setDatingMen(isDatingMen);
+            boolean isDatingWomen = (res.getInt(res.getColumnIndex(USER_COL_ISDATINGWOMEN)) == 1) ? true : false;
+            person.setDatingWomen(isDatingWomen);
+            person.setDatingAge(res.getInt(res.getColumnIndex(USER_COL_DATINGAGE)));
         }
         res.close();
         db.close();
@@ -309,7 +316,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    public List<Message> getReplyByConversationId (int conversationId) {
+    public List<Message> getReplyByConversationId(int conversationId) {
         List<Message> messages = new ArrayList<>();
         String query = "SELECT * FROM " + CONVERSATION_DETAIL_TABLE + ", " + USER_TABLE + " U WHERE "
                 + USER_COL_EMAIL + " = " + CONVERSATION_DETAIL_COL_EMAIL + " AND "
@@ -338,7 +345,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return messages;
     }
 
-    public void deleteConversationById(int conversationId){
+    public void deleteConversationById(int conversationId) {
         String query = "DELETE FROM " + CONVERSATION_TABLE + " WHERE "
                 + CONVERSATION_COL_ID + " = '" + conversationId + "'";
 
@@ -347,7 +354,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void deleteReplyByConversationId(int conversationId){
+    public void deleteReplyByConversationId(int conversationId) {
         String query = "DELETE FROM " + CONVERSATION_DETAIL_TABLE + " WHERE "
                 + CONVERSATION_DETAIL_COL_C_ID + " = '" + conversationId + "'";
 
@@ -357,11 +364,10 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-
     //TODO: list friend conversation
-    public List<Person> getListFriendWithConversation(){
+    public List<Person> getListFriendWithConversation() {
         List<Person> persons = new ArrayList<>();
-        String query = "SELECT * FROM " + USER_TABLE +  ", "  + CONVERSATION_TABLE + " WHERE "
+        String query = "SELECT * FROM " + USER_TABLE + ", " + CONVERSATION_TABLE + " WHERE "
                 + USER_COL_FLAG + " = '" + USER_FLAG_FRIENDS + "' AND "
                 + USER_COL_FLAG + " = '" + USER_FLAG_FRIENDS + "'";
 

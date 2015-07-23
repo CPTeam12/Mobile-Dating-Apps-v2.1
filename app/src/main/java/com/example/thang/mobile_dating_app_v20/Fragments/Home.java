@@ -41,7 +41,7 @@ public class Home extends Fragment implements MaterialTabListener, ObservableScr
         adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager(), getActivity());
 
         pager = (ViewPager) v.findViewById(R.id.pager);
-        pager.setOffscreenPageLimit(2);
+        pager.setOffscreenPageLimit(3);
         pager.setAdapter(adapter);
         pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override

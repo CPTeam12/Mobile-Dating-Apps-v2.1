@@ -15,7 +15,7 @@ import com.example.thang.mobile_dating_app_v20.Fragments.Tab3;
 /**
  * Created by Thang on 5/15/2015.
  */
-public class ViewPagerAdapter extends FragmentStatePagerAdapter {
+public class ViewPagerAdapter extends FragmentPagerAdapter {
     String[] title = {"a","b","c"};
     private int[] tabIcon = {
             R.drawable.ic_notifications,

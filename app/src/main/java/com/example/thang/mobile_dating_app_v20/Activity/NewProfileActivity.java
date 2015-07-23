@@ -606,7 +606,8 @@ public class NewProfileActivity extends ActionBarActivity implements ObservableS
                 mImageView.setImageBitmap(person.getAvatar().isEmpty() ? BitmapFactory.decodeResource(getResources(),
                         R.drawable.no_avatar) : Utils.decodeBase64StringToBitmap(person.getAvatar()));
                 //setFriendAdapter(listView, person);
-                mTitleView.setText(person.getFullName());
+                String title = person.getFullName() +(person.getPercent() != 0 ? person.getPercent() : "") ;
+                mTitleView.setText(title);
                 mPager.setAdapter(mPagerAdapter);
 
 

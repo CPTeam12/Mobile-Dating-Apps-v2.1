@@ -18,5 +18,4 @@
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/tool_bar" />
 
-
 </RelativeLayout>

@@ -105,7 +105,7 @@ public class NearbyAdapter extends RecyclerView.Adapter<HeaderViewHolder> {
             return new HeaderViewHolder(view);
         } else {
             view = LayoutInflater.from(context)
-                    .inflate(R.layout.nearby_item, parent, false);
+                    .inflate(R.layout.nearby_item_new, parent, false);
             return new HeaderViewHolder(view, context);
         }
     }

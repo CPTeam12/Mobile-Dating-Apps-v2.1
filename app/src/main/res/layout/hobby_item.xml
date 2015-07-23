@@ -48,7 +48,7 @@
         android:paddingLeft="60dp"
         android:paddingRight="50dp"
         android:text="demo"
-        android:textColor="@color/md_blue_800"
+        android:textColor="@color/md_grey_500"
         android:textSize="18sp" />
 
 </LinearLayout>

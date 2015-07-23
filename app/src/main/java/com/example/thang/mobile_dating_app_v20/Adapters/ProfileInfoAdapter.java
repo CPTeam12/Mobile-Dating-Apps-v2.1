@@ -65,34 +65,48 @@ public class ProfileInfoAdapter extends BaseAdapter {
         switch (PROFILE_CASE[position]) {
             case "EMAIL":
                 holder.profileIcon.setImageResource(R.drawable.profile_email);
-                holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                holder.profileText.setText("-");
+                if (profile.get(PROFILE_CASE[position]) != null) {
+                    holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                }
                 holder.profileHeaderText.setText(R.string.prompt_email);
                 break;
             case "AGE":
                 holder.profileIcon.setImageResource(R.drawable.profile_age);
-                holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                holder.profileText.setText("-");
+                if (profile.get(PROFILE_CASE[position]) != null) {
+                    holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                }
                 holder.profileHeaderText.setText(R.string.profile_age);
                 break;
             case "GENDER":
                 holder.profileIcon.setImageResource(R.drawable.profile_gender);
-                holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                holder.profileText.setText("-");
+                if (profile.get(PROFILE_CASE[position]) != null) {
+                    String gender = profile.get(PROFILE_CASE[position]).equals("Female") ?
+                            context.getString(R.string.register_gender_female) :
+                            context.getString(R.string.register_gender_male);
+                    holder.profileText.setText(gender);
+                }
                 holder.profileHeaderText.setText(R.string.register_gender);
                 break;
             case "ADDRESS":
                 holder.profileIcon.setImageResource(R.drawable.profile_address);
-                if (!profile.get(PROFILE_CASE[position]).isEmpty()) {
-                    holder.profileText.setText(profile.get(PROFILE_CASE[position]));
-                } else {
-                    holder.profileText.setText("-");
+                holder.profileText.setText("-");
+                if (profile.get(PROFILE_CASE[position]) != null) {
+                    if (!profile.get(PROFILE_CASE[position]).isEmpty()) {
+                        holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                    }
                 }
                 holder.profileHeaderText.setText(R.string.profile_address);
                 break;
             case "PHONE":
                 holder.profileIcon.setImageResource(R.drawable.profile_phone);
-                if (!profile.get(PROFILE_CASE[position]).isEmpty()) {
-                    holder.profileText.setText(profile.get(PROFILE_CASE[position]));
-                } else {
-                    holder.profileText.setText("-");
+                holder.profileText.setText("-");
+                if (profile.get(PROFILE_CASE[position]) != null) {
+                    if (!profile.get(PROFILE_CASE[position]).isEmpty()) {
+                        holder.profileText.setText(profile.get(PROFILE_CASE[position]));
+                    }
                 }
                 holder.profileHeaderText.setText(R.string.profile_phone);
                 break;
