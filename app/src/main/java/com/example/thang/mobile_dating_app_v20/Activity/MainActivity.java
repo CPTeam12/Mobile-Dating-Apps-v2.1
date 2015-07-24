@@ -77,6 +77,7 @@ public class MainActivity extends ActionBarActivity {
                 )
                 .build();
 
+
         result = new Drawer()
                 .withActivity(this)
                 .withAccountHeader(headerResult)
