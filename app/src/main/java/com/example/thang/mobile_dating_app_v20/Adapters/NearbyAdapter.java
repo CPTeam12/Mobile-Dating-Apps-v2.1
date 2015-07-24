@@ -27,7 +27,7 @@ public class NearbyAdapter extends RecyclerView.Adapter<HeaderViewHolder> {
     private final ArrayList<LineItem> lineItems;
     private final Context context;
 
-    public NearbyAdapter(Context context, List<Person> persons) {
+    public NearbyAdapter(Context context, List<Person> persons, List<Person> friends) {
         this.context = context;
         lineItems = new ArrayList<>();
         //int sectionManager = -1;
@@ -44,9 +44,8 @@ public class NearbyAdapter extends RecyclerView.Adapter<HeaderViewHolder> {
         String currentHeader = "";
 
         //for friend
-        for (int i = 0; i < persons.size(); i++) {
-            Person person = DBHelper.getInstance(context).getPersonByEmail(persons.get(i).getEmail());
-            if (person.getEmail() != null) {
+        if (friends != null){
+            for (int i = 0; i < friends.size(); i++) {
                 //is friend
                 if (!currentHeader.equals(context.getResources().getString(R.string.nearby_friend))) {
                     //add header
@@ -56,7 +55,7 @@ public class NearbyAdapter extends RecyclerView.Adapter<HeaderViewHolder> {
                     lineItems.add(new LineItem(currentHeader, true, sectionFirstPosition));
                 }
                 //add content
-                lineItems.add(new LineItem("", false, sectionFirstPosition, persons.get(i)));
+                lineItems.add(new LineItem("", false, sectionFirstPosition, friends.get(i)));
                 totalCount++;
                 friendCount++;
             }
@@ -66,10 +65,8 @@ public class NearbyAdapter extends RecyclerView.Adapter<HeaderViewHolder> {
         lineItems.get(0).start_friend = nearbyFriend;
 
         //not friend
-        for (int i = 0; i < persons.size(); i++) {
-            Person person = DBHelper.getInstance(context).getPersonByEmail(persons.get(i).getEmail());
-            if (person.getEmail() == null) {
-                //is friend
+        if (persons != null){
+            for (int i = 0; i < persons.size(); i++) {
                 if (!currentHeader.equals(context.getResources().getString(R.string.nearby_people))) {
                     //add header
                     currentHeader = context.getResources().getString(R.string.nearby_people);

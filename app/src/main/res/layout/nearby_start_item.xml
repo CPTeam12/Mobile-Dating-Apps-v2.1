@@ -13,48 +13,51 @@
         android:src="@drawable/avatar" />
 
     <ImageView
-        android:alpha="0.6"
-        android:background="@color/md_black_1000"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent"
+        android:alpha="0.6"
+        android:background="@color/md_black_1000" />
 
     <LinearLayout
         android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:layout_height="fill_parent">
+        android:paddingRight="20dp">
+
         <ImageView
-            android:src="@drawable/place_icon"
-            android:layout_width="60dp"
-            android:layout_height="fill_parent" />
+            android:layout_width="65dp"
+            android:layout_height="fill_parent"
+            android:src="@mipmap/ic_launcher" />
+
         <LinearLayout
-            android:orientation="vertical"
-            android:paddingLeft="20dp"
-            android:gravity="center_vertical"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_height="fill_parent"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingLeft="20dp">
             <!--<TextView-->
-                <!--android:id="@+id/friend_nearby_title"-->
-                <!--android:text="5 Friends nearby"-->
-                <!--android:textSize="20sp"-->
-                <!--android:textColor="@color/md_white_1000"-->
-                <!--android:layout_width="fill_parent"-->
-                <!--android:paddingBottom="6dp"-->
-                <!--android:layout_height="wrap_content" />-->
+            <!--android:id="@+id/friend_nearby_title"-->
+            <!--android:text="5 Friends nearby"-->
+            <!--android:textSize="20sp"-->
+            <!--android:textColor="@color/md_white_1000"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:paddingBottom="6dp"-->
+            <!--android:layout_height="wrap_content" />-->
             <TextView
                 android:id="@+id/friend_nearby"
-                android:text="5 Friends nearby"
-                android:textSize="15sp"
-                android:textColor="@color/md_white_1000"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="5 Friends nearby"
+                android:textColor="@color/md_white_1000"
+                android:textSize="15sp" />
+
             <TextView
                 android:id="@+id/people_nearby"
-                android:text="5 peoples you might want to know"
-                android:textSize="15sp"
-                android:textColor="@color/md_white_1000"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="5 peoples you might want to know"
+                android:textColor="@color/md_white_1000"
+                android:textSize="15sp" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

@@ -3,6 +3,8 @@ package com.example.thang.mobile_dating_app_v20.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -13,7 +15,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
+import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.Classes.Utils;
@@ -37,7 +41,7 @@ public class MainActivity extends ActionBarActivity {
 
     //public static final String URL_CLOUD = "http://192.168.43.180:8084/DatingAppService";
     public static final String URL_CLOUD = "http://datingappservice3.jelastic.skali.net/datingapp";
-    private static final String URL_UPDATE_LOCATION = URL_CLOUD + "/Service/updatelocation?";
+    private static final String URL_REMOVE_GCM = URL_CLOUD + "/Service/removeGCM?";
     private static String PACKAGE_NAME = "com.example.thang.mobile_dating_app_v20.Fragments.";
     private int currentItem = -1;
     public Drawer.Result result = null;
@@ -51,6 +55,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
@@ -105,7 +110,12 @@ public class MainActivity extends ActionBarActivity {
                                     startActivity(intent1);
                                     break;
                                 case 3:
-                                    DBHelper.getInstance(getApplicationContext()).deleteData();
+                                    //remove GCM id
+                                    DBHelper dbHelper =  DBHelper.getInstance(getApplicationContext());
+                                    String url = URL_REMOVE_GCM + "email=" + dbHelper.getCurrentUser().getEmail();
+                                    new RemoveGCMTask().execute(url);
+                                    //empty SQLite data
+                                    dbHelper.deleteData();
                                     Intent intent4 = new Intent(getApplicationContext(), LoginActivity.class);
                                     finish();
                                     startActivity(intent4);
@@ -202,5 +212,21 @@ public class MainActivity extends ActionBarActivity {
             return false;
         }
         return true;
+    }
+
+    private class RemoveGCMTask extends AsyncTask<String, Integer, String>{
+
+        @Override
+        protected String doInBackground(String... params) {
+            return ConnectionTool.makeGetRequest(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result == null){
+                //error
+                Toast.makeText(getApplicationContext(),R.string.loading_error,Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

@@ -2,8 +2,10 @@ package com.example.thang.mobile_dating_app_v20.Classes;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -74,8 +76,9 @@ public class HeaderViewHolder extends RecyclerView.ViewHolder {
 
     public void bindNearbyItem(final Person person) {
 
-        avatar.setImageBitmap(person.getAvatar().isEmpty() ? BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.no_avatar) : Utils.generateSmaleBitmap(person.getAvatar(), 144, 144));
+        Bitmap avatarBitmap = person.getAvatar().isEmpty() ? BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.no_avatar) : Utils.generateSmaleBitmap(person.getAvatar(), 144, 144);
+        avatar.setImageBitmap(avatarBitmap);
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,11 +100,16 @@ public class HeaderViewHolder extends RecyclerView.ViewHolder {
             gender = context.getResources().getString(R.string.register_gender_female);
         }
         String title = "";
-        if (person.getPercent() != 0){
-            title = " | " + String.format("%.0f",person.getPercent() * 100) + "%";
+        if (person.getPercent() != 0) {
+            title = " | " + String.format("%.0f", person.getPercent() * 100) + "%";
         }
         String briefInfo = context.getResources().getString(R.string.friend_info, gender, person.getAge()) + title;
         subName.setText(briefInfo);
+
+        Palette p = Palette.from(avatarBitmap).generate();
+        int prominentColor = p.getDarkVibrantColor(R.color.ColorPrimary);
+
+        linearLayout.setBackgroundColor(prominentColor);
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

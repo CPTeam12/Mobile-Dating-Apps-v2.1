@@ -38,10 +38,11 @@ import java.util.concurrent.ExecutionException;
  */
 public class Tab3 extends Fragment implements OnRefreshListener {
     private static final String URL_UPDATE_LOCATION = MainActivity.URL_CLOUD + "/Service/updatelocation?";
-    private String URL_NEARBY_PERSON = MainActivity.URL_CLOUD + "/Service/getnearby?";
-
+    private String URL_NEARBY_PERSON = MainActivity.URL_CLOUD + "/Service/getnearbyrecommend?";
+    private String URL_NEARBY_FRIEND = MainActivity.URL_CLOUD + "/Service/getnearbyfriend?";
 
     private List<Person> persons = new ArrayList<>();
+    private List<Person> friends = new ArrayList<>();
     private int numColumns = 2;
     private static final int DISTANCE = 1000; //in meter
     private RecyclerView recyclerView;
@@ -198,8 +199,10 @@ public class Tab3 extends Fragment implements OnRefreshListener {
                 Toast.makeText(getActivity(), getActivity().
                         getString(R.string.loading_error), Toast.LENGTH_SHORT).show();
             } else {
-                String url = URL_NEARBY_PERSON + "email=" + DBHelper.getInstance(getActivity()).getCurrentUser().getEmail();
-                new getNearbyPersonTask().execute(url);
+                String url1 = URL_NEARBY_PERSON + "email=" + DBHelper.getInstance(getActivity()).getCurrentUser().getEmail();
+                new getNearbyPersonTask().execute(url1);
+                String url2 = URL_NEARBY_FRIEND + "email=" + DBHelper.getInstance(getActivity()).getCurrentUser().getEmail();
+                new getNearbyFriendTask().execute(url2);
             }
         }
     }
@@ -222,10 +225,47 @@ public class Tab3 extends Fragment implements OnRefreshListener {
                     JSONObject jsonObject = new JSONObject(result);
                     persons = ConnectionTool.fromJSON(jsonObject);
                     if (persons != null) {
-                        NearbyAdapter nearbyAdapter = new NearbyAdapter(getActivity(), persons);
+                        NearbyAdapter nearbyAdapter = new NearbyAdapter(getActivity(), persons, friends);
                         recyclerView.setAdapter(nearbyAdapter);
                         noNearby.setVisibility(View.GONE);
-                    } else {
+                    }
+                    if (friends == null && persons == null){
+                        noNearby.setVisibility(View.VISIBLE);
+                    }
+                    swipeRefreshLayout.setRefreshing(false);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                Toast.makeText(getActivity(), getString(R.string.loading_error), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private class getNearbyFriendTask extends AsyncTask<String, Integer, String> {
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            return ConnectionTool.makeGetRequest(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (!result.isEmpty()) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    friends = ConnectionTool.fromJSON(jsonObject);
+                    if (friends != null) {
+                        NearbyAdapter nearbyAdapter = new NearbyAdapter(getActivity(), persons, friends);
+                        recyclerView.setAdapter(nearbyAdapter);
+                        noNearby.setVisibility(View.GONE);
+                    }
+                    if (friends == null && persons == null){
                         noNearby.setVisibility(View.VISIBLE);
                     }
                     swipeRefreshLayout.setRefreshing(false);

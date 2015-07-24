@@ -42,7 +42,7 @@ public class HeaderFragment extends Fragment {
         person1.setAvatar("");
         persons.add(person1);
 
-        NearbyAdapter nearbyAdapter = new NearbyAdapter(getActivity(),persons);
+        NearbyAdapter nearbyAdapter = new NearbyAdapter(getActivity(),persons, persons);
 
         RecyclerView recyclerView =
                 (RecyclerView) view.findViewById(R.id.recycler_view);

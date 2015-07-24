@@ -44,7 +44,7 @@ public class RegistrationIntentService extends IntentService {
 
     private static final String TAG = "RegIntentService";
     private static final String[] TOPICS = {"global"};
-    private static final String URL_REGISTRATIONID = MainActivity.URL_CLOUD + "/Service/registrationNotify?";
+    private static final String URL_REGISTRATIONID = MainActivity.URL_CLOUD + "/Service/registrationGCM?";
 
     public RegistrationIntentService() {
         super(TAG);
