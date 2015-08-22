@@ -21,7 +21,6 @@ import com.example.thang.mobile_dating_app_v20.Adapters.NearbyAdapter;
 import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.GPSTracker;
-import com.example.thang.mobile_dating_app_v20.Classes.LocationTracker;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.tonicartos.superslim.LayoutManager;
@@ -63,57 +62,12 @@ public class Tab3 extends Fragment implements OnRefreshListener {
         //pull down to refresh
         swipeRefreshLayout.setColorSchemeResources(R.color.AccentColor);
         swipeRefreshLayout.setOnRefreshListener(this);
-//        swipeRefreshLayout.setRefreshing(true);
-//        GPSTracker gpsTracker = new GPSTracker(getActivity());
-//        if (gpsTracker.canGetLocation()) {
-//
-//            String url = URL_UPDATE_LOCATION + "email=" + DBHelper.getInstance(getActivity()).getCurrentUser().getEmail()
-//                    + "&longtitude=" + gpsTracker.getLongitude() + "&latitude=" + gpsTracker.getLatitude();
-//            ConnectionTool connectionTool = new ConnectionTool(getActivity());
-//
-//
-//            if (connectionTool.isNetworkAvailable()) {
-//                try {
-//                    new updateLocationTask().execute(url).get();
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                } catch (ExecutionException e) {
-//                    e.printStackTrace();
-//                }
-//            } else {
-//                new MaterialDialog.Builder(getActivity())
-//                        .title(R.string.error_connection_title)
-//                        .content(R.string.error_connection)
-//                        .titleColorRes(R.color.md_red_400)
-//                        .show();
-//            }
-//            gpsTracker.stopUsingGPS();
-//        } else {
-//            gpsTracker.showSettingsAlert();
-//        }
-
         swipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
-                //check for current location
-//                LocationTracker locationTracker = new LocationTracker(getActivity());
-//                locationTracker.getCurrentLocation();
-//
+                //show spinner
                 swipeRefreshLayout.setRefreshing(true);
-//                String url = URL_NEARBY_PERSON + "email=" + DBHelper.getInstance(getActivity()).getCurrentUser().getEmail();
-//                Log.i(null, url);
-//                ConnectionTool connectionTool = new ConnectionTool(getActivity());
-//                if (connectionTool.isNetworkAvailable()) {
-//                    new getNearbyPersonTask().execute(url);
-//                } else {
-//                    new MaterialDialog.Builder(getActivity())
-//                            .title(R.string.error_connection_title)
-//                            .content(R.string.error_connection)
-//                            .titleColorRes(R.color.md_red_400)
-//                            .show();
-//                }
-
-                //new
+                //check for current location
                 GPSTracker gpsTracker = new GPSTracker(getActivity());
                 if (gpsTracker.canGetLocation()) {
 
@@ -121,15 +75,8 @@ public class Tab3 extends Fragment implements OnRefreshListener {
                             + "&longtitude=" + gpsTracker.getLongitude() + "&latitude=" + gpsTracker.getLatitude();
                     ConnectionTool connectionTool = new ConnectionTool(getActivity());
 
-
                     if (connectionTool.isNetworkAvailable()) {
-                        try {
-                            new updateLocationTask().execute(url).get();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
-                        }
+                        new updateLocationTask().execute(url);
                     } else {
                         new MaterialDialog.Builder(getActivity())
                                 .title(R.string.error_connection_title)
@@ -141,8 +88,6 @@ public class Tab3 extends Fragment implements OnRefreshListener {
                 } else {
                     gpsTracker.showSettingsAlert();
                 }
-
-
             }
         });
 
@@ -153,16 +98,12 @@ public class Tab3 extends Fragment implements OnRefreshListener {
     @Override
     public void onRefresh() {
         //check for current location
-//        LocationTracker locationTracker = new LocationTracker(getActivity());
-//        locationTracker.getCurrentLocation();
-
         GPSTracker gpsTracker = new GPSTracker(getActivity());
         if (gpsTracker.canGetLocation()) {
 
             String url = URL_UPDATE_LOCATION + "email=" + DBHelper.getInstance(getActivity()).getCurrentUser().getEmail()
                     + "&longtitude=" + gpsTracker.getLongitude() + "&latitude=" + gpsTracker.getLatitude();
             ConnectionTool connectionTool = new ConnectionTool(getActivity());
-
 
             if (connectionTool.isNetworkAvailable()) {
                 try {
@@ -229,7 +170,7 @@ public class Tab3 extends Fragment implements OnRefreshListener {
                         recyclerView.setAdapter(nearbyAdapter);
                         noNearby.setVisibility(View.GONE);
                     }
-                    if (friends == null && persons == null){
+                    if (friends == null && persons == null) {
                         noNearby.setVisibility(View.VISIBLE);
                     }
                     swipeRefreshLayout.setRefreshing(false);
@@ -265,7 +206,7 @@ public class Tab3 extends Fragment implements OnRefreshListener {
                         recyclerView.setAdapter(nearbyAdapter);
                         noNearby.setVisibility(View.GONE);
                     }
-                    if (friends == null && persons == null){
+                    if (friends == null && persons == null) {
                         noNearby.setVisibility(View.VISIBLE);
                     }
                     swipeRefreshLayout.setRefreshing(false);
@@ -325,24 +266,4 @@ public class Tab3 extends Fragment implements OnRefreshListener {
 //            }
 //        }
 //    }
-
-
-    private class sendNotificationTask extends AsyncTask<String, Integer, String> {
-        @Override
-        protected void onPreExecute() {
-            noNearby.setVisibility(View.GONE);
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            return ConnectionTool.makeGetRequest(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if (result.isEmpty()) {
-                Toast.makeText(getActivity(), getActivity().getString(R.string.loading_error), Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 }

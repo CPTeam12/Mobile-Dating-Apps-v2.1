@@ -17,6 +17,7 @@ import com.example.thang.mobile_dating_app_v20.Activity.MainActivity;
 import com.example.thang.mobile_dating_app_v20.Activity.NewProfileActivity;
 import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
+import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.R;
 
 import it.gmariotti.cardslib.library.internal.Card;
@@ -124,7 +125,11 @@ public class CardFriendRequest extends Card {
                     deny.setVisibility(View.GONE);
                     actionMessage.setVisibility(View.VISIBLE);
                     String param = "from=" + DBHelper.getInstance(context).getCurrentUser().getEmail() + "&to=" + email;
-                    new getFriendRequest().execute(URL_FRIEND_ACCEPT + param);
+                    //update local friend db
+                    Person person = new Person();
+                    person.setEmail(email);
+                    DBHelper.getInstance(context).insertPerson(person, DBHelper.USER_FLAG_FRIENDS);
+                    new AcceptFriendRequestTask().execute(URL_FRIEND_ACCEPT + param);
                 }
             });
 
@@ -137,12 +142,12 @@ public class CardFriendRequest extends Card {
                     actionMessage.setText(R.string.friend_deny_request);
                     actionMessage.setVisibility(View.VISIBLE);
                     String param = "from=" + DBHelper.getInstance(context).getCurrentUser().getEmail() + "&to=" + email;
-                    new denyFriendRequest().execute(URL_FRIEND_DENY + param);
+                    new DenyFriendRequestTask().execute(URL_FRIEND_DENY + param);
                 }
             });
     }
 
-    private class getFriendRequest extends AsyncTask<String, Integer, String> {
+    private class AcceptFriendRequestTask extends AsyncTask<String, Integer, String> {
         @Override
         protected void onPreExecute() {
 
@@ -170,7 +175,7 @@ public class CardFriendRequest extends Card {
         }
     }
 
-    private class denyFriendRequest extends AsyncTask<String, Integer, String> {
+    private class DenyFriendRequestTask extends AsyncTask<String, Integer, String> {
         @Override
         protected void onPreExecute() {
 

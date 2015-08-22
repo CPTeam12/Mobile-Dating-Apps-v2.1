@@ -2,28 +2,19 @@ package com.example.thang.mobile_dating_app_v20.Activity;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.text.method.CharacterPickerDialog;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
-import android.widget.ListView;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Toast;
@@ -32,9 +23,9 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.GPSTracker;
-import com.example.thang.mobile_dating_app_v20.Classes.Hobby;
-import com.example.thang.mobile_dating_app_v20.Classes.LocationTracker;
+import com.example.thang.mobile_dating_app_v20.Classes.Interest;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
+import com.example.thang.mobile_dating_app_v20.Classes.SubInterest;
 import com.example.thang.mobile_dating_app_v20.Classes.Utils;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.google.gson.Gson;
@@ -42,28 +33,16 @@ import com.google.gson.reflect.TypeToken;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rengwuxian.materialedittext.validation.RegexpValidator;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.lang.reflect.Type;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class RegisterActivity extends ActionBarActivity {
@@ -179,6 +158,8 @@ public class RegisterActivity extends ActionBarActivity {
                     if (flag == null) person.setPassword(password.getText().toString());
 
                     person.setFacebookId(facebookLogin);
+                    //initial hobby
+                    person.setHobbies(initialInterest());
                     List<Person> currentUser = new ArrayList<Person>();
                     List<Person> friendUser = new ArrayList<Person>();
                     currentUser.add(person);
@@ -188,7 +169,7 @@ public class RegisterActivity extends ActionBarActivity {
                     }
 
                     //register
-                    new registerNew().execute(currentUser);
+                    new RegisterAccount().execute(currentUser);
 
                     //set relationship for facebook
                     if (flag != null) new setRelationshipFriends().execute(friendUser);
@@ -204,10 +185,6 @@ public class RegisterActivity extends ActionBarActivity {
             }
         });
 
-        //get current location for address:
-        LocationTracker locationTracker = new LocationTracker(this);
-        //String geoLocation = locationTracker.getCurrentGeocoding();
-        //Log.i(null, geoLocation);
 
         GPSTracker gps = new GPSTracker(this);
         if (gps.canGetLocation()){
@@ -217,11 +194,10 @@ public class RegisterActivity extends ActionBarActivity {
             gps.showSettingsAlert();
         }
         gps.stopUsingGPS();
-        //new getLocationTask().execute(geoLocation);
 
     }
 
-    private class registerNew extends AsyncTask<List<Person>, Integer, String> {
+    private class RegisterAccount extends AsyncTask<List<Person>, Integer, String> {
         DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
 
         @Override
@@ -288,6 +264,9 @@ public class RegisterActivity extends ActionBarActivity {
                     dbHelper.insertPerson(personList.get(0), dbHelper.USER_FLAG_CURRENT);
                     //move to hobby activity
                     Intent intent = new Intent(RegisterActivity.this, HobbyActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("Flag","Register");
+                    intent.putExtras(bundle);
                     startActivity(intent);
                     finish();
                 } else {
@@ -469,6 +448,37 @@ public class RegisterActivity extends ActionBarActivity {
             }
         }
 
+    }
+
+    private String initialInterest(){
+        List<Interest> hobbies = new ArrayList<>();
+        String[] array = getResources().getStringArray(R.array.hobbies);
+
+        for (String item : array) {
+            String[] tempArray;
+            if (item.equals("Âm nhạc")) {
+                tempArray = getResources().getStringArray(R.array.Music);
+            } else if (item.equals("Phim ảnh")) {
+                tempArray = getResources().getStringArray(R.array.Movie);
+            } else if (item.equals("Sách")) {
+                tempArray = getResources().getStringArray(R.array.Book);
+            } else if (item.equals("Thể thao")) {
+                tempArray = getResources().getStringArray(R.array.Sport);
+            } else if (item.equals("Thức ăn")) {
+                tempArray = getResources().getStringArray(R.array.Food);
+            } else if (item.equals("Thú cưng")) {
+                tempArray = getResources().getStringArray(R.array.Pet);
+            } else {//drink
+                tempArray = getResources().getStringArray(R.array.Drink);
+            }
+            List<SubInterest> subHobbies = new ArrayList<>();
+            for (int i = 0; i < tempArray.length; i++) {
+                subHobbies.add(new SubInterest(tempArray[i], false));
+            }
+            hobbies.add(new Interest(item, subHobbies));
+        }
+
+        return Interest.toStringFromList(hobbies);
     }
 
 

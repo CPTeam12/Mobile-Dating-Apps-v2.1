@@ -7,16 +7,17 @@
     android:descendantFocusability="blocksDescendants"
     android:gravity="left|center"
     android:orientation="horizontal"
+    android:clickable="true"
     android:weightSum="1">
 
     <com.example.thang.mobile_dating_app_v20.Views.SquareImageView
         android:id="@+id/profile_icon"
-        android:layout_width="50dp"
+        android:layout_width="30dp"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:layout_marginLeft="16dp"
         android:transitionName="image"
-        android:src="@drawable/no_avatar" />
+        android:src="@drawable/profile_email" />
 
     <!--<ImageView-->
         <!--android:id="@+id/profile_icon"-->

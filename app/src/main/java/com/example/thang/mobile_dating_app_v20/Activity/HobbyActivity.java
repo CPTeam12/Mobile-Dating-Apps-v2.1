@@ -19,9 +19,9 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.thang.mobile_dating_app_v20.Adapters.HobbyAdapter;
 import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
-import com.example.thang.mobile_dating_app_v20.Classes.Hobby;
+import com.example.thang.mobile_dating_app_v20.Classes.Interest;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
-import com.example.thang.mobile_dating_app_v20.Classes.SubHobby;
+import com.example.thang.mobile_dating_app_v20.Classes.SubInterest;
 import com.example.thang.mobile_dating_app_v20.Fragments.SubHobbyFragment;
 import com.example.thang.mobile_dating_app_v20.R;
 
@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HobbyActivity extends ActionBarActivity {
+    private static final String URL_REGISTER_HOBBY = MainActivity.URL_CLOUD + "/Service/registerhobby";
     private static final String URL_UPDATE_HOBBY = MainActivity.URL_CLOUD + "/Service/updateprofile";
     private MaterialDialog.Builder dialogBuilder;
     private MaterialDialog materialDialog;
@@ -44,7 +45,7 @@ public class HobbyActivity extends ActionBarActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle(R.string.hobby_choose);
+        getSupportActionBar().setTitle(R.string.hobby_choose);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,12 +58,13 @@ public class HobbyActivity extends ActionBarActivity {
 
         String[] array = getResources().getStringArray(R.array.hobbies);
 
-        List<Hobby> hobbies = new ArrayList<>();
+        List<Interest> hobbies = new ArrayList<>();
 
         //if current user is empty mean register
         //else is transfer from edit profile activity
         Person person = DBHelper.getInstance(this).getCurrentUser();
-        if (person.getHobbies().isEmpty()) {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
             //register
             for (String item : array) {
                 String[] tempArray;
@@ -81,16 +83,16 @@ public class HobbyActivity extends ActionBarActivity {
                 } else {//drink
                     tempArray = getResources().getStringArray(R.array.Drink);
                 }
-                List<SubHobby> subHobbies = new ArrayList<>();
+                List<SubInterest> subHobbies = new ArrayList<>();
                 for (int i = 0; i < tempArray.length; i++) {
-                    subHobbies.add(new SubHobby(tempArray[i], false));
+                    subHobbies.add(new SubInterest(tempArray[i], false));
                 }
-                hobbies.add(new Hobby(item, subHobbies));
+                hobbies.add(new Interest(item, subHobbies));
             }
         } else {
             //edit profle
             isRegister = false;
-            hobbies = Hobby.toList(person.getHobbies());
+            hobbies = Interest.toList(person.getHobbies());
         }
 
         HobbyAdapter hobbyAdapter = new HobbyAdapter(this, hobbies, HobbyAdapter.FLAG_REGISTER);
@@ -101,21 +103,21 @@ public class HobbyActivity extends ActionBarActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 //get from share reference
                 SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-                String sharePref = sharedPref.getString("Hobby", "");
+                String sharePref = sharedPref.getString("Interest", "");
                 //Toast.makeText(getApplicationContext(), sharePref, Toast.LENGTH_SHORT).show();
-                //Log.i("Hobby: ", sharePref);
+                //Log.i("Interest: ", sharePref);
 
-                List<Hobby> hobbies = Hobby.toList(sharePref);
-                Hobby hobby = hobbies.get(position);
+                List<Interest> hobbies = Interest.toList(sharePref);
+                Interest interest = hobbies.get(position);
 
                 Bundle bundle = new Bundle();
-                bundle.putString("Hobby", Hobby.toStringFromObject(hobby));
+                bundle.putString("Interest", Interest.toStringFromObject(interest));
                 Fragment fragment = new SubHobbyFragment();
                 fragment.setArguments(bundle);
                 getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                         .replace(R.id.mainFragment, fragment)
-                        .addToBackStack("Hobby")
+                        .addToBackStack("Interest")
                         .commit();
             }
         });
@@ -123,7 +125,7 @@ public class HobbyActivity extends ActionBarActivity {
         //initial Share reference
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("Hobby", Hobby.toStringFromList(hobbies));
+        editor.putString("Interest", Interest.toStringFromList(hobbies));
         editor.commit();
     }
 
@@ -145,12 +147,12 @@ public class HobbyActivity extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.finish) {
             SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-            String sharePref = sharedPref.getString("Hobby", "");
-            List<Hobby> hobbies = Hobby.toList(sharePref);
-            for (Hobby hobby : hobbies) {
-                List<SubHobby> subHobbies = hobby.getSubHobby();
-                for (SubHobby subHobby : subHobbies) {
-                    if (subHobby.getIsSelected()) {
+            String sharePref = sharedPref.getString("Interest", "");
+            List<Interest> hobbies = Interest.toList(sharePref);
+            for (Interest interest : hobbies) {
+                List<SubInterest> subHobbies = interest.getSubInterest();
+                for (SubInterest subInterest : subHobbies) {
+                    if (subInterest.getIsSelected()) {
                         isEmpty = false;
                     }
                 }
@@ -185,7 +187,6 @@ public class HobbyActivity extends ActionBarActivity {
                 }
             }
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -205,7 +206,7 @@ public class HobbyActivity extends ActionBarActivity {
         @Override
         protected String doInBackground(List<Person>... persons) {
             List<Person> personList = persons[0];
-            return ConnectionTool.makePostRequest(URL_UPDATE_HOBBY, personList);
+            return ConnectionTool.makePostRequest(URL_REGISTER_HOBBY, personList);
         }
 
         @Override
@@ -222,20 +223,21 @@ public class HobbyActivity extends ActionBarActivity {
                     //update current user into database
                     DBHelper helper = new DBHelper(getApplicationContext());
                     helper.updatePerson(personList.get(0));
-                    if (isRegister){
+//                    if (isRegister){
                         //move to main activity
                         Intent intent = new Intent(HobbyActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
-                    }else{
-                        //move to profile activity
-                        Bundle bundle = new Bundle();
-                        bundle.putString("ProfileOf", DBHelper.USER_FLAG_CURRENT);
-                        Intent intent = new Intent(getApplicationContext(), NewProfileActivity.class);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                        finish();
-                    }
+//                    }
+//                    else{
+//                        //move to profile activity
+//                        Bundle bundle = new Bundle();
+//                        bundle.putString("ProfileOf", DBHelper.USER_FLAG_CURRENT);
+//                        Intent intent = new Intent(getApplicationContext(), NewProfileActivity.class);
+//                        intent.putExtras(bundle);
+//                        startActivity(intent);
+//                        finish();
+//                    }
 
                 } else {
                     Toast.makeText(getApplicationContext(), getResources().

@@ -43,7 +43,7 @@
     <string name="progress_dialog">Đang xử lý...</string>
     <string name="friend_accept">Xác nhận</string>
     <string name="friend_dismiss">Xóa</string>
-    <string name="no_friend_item">Không có người bạn nào</string>
+    <string name="no_friend_item">Không có bạn nào để hiển thị</string>
     <string name="setting_dating">Bạn muốn hẹn hò</string>
     <string name="setting_dating_men">Nam</string>
     <string name="setting_dating_women">Nữ</string>
@@ -82,11 +82,11 @@
     <string name="profile_hobbies">Sở thích</string>
     <string name="search_hint">Tìm kiếm theo tên</string>
     <string name="search_no_result">Không tìm thấy kết quả nào</string>
-    <string name="profile_friend_request">Yêu cầu kết bạn đã được gởi tới </string>
+    <string name="profile_friend_request">Đã gởi yêu cầu kết bạn tới </string>
     <string name="friend_accepted">Kết bạn thành công</string>
     <string name="loading_error">Lỗi tải dữ liệu</string>
     <string name="hello_blank_fragment"></string>
-    <string name="friend_request">Đã gửi yêu cầu kết bạn</string>
+    <string name="friend_request">Đã gửi yêu cầu kết bạn tới </string>
     <string name="friend_deny_request">Đã hủy yêu cầu kết bạn</string>
     <string name="friend_year_old"> tuổi</string>
     <string name="fab_unfriend">Hủy kết bạn</string>
@@ -185,15 +185,20 @@
     </string-array>
     <string name="dialog_hobby">Bạn phải chọn sở thích của mình để có thể bắt đầu sử dụng ứng dụng này.</string>
     <string name="dialog_ok">OK</string>
-    <string name="editprofile_avatar">Đổi hình đại diện</string>
+    <string name="editprofile_avatar">Chạm để đổi hình đại diện</string>
     <string name="edit_password">Thay đổi mật khẩu</string>
     <string name="edit_hobby">Cập nhật sở thích</string>
     <string name="edit_profile">Thay đổi thông tin </string>
     <string name="save">Lưu</string>
-    <string name="prompt_old_password">Mật khẩu hiện tại</string>
+    <string name="prompt_old_password">Mật khẩu mới</string>
     <string name="change_password">Thay đổi mật khẩu</string>
     <string name="friend_info">%1$s, %2$d tuổi.</string>
     <string name="friend_recommend_info">%1$s, %2$s tuổi, tương đồng %3$s</string>
     <string name="update_profile_success">Thông tin cá nhân đã được thay đổi thành công.</string>
     <string name="promt_location">Địa điểm</string>
+    <string name="profile_mutual_friend">Có %1$s bạn chung</string>
+    <string name="profile_no_mutual_friend">Không có bạn chung nào</string>
+    <string name="profile_mutual_friend_header">Những bạn chung</string>
+    <string name="friend">Bạn bè</string>
+    <string name="empty_chat">Không có tin nhắn nào để hiển thị</string>
 </resources>

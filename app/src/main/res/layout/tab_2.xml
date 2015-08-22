@@ -12,7 +12,8 @@
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_height="fill_parent"
+            android:layout_alignParentBottom="true">
 
             <ListView
                 android:id="@+id/friendlist"
@@ -22,7 +23,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:divider="@color/md_white_1000"
-                android:drawSelectorOnTop="true" />
+                android:drawSelectorOnTop="true"
+                android:paddingTop="8dp" />
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
@@ -48,18 +50,18 @@
         android:orientation="vertical">
 
         <ImageView
-            android:src="@drawable/ic_zero_friends"
             android:layout_width="fill_parent"
             android:layout_height="100dp"
-            android:maxWidth="100dp" />
+            android:maxWidth="100dp"
+            android:src="@drawable/ic_zero_friends" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingTop="4dp"
             android:paddingLeft="80dp"
             android:paddingRight="80dp"
+            android:paddingTop="4dp"
             android:text="@string/no_friend_item"
             android:textSize="20sp" />
 

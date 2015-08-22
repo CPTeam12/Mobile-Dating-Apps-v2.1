@@ -14,11 +14,12 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:orientation="vertical"
-            android:layout_marginLeft="16dp">
+            android:layout_marginLeft="16dp"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -27,17 +28,21 @@
 
                 <TextView
                     android:id="@+id/carddemo_myapps_main_inner_title"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     android:text="Medium Text"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/md_black_1000" />
 
                 <TextView
                     android:id="@+id/carddemo_myapps_main_inner_secondaryTitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="Small Text"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -56,19 +61,19 @@
 
             </LinearLayout>
         </LinearLayout>
+
         <TextView
             android:id="@+id/friend_requested"
-            android:visibility="gone"
-            android:text="@string/friend_request"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:textSize="18sp"
-            android:textColor="@color/md_blue_800"
+            android:layout_marginLeft="16dp"
             android:gravity="bottom|center_horizontal"
-            android:layout_marginLeft="16dp" />
+            android:text="@string/friend_request"
+            android:textColor="@color/md_blue_800"
+            android:textSize="18sp"
+            android:visibility="gone" />
 
     </RelativeLayout>
-
 
 
 </LinearLayout>

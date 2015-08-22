@@ -2,6 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:id="@+id/root_view"
     android:layout_height="match_parent">
 
     <com.github.ksoichiro.android.observablescrollview.TouchInterceptionFrameLayout
@@ -85,8 +86,8 @@
 
             <ProgressBar
                 android:id="@+id/spinner"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:scrollbarSize="20dp" />
         </FrameLayout>
@@ -125,11 +126,11 @@
                 android:id="@+id/fab_blockfriend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:fab_icon="@drawable/ic_lock_white"
+                app:fab_icon="@drawable/ic_forum"
                 fab:fab_colorNormal="@color/md_blue_900"
                 fab:fab_colorPressed="@color/md_blue_800"
                 fab:fab_size="mini"
-                fab:fab_title="Block" />
+                fab:fab_title="Gởi tin nhắn" />
 
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_unfriend"

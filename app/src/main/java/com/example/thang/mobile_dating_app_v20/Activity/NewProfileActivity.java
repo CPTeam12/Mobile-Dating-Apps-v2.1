@@ -1,7 +1,6 @@
 package com.example.thang.mobile_dating_app_v20.Activity;
 
 import android.annotation.TargetApi;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -9,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewCompat;
@@ -27,7 +27,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.OverScroller;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +35,6 @@ import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.Classes.Utils;
-import com.example.thang.mobile_dating_app_v20.Fragments.EditProfile;
 import com.example.thang.mobile_dating_app_v20.Fragments.ProfileTab1;
 import com.example.thang.mobile_dating_app_v20.Fragments.ProfileTab2;
 import com.example.thang.mobile_dating_app_v20.R;
@@ -77,11 +75,19 @@ public class NewProfileActivity extends ActionBarActivity implements ObservableS
     private int mTabHeight;
     private boolean mScrolled;
     private ProgressBar spinner;
+    private View rootView;
 
     private static Person person;
-    private String URL_FIND = MainActivity.URL_CLOUD + "/Service/getbyemail?email=";
+    private String flag;
+    private String URL_GET_PROFILE = MainActivity.URL_CLOUD + "/Service/getprofile?";
     private String URL_FRIEND_REQUEST = MainActivity.URL_CLOUD + "/Service/makefriendrequest?";
     private String URL_UNFRIEND = MainActivity.URL_CLOUD + "/Service/deleterelationship?";
+
+    private GetProfileTask getProfileTask = new GetProfileTask();
+
+    FloatingActionButton fabAddFriend;
+    FloatingActionButton fabProfileEditor;
+    FloatingActionsMenu fabFriendEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +111,7 @@ public class NewProfileActivity extends ActionBarActivity implements ObservableS
         mImageView = (ImageView) findViewById(R.id.image);
         mOverlayView = findViewById(R.id.overlay);
         spinner = (ProgressBar) findViewById(R.id.spinner);
+        rootView = findViewById(R.id.root_view);
         // Padding for ViewPager must be set outside the ViewPager itself
         // because with padding, EdgeEffect of ViewPager become strange.
         mFlexibleSpaceHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
@@ -144,12 +151,11 @@ public class NewProfileActivity extends ActionBarActivity implements ObservableS
         });
 
         //init fab button
-        FloatingActionButton fabAddFriend = (FloatingActionButton) findViewById(R.id.fab_addfriend);
-        FloatingActionButton fabProfileEditor = (FloatingActionButton) findViewById(R.id.fab_editor);
-        FloatingActionsMenu fabFriendEditor = (FloatingActionsMenu) findViewById(R.id.multiple_actions_down);
+         fabAddFriend = (FloatingActionButton) findViewById(R.id.fab_addfriend);
+         fabProfileEditor = (FloatingActionButton) findViewById(R.id.fab_editor);
+         fabFriendEditor = (FloatingActionsMenu) findViewById(R.id.multiple_actions_down);
         FloatingActionButton fabBlockFriend = (FloatingActionButton) findViewById(R.id.fab_blockfriend);
         FloatingActionButton fabUnFriend = (FloatingActionButton) findViewById(R.id.fab_unfriend);
-
 
         //gone as default
         fabAddFriend.setVisibility(View.GONE);
@@ -159,7 +165,7 @@ public class NewProfileActivity extends ActionBarActivity implements ObservableS
 
         //get current user avatar
         Bundle bundle = getIntent().getExtras();
-        String flag = bundle.getString("ProfileOf");
+        flag = bundle.getString("ProfileOf");
         DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
 
         if (flag.equals(DBHelper.USER_FLAG_CURRENT)) {
@@ -179,7 +185,7 @@ public class NewProfileActivity extends ActionBarActivity implements ObservableS
             });
             //updated
             mImageView.setImageBitmap(person.getAvatar().isEmpty() ? BitmapFactory.decodeResource(getResources(),
-                    R.drawable.no_avatar) : Utils.decodeBase64StringToBitmap(person.getAvatar()));
+                    R.drawable.no_avatar) : Utils.generateSmaleBitmap(person.getAvatar(), 400, 400));
             //setFriendAdapter(listView, person);
             mTitleView.setText(person.getFullName());
         } else {
@@ -218,6 +224,18 @@ public class NewProfileActivity extends ActionBarActivity implements ObservableS
                     }
                 });
 
+                fabBlockFriend.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("Email", person.getEmail());
+                        Intent intent = new Intent(NewProfileActivity.this, ChatActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+                });
+
             } else {
                 //unknown friend, get from service
                 fabAddFriend.setVisibility(View.VISIBLE);
@@ -229,12 +247,15 @@ public class NewProfileActivity extends ActionBarActivity implements ObservableS
                         String friendEmail = person.getEmail();
                         String param = URL_FRIEND_REQUEST + "from=" + userEmail + "&to=" + friendEmail;
                         new makeFriendRequestTask().execute(param);
+                        Snackbar.make(rootView, getString(R.string.profile_friend_request) + " " + person.getFullName(), Snackbar.LENGTH_LONG).show();
                     }
                 });
             }
 
             //get avatar from service
-            new getProfileTask().execute(URL_FIND + bundle.getString("email"));
+            String currentUser = DBHelper.getInstance(this).getCurrentUser().getEmail();
+
+            getProfileTask.execute(URL_GET_PROFILE + "current=" + currentUser + "&email=" + bundle.getString("email"));
 
             //animation for menu fab
             final View subLayer = findViewById(R.id.sub_layer);
@@ -246,13 +267,11 @@ public class NewProfileActivity extends ActionBarActivity implements ObservableS
                 @Override
                 public void onMenuExpanded() {
                     subLayer.setVisibility(View.VISIBLE);
-                    //subLayer.setBackgroundColor(getResources().getColor(R.color.black_layer));
                 }
 
                 @Override
                 public void onMenuCollapsed() {
                     subLayer.setVisibility(View.GONE);
-                    //subLayer.setBackgroundColor(getResources().getColor(R.color.no_layer));
                 }
             };
 
@@ -493,6 +512,7 @@ public class NewProfileActivity extends ActionBarActivity implements ObservableS
             Fragment f;
             Bundle bundle = new Bundle();
             bundle.putSerializable("Person", person);
+            bundle.putString("ProfileOf", flag);
             switch (position) {
                 case 0:
                     f = new ProfileTab1();
@@ -569,12 +589,12 @@ public class NewProfileActivity extends ActionBarActivity implements ObservableS
 
         @Override
         protected void onPostExecute(String result) {
-            Toast.makeText(getApplicationContext(), getResources().getString(R.string.profile_friend_request) + " " + person.getFullName(),
-                    Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), getResources().getString(R.string.profile_friend_request) + " " + person.getFullName(),
+//                    Toast.LENGTH_SHORT).show();
         }
     }
 
-    private class getProfileTask extends AsyncTask<String, Integer, String> {
+    private class GetProfileTask extends AsyncTask<String, Integer, String> {
         @Override
         protected void onPreExecute() {
             ConnectionTool connectionTool = new ConnectionTool(NewProfileActivity.this);
@@ -606,7 +626,7 @@ public class NewProfileActivity extends ActionBarActivity implements ObservableS
                 mImageView.setImageBitmap(person.getAvatar().isEmpty() ? BitmapFactory.decodeResource(getResources(),
                         R.drawable.no_avatar) : Utils.decodeBase64StringToBitmap(person.getAvatar()));
                 //setFriendAdapter(listView, person);
-                String title = person.getFullName() +(person.getPercent() != 0 ? person.getPercent() : "") ;
+                String title = person.getFullName() + (person.getPercent() != 0 ? person.getPercent() : "");
                 mTitleView.setText(title);
                 mPager.setAdapter(mPagerAdapter);
 
@@ -618,4 +638,11 @@ public class NewProfileActivity extends ActionBarActivity implements ObservableS
             }
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        getProfileTask.cancel(true);
+        super.onBackPressed();
+    }
+
 }

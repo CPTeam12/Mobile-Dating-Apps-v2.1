@@ -32,6 +32,7 @@
                     android:id="@+id/carddemo_myapps_main_inner_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/md_black_1000"
                     android:text="Medium Text"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 

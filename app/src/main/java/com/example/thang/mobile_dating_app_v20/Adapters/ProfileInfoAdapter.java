@@ -6,8 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.R;
 import com.example.thang.mobile_dating_app_v20.Views.SquareImageView;
 
@@ -20,7 +23,7 @@ import java.util.Map;
 public class ProfileInfoAdapter extends BaseAdapter {
     private Map<String, String> profile = new HashMap<String, String>();
     private Context context;
-    private static final String[] PROFILE_CASE = {"AGE", "GENDER", "EMAIL", "PHONE", "ADDRESS"};
+    private static String[] PROFILE_CASE = {"EMAIL", "AGE", "GENDER", "PHONE", "ADDRESS"};
 
     public ProfileInfoAdapter(Map<String, String> profile, Context context) {
         this.profile = profile;
@@ -45,8 +48,11 @@ public class ProfileInfoAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-
-
+//        if (flag.equals(DBHelper.USER_FLAG_CURRENT) ){
+//            PROFILE_CASE = PROFILE_CASE1;
+//        }else{
+//            PROFILE_CASE = PROFILE_CASE2;
+//        }
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(context);
             convertView = inflater.inflate(R.layout.profile_item, parent, false);
@@ -55,6 +61,7 @@ public class ProfileInfoAdapter extends BaseAdapter {
             holder.profileIcon = (SquareImageView) convertView.findViewById(R.id.profile_icon);
             holder.profileText = (TextView) convertView.findViewById(R.id.profile_text);
             holder.profileHeaderText = (TextView) convertView.findViewById(R.id.profile_header_text);
+            holder.friendItem = (LinearLayout) convertView.findViewById(R.id.friend_item);
 
             convertView.setTag(holder);
 
@@ -72,7 +79,7 @@ public class ProfileInfoAdapter extends BaseAdapter {
                 holder.profileHeaderText.setText(R.string.prompt_email);
                 break;
             case "AGE":
-                holder.profileIcon.setImageResource(R.drawable.profile_age);
+                holder.profileIcon.setImageResource(R.drawable.profile_birthday);
                 holder.profileText.setText("-");
                 if (profile.get(PROFILE_CASE[position]) != null) {
                     holder.profileText.setText(profile.get(PROFILE_CASE[position]));
@@ -110,12 +117,15 @@ public class ProfileInfoAdapter extends BaseAdapter {
                 }
                 holder.profileHeaderText.setText(R.string.profile_phone);
                 break;
+            default:
+                holder.friendItem.setVisibility(View.GONE);
         }
 
         return convertView;
     }
 
     private class ViewHolder {
+        public LinearLayout friendItem;
         public SquareImageView profileIcon;
         public TextView profileText;
         public TextView profileHeaderText;

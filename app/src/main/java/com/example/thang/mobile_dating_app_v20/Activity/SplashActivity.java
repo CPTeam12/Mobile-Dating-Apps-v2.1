@@ -3,7 +3,6 @@ package com.example.thang.mobile_dating_app_v20.Activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,7 +14,7 @@ import com.example.thang.mobile_dating_app_v20.Classes.Person;
 import com.example.thang.mobile_dating_app_v20.R;
 
 public class SplashActivity extends Activity {
-    private static int splashInterval = 2000;
+    private static int SPLASH_INTERVAL = 1500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +38,11 @@ public class SplashActivity extends Activity {
                 }
                 finish();
                 startActivity(intent);
-
+                overridePendingTransition(R.anim.abc_fade_in,R.anim.abc_fade_out);
             }
         }
 
-                , splashInterval);
+                , SPLASH_INTERVAL);
     }
 
     @Override

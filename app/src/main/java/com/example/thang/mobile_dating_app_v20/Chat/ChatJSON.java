@@ -15,12 +15,13 @@ public class ChatJSON {
     public ChatJSON() {
     }
 
-    public static String setClientEstablish(String email) {
+    public static String setClientEstablish(String email, String to) {
         String json = null;
         try {
             JSONObject jObj = new JSONObject();
             jObj.put("flag", FLAG_ESTABLISH);
             jObj.put("email", email);
+            jObj.put("to", to);
             json = jObj.toString();
         } catch (JSONException e) {
             e.printStackTrace();

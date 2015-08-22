@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.thang.mobile_dating_app_v20.Classes.ConnectionTool;
 import com.example.thang.mobile_dating_app_v20.Classes.DBHelper;
 import com.example.thang.mobile_dating_app_v20.Classes.Person;
@@ -39,8 +40,10 @@ public class MainActivity extends ActionBarActivity {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String TAG = "MainActivity";
 
-    //public static final String URL_CLOUD = "http://192.168.43.180:8084/DatingAppService";
-    public static final String URL_CLOUD = "http://datingappservice3.jelastic.skali.net/datingapp";
+    public static final String IP = "192.168.1.17";
+    public static final String URL_CLOUD = "http://" + IP + ":8084/DatingAppService";
+    //public static final String URL_CLOUD = "http://192.168.43.179:8084/DatingAppService";
+    //public static final String URL_CLOUD = "http://datingapp.jelastic.skali.net/mda";
     private static final String URL_REMOVE_GCM = URL_CLOUD + "/Service/removeGCM?";
     private static String PACKAGE_NAME = "com.example.thang.mobile_dating_app_v20.Fragments.";
     private int currentItem = -1;
@@ -59,6 +62,7 @@ public class MainActivity extends ActionBarActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
+
         //get current Account from database
         DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
         Person person = dbHelper.getCurrentUser();
@@ -73,10 +77,9 @@ public class MainActivity extends ActionBarActivity {
                                 withName(fullname).
                                 withEmail(email).
                                 withIcon(person.getAvatar().isEmpty() ? getResources().getDrawable(R.drawable.no_avatar)
-                                        : new BitmapDrawable(getApplicationContext().getResources(),Utils.generateSmaleBitmap(person.getAvatar(),800,800)))
+                                        : new BitmapDrawable(getApplicationContext().getResources(), Utils.generateSmaleBitmap(person.getAvatar(), 800, 800)))
                 )
                 .build();
-
 
         result = new Drawer()
                 .withActivity(this)
@@ -92,8 +95,8 @@ public class MainActivity extends ActionBarActivity {
 
                         new PrimaryDrawerItem().withName(R.string.nav_logout).withIcon(GoogleMaterial.Icon.gmd_exit_to_app).withIdentifier(3),
                         new DividerDrawerItem(),
-                        new SecondaryDrawerItem().withName(R.string.nav_about).withIcon(GoogleMaterial.Icon.gmd_email).withIdentifier(4),
-                        new SecondaryDrawerItem().withName(R.string.nav_setting).withIcon(GoogleMaterial.Icon.gmd_settings).withIdentifier(5)
+                        new SecondaryDrawerItem().withName(R.string.nav_about).withIcon(GoogleMaterial.Icon.gmd_email).withIdentifier(4)
+                        //new SecondaryDrawerItem().withName(R.string.nav_setting).withIcon(GoogleMaterial.Icon.gmd_settings).withIdentifier(5)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -111,25 +114,48 @@ public class MainActivity extends ActionBarActivity {
                                     startActivity(intent1);
                                     break;
                                 case 3:
-                                    //remove GCM id
-                                    DBHelper dbHelper =  DBHelper.getInstance(getApplicationContext());
-                                    String url = URL_REMOVE_GCM + "email=" + dbHelper.getCurrentUser().getEmail();
-                                    new RemoveGCMTask().execute(url);
-                                    //empty SQLite data
-                                    dbHelper.deleteData();
-                                    Intent intent4 = new Intent(getApplicationContext(), LoginActivity.class);
-                                    finish();
-                                    startActivity(intent4);
+                                    new MaterialDialog.Builder(MainActivity.this)
+                                            .title("Xác nhận")
+                                            .content("Bạn có muốn đăng xuất không?")
+                                            .negativeText("Hủy")
+                                            .positiveText("Đồng ý")
+                                            .callback(new MaterialDialog.ButtonCallback() {
+                                                @Override
+                                                public void onNegative(MaterialDialog dialog) {
+                                                    dialog.dismiss();
+                                                }
+
+                                                @Override
+                                                public void onPositive(MaterialDialog dialog) {
+                                                    //remove GCM id
+                                                    DBHelper dbHelper = DBHelper.getInstance(getApplicationContext());
+                                                    String url = URL_REMOVE_GCM + "email=" + dbHelper.getCurrentUser().getEmail();
+                                                    new RemoveGCMTask().execute(url);
+                                                    //empty SQLite data
+                                                    dbHelper.deleteData();
+                                                    Intent intent4 = new Intent(getApplicationContext(), LoginActivity.class);
+                                                    finish();
+                                                    startActivity(intent4);
+                                                }
+                                            }).show();
                                     break;
                                 case 4:
                                     //switchFragment(4, "Test", "HeaderFragment");
-                                    Intent intent5 = new Intent(getApplicationContext(), HobbyActivity.class);
-                                    finish();
-                                    startActivity(intent5);
+//                                    Intent intent5 = new Intent(getApplicationContext(), HobbyActivity.class);
+//                                    finish();
+//                                    startActivity(intent5);
+                                    new MaterialDialog.Builder(MainActivity.this)
+                                            .title("Mobile Dating Apps Ver 3.0")
+                                            .content("Ứng dụng hẹn hò dành cho thiết bị di động là đồ án tốt nghiệp ĐH FPT được phát" +
+                                                    " triển bởi Phạm Văn Thắng dưới sự hướng dẫn của giảng viên Nguyễn Huy Hùng. ")
+                                            .positiveText("Đóng")
+                                            .icon(getResources().getDrawable(R.drawable.ic_splash))
+                                            .maxIconSize(200)
+                                            .show();
                                     break;
                                 case 5:
-                                    Intent intent2 = new Intent(getApplicationContext(), SettingActivity.class);
-                                    startActivity(intent2);
+//                                    Intent intent2 = new Intent(getApplicationContext(), SettingActivity.class);
+//                                    startActivity(intent2);
                                     break;
                             }
                         }
@@ -160,16 +186,10 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -177,13 +197,16 @@ public class MainActivity extends ActionBarActivity {
     public void onBackPressed() {
         if (result != null && result.isDrawerOpen()) {
             result.closeDrawer();
-        } else if (result != null && currentItem != 1) {
-            result.setSelection(0);
-        } else if (result != null) {
-            super.onBackPressed();
         } else {
             super.onBackPressed();
         }
+//        else if (result != null && currentItem != 1) {
+//            result.setSelection(0);
+//        } else if (result != null) {
+//            super.onBackPressed();
+//        } else {
+//            super.onBackPressed();
+//        }
     }
 
     public void switchFragment(int itemId, String title, String fragment) {
@@ -195,7 +218,7 @@ public class MainActivity extends ActionBarActivity {
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle(title);
         getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                //.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                 .replace(R.id.mainFragment, Fragment.instantiate(MainActivity.this, PACKAGE_NAME + fragment))
                 .commit();
     }
@@ -215,7 +238,8 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
-    private class RemoveGCMTask extends AsyncTask<String, Integer, String>{
+
+    private class RemoveGCMTask extends AsyncTask<String, Integer, String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -224,9 +248,9 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if (result == null){
+            if (result == null) {
                 //error
-                Toast.makeText(getApplicationContext(),R.string.loading_error,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.loading_error, Toast.LENGTH_SHORT).show();
             }
         }
     }

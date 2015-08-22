@@ -29,6 +29,7 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.ConnectionResult;
@@ -170,8 +171,10 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
         LoginButton btn = (LoginButton) findViewById(R.id.facebook_sign_in);
         btn.setReadPermissions(Arrays.asList("public_profile, email, user_birthday, user_friends"));
         btn.registerCallback(callbackManager, callback);
-        //google plus
 
+        LoginManager.getInstance().logOut();
+
+        //google plus
         gac = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(Plus.API, Plus.PlusOptions.builder().build())
@@ -353,6 +356,14 @@ public class LoginActivity extends ActionBarActivity implements GoogleApiClient.
     public void onConnected(Bundle bundle) {
         mSignInClicked = false;
         if (Plus.PeopleApi.getCurrentPerson(gac) != null) {
+            if (dialogBuilder == null) {
+                dialogBuilder = new MaterialDialog.Builder(LoginActivity.this)
+                        .cancelable(false)
+                        .content(R.string.progress_dialog)
+                        .progress(true, 0);
+                materialDialog = dialogBuilder.build();
+                materialDialog.show();
+            }
             com.google.android.gms.plus.model.people.Person p = Plus.PeopleApi.getCurrentPerson(gac);
             Person person = new Person();
             person.setFullName(p.getDisplayName());

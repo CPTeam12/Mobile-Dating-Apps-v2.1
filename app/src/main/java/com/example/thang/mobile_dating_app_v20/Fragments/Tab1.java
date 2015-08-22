@@ -65,27 +65,27 @@ public class Tab1 extends Fragment implements OnRefreshListener, GoogleApiClient
         swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.AccentColor);
 
-        //google api client
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(getActivity())
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        //current place
-        String placeId = "ChIJXdSq7IkpdTERpgP-QljuR3Q";
-        Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId)
-                .setResultCallback(new ResultCallback<PlaceBuffer>() {
-                    @Override
-                    public void onResult(PlaceBuffer places) {
-                        if (places.getStatus().isSuccess()) {
-                            final Place myPlace = places.get(0);
-                            Log.i(null, "Place found: " + myPlace.getName());
-                        }
-                        places.release();
-                    }
-                });
+//        //google api client
+//        mGoogleApiClient = new GoogleApiClient
+//                .Builder(getActivity())
+//                .addApi(Places.GEO_DATA_API)
+//                .addApi(Places.PLACE_DETECTION_API)
+//                .addConnectionCallbacks(this)
+//                .addOnConnectionFailedListener(this)
+//                .build();
+//        //current place
+//        String placeId = "ChIJXdSq7IkpdTERpgP-QljuR3Q";
+//        Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId)
+//                .setResultCallback(new ResultCallback<PlaceBuffer>() {
+//                    @Override
+//                    public void onResult(PlaceBuffer places) {
+//                        if (places.getStatus().isSuccess()) {
+//                            final Place myPlace = places.get(0);
+//                            Log.i(null, "Place found: " + myPlace.getName());
+//                        }
+//                        places.release();
+//                    }
+//                });
         //pull down to refresh
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.post(new Runnable() {
@@ -141,10 +141,12 @@ public class Tab1 extends Fragment implements OnRefreshListener, GoogleApiClient
 
     @Override
     public void onRefresh() {
-        cards.clear();
-        if (personsRecommendation != null) personsRecommendation.clear();
-        if (personsRequest != null) personsRequest.clear();
-
+        cards = new ArrayList<Card>();
+//        if (personsRecommendation != null)
+//            personsRecommendation.clear();
+//        if (personsRequest != null)
+//            personsRequest.clear();
+        swipeRefreshLayout.setRefreshing(true);
         String email = DBHelper.getInstance(getActivity()).getCurrentUser().getEmail();
         ConnectionTool connectionTool = new ConnectionTool(getActivity());
         if (connectionTool.isNetworkAvailable()) {
@@ -187,7 +189,7 @@ public class Tab1 extends Fragment implements OnRefreshListener, GoogleApiClient
 
         @Override
         protected void onPostExecute(String result) {
-            swipeRefreshLayout.setRefreshing(false);
+
             //start parsing jsonResponse
             JSONObject jsonObject = null;
             try {
@@ -225,6 +227,7 @@ public class Tab1 extends Fragment implements OnRefreshListener, GoogleApiClient
             } else {
                 initCards();
             }
+            //swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -264,9 +267,8 @@ public class Tab1 extends Fragment implements OnRefreshListener, GoogleApiClient
                         }
 
                         String briefInfo = getActivity().getString(R.string.friend_info, gender, item.getAge());
-
                         String title = "";
-                        title = item.getFullName() + " • " + String.format("%.0f",item.getPercent() * 100) + "%";
+                        title = item.getFullName() + " • " + String.format("%.0f", item.getPercent() * 100) + "%";
                         card.setContext(getActivity());
                         card.setTitle(title);
                         card.setSecondaryTitle(briefInfo);
@@ -287,6 +289,7 @@ public class Tab1 extends Fragment implements OnRefreshListener, GoogleApiClient
             } else {
                 Toast.makeText(getActivity(), getActivity().getString(R.string.loading_error), Toast.LENGTH_SHORT).show();
             }
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 

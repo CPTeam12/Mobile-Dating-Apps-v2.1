@@ -75,7 +75,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String userDB = "CREATE TABLE " + USER_TABLE + "("
                 + USER_COL_EMAIL + " text primary key not null, "
-                + USER_COL_FULLNAME + " text not null, "
+                + USER_COL_FULLNAME + " text, "
                 + USER_COL_AGE + " INTEGER, "
                 + USER_COL_AVATAR + " text, "
                 + USER_COL_ADDRESS + " text, "
@@ -323,7 +323,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 + CONVERSATION_DETAIL_COL_C_ID + " = '" + conversationId + "' ";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery(query, null);
-        res.moveToFirst();
+
         int a = res.getCount();
         while (res.moveToNext()) {
             String email = res.getString(res.getColumnIndex(CONVERSATION_DETAIL_COL_EMAIL));

@@ -9,7 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.thang.mobile_dating_app_v20.Classes.SubHobby;
+import com.example.thang.mobile_dating_app_v20.Classes.SubInterest;
 import com.example.thang.mobile_dating_app_v20.R;
 
 import java.util.List;
@@ -18,12 +18,12 @@ import java.util.List;
  * Created by Thang on 5/17/2015.
  */
 public class SubHobbyAdapter extends BaseAdapter {
-    private List<SubHobby> subHobbies;
+    private List<SubInterest> subHobbies;
     private Context context;
 
-    public SubHobbyAdapter(Context context, List<SubHobby> subHobby) {
+    public SubHobbyAdapter(Context context, List<SubInterest> subInterest) {
         super();
-        this.subHobbies = subHobby;
+        this.subHobbies = subInterest;
         this.context = context;
     }
 
@@ -44,7 +44,7 @@ public class SubHobbyAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final SubHobby subHobby = subHobbies.get(position);
+        final SubInterest subInterest = subHobbies.get(position);
         final GribHolder holder;
 
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -55,16 +55,16 @@ public class SubHobbyAdapter extends BaseAdapter {
         holder.name = (TextView) convertView.findViewById(R.id.name);
         holder.selected = (ImageView) convertView.findViewById(R.id.selected);
 
-        if (subHobby.getIsSelected()) {
+        if (subInterest.getIsSelected()) {
             holder.selected.setVisibility(View.VISIBLE);
-            holder.name.setVisibility(View.GONE);
+            //holder.name.setVisibility(View.GONE);
         } else {
             holder.selected.setVisibility(View.GONE);
-            holder.name.setVisibility(View.VISIBLE);
+            //holder.name.setVisibility(View.VISIBLE);
         }
 
         holder.hobbyItem = (FrameLayout) convertView.findViewById(R.id.hobby_item);
-        holder.name.setText(subHobby.getName());
+        holder.name.setText(subInterest.getName());
 
         return convertView;
     }

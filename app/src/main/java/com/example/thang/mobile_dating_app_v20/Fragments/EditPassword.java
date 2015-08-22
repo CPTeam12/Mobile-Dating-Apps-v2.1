@@ -56,7 +56,7 @@ public class EditPassword extends Fragment {
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         //actionBar.setTitle(R.string.change_password);
 
-        currentPassword = (MaterialEditText) view.findViewById(R.id.current_password);
+        //currentPassword = (MaterialEditText) view.findViewById(R.id.current_password);
         newPassword = (MaterialEditText) view.findViewById(R.id.new_password);
         rePassword = (MaterialEditText) view.findViewById(R.id.re_new_password);
 

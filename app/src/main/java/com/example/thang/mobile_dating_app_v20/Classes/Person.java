@@ -37,7 +37,6 @@ public class Person implements Serializable {
     //dating search options
     private boolean datingMen;
     private boolean datingWomen;
-    private String datingProfile;
     private int datingAge;
 
     //notification
@@ -45,6 +44,9 @@ public class Person implements Serializable {
 
     //Matching profile percent
     private double percent;
+
+    //Mutual Friend
+    private int mutualFriend;
 
     public Person() {
     }
@@ -59,7 +61,9 @@ public class Person implements Serializable {
         return facebookId;
     }
 
-    public void setFacebookId(String facebookId) { this.facebookId = facebookId; }
+    public void setFacebookId(String facebookId) {
+        this.facebookId = facebookId;
+    }
 
     public String getPassword() {
         return password;
@@ -173,14 +177,6 @@ public class Person implements Serializable {
         this.datingWomen = datingWomen;
     }
 
-    public String getDatingProfile() {
-        return datingProfile;
-    }
-
-    public void setDatingProfile(String datingProfile) {
-        this.datingProfile = datingProfile;
-    }
-
     public int getDatingAge() {
         return datingAge;
     }
@@ -203,6 +199,14 @@ public class Person implements Serializable {
 
     public void setPercent(double percent) {
         this.percent = percent;
+    }
+
+    public int getMutualFriend() {
+        return mutualFriend;
+    }
+
+    public void setMutualFriend(int mutualFriend) {
+        this.mutualFriend = mutualFriend;
     }
 
     @Override

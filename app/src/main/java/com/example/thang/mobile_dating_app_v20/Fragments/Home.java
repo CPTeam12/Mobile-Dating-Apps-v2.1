@@ -1,7 +1,7 @@
 package com.example.thang.mobile_dating_app_v20.Fragments;
 
 import com.example.thang.mobile_dating_app_v20.R;
-import com.example.thang.mobile_dating_app_v20.Adapters.ViewPagerAdapter;
+import com.example.thang.mobile_dating_app_v20.Adapters.MainViewPagerAdapter;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 
@@ -26,7 +26,7 @@ import it.neokree.materialtabs.MaterialTabListener;
  */
 public class Home extends Fragment implements MaterialTabListener, ObservableScrollViewCallbacks {
     ViewPager pager;
-    ViewPagerAdapter adapter;
+    MainViewPagerAdapter adapter;
     MaterialTabHost tabs;
 
 
@@ -34,19 +34,22 @@ public class Home extends Fragment implements MaterialTabListener, ObservableScr
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup v = (ViewGroup) inflater.inflate(R.layout.homefragment, container, false);
-        ActionBar toolbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        final ActionBar toolbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        toolbar.setTitle("Thông báo và đề xuất");
         //View v = inflater.inflate(R.layout.homefragment,container,false);
 
         tabs = (MaterialTabHost) v.findViewById(R.id.materialTabHost);
-        adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager(), getActivity());
+        adapter = new MainViewPagerAdapter(getActivity().getSupportFragmentManager(), getActivity());
 
         pager = (ViewPager) v.findViewById(R.id.pager);
         pager.setOffscreenPageLimit(3);
         pager.setAdapter(adapter);
-        pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        final String title[] = {"Thông báo và đề xuất","Những người xung quanh","Danh sách bạn bè"};
+        pager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 tabs.setSelectedNavigationItem(position);
+                toolbar.setTitle(title[position]);
             }
         });
 

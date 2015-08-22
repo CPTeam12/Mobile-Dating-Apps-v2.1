@@ -237,14 +237,14 @@
     </string-array>
     <string name="hobby_finish">Finish</string>
     <string name="choose">Choose</string>
-    <string name="hobby_choose">Choose your hobby</string>
+    <string name="hobby_choose">Choose your interest</string>
     <string name="dialog_hobby">You must select your hobbies to start using this application</string>
     <string name="dialog_ok">OK</string>
     <string name="title_activity_new_profile" translatable="false">NewProfileActivity</string>
     <string name="title_activity_edit_profile" translatable="false">EditProfileActivity</string>
     <string name="editprofile_avatar">Change Avatar</string>
     <string name="edit_password">Update your password</string>
-    <string name="edit_hobby">Update your hobby</string>
+    <string name="edit_hobby">Update your interest</string>
     <string name="edit_profile">Edit your profile</string>
     <string name="save">Save</string>
     <string name="prompt_old_password">Old password</string>
@@ -253,5 +253,10 @@
     <string name="friend_recommend_info">%1$s, %2$s years old, %3$s matching</string>
     <string name="update_profile_success">Update profile successfully</string>
     <string name="promt_location">Location</string>
+    <string name="profile_mutual_friend">%1$s mutual friends</string>
+    <string name="profile_no_mutual_friend">There are no mutual friend</string>
+    <string name="profile_mutual_friend_header">Mutual friend</string>
+    <string name="friend">Friend</string>
+    <string name="empty_chat">No chat message</string>
 
 </resources>

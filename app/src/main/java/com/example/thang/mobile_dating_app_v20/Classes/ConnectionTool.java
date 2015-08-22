@@ -104,6 +104,8 @@ public class ConnectionTool implements Serializable {
                     person.setDatingAge(Integer.parseInt(jsonObject2.getString("datingAge")));
 
                     person.setPercent(Double.parseDouble(jsonObject2.getString("percent")));
+                    person.setMutualFriend(jsonObject2.getInt("mutualFriend"));
+
                     persons.add(person);
                 }
             } else {
@@ -129,6 +131,7 @@ public class ConnectionTool implements Serializable {
                     person.setDatingAge(Integer.parseInt(jsonObject1.getString("datingAge")));
 
                     person.setPercent(Double.parseDouble(jsonObject1.getString("percent")));
+                    person.setMutualFriend(jsonObject1.getInt("mutualFriend"));
 
                     persons.add(person);
                 }
